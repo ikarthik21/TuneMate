@@ -1,13 +1,11 @@
 import Wrapper from "./Wrapper";
 
-
-
 const Home = () => {
+
     return (
         <Wrapper>
-            
-        </Wrapper>
-    )
+
+        </Wrapper>)
 }
 
 export default Home
