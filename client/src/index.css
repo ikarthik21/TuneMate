@@ -37,3 +37,10 @@ body,
     background-color: #59c2ef;
     outline: none;
 }
+
+
+.link_button {
+    border: none;
+    outline: none;
+    text-decoration: underline;
+}

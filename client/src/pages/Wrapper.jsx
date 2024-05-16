@@ -2,6 +2,7 @@ import NavBar from "@/_components/navigation/Navbar/NavBar"
 import SideBar from "@/_components/navigation/SideBar/SideBar"
 import Modal from "@/_components/Modals/Modal.jsx";
 import useModal from "@/hooks/useModal.js";
+// import Register from "@/pages/auth/register.jsx";
 import Login from "@/pages/auth/login.jsx";
 
 // eslint-disable-next-line react/prop-types

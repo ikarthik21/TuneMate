@@ -1,5 +1,6 @@
 import {getPrismaInstance} from "../../utils/prisma/prisma.js";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 export const UserController = () => {
@@ -10,9 +11,9 @@ export const UserController = () => {
             const prisma = await getPrismaInstance();
 
             try {
-                const existingUserByEmail = await prisma.user.findUnique({where: {email}});
+                const existingUserByEmail = await prisma.users.findUnique({where: {email}});
 
-                const existingUserByUsername = await prisma.user.findUnique({where: {username}});
+                const existingUserByUsername = await prisma.users.findUnique({where: {username}});
 
                 if (existingUserByEmail && existingUserByUsername) {
                     return res.status(200).json({
@@ -35,14 +36,15 @@ export const UserController = () => {
                 }
 
                 const hashedPassword = await bcrypt.hash(password, 10);
-                await prisma.user.create({
+                await prisma.users.create({
                     data: {
                         email: email, username: username, password: hashedPassword
                     },
                 });
                 return res.status(201).json({data: {message: "User created successfully", type: "success"}});
             } catch (err) {
-       
+                console.log(err)
+
                 return res.status(500).json({
                     data: {
                         message: "Error creating user, please try again later", type: "error"
@@ -51,13 +53,14 @@ export const UserController = () => {
             }
         }, async login(req, res) {
             const {email, password} = req.body;
-            const prisma = getPrismaInstance();
-            const user = await prisma.user.findUnique({where: {email}});
+            const prisma = await getPrismaInstance();
+
+            const user = await prisma.users.findUnique({where: {email}});
 
             if (user) {
                 try {
-                    const userid = user._id.toHexString();
-                    const result = await bcrypt.compare(lpassword, user.password);
+                    const userid = user.id;
+                    const result = await bcrypt.compare(password, user.password);
                     if (!result) {
                         return res.status(401).json({message: 'Wrong Username or Password'});
                     }
