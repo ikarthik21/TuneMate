@@ -1,8 +1,8 @@
 import {useState} from 'react';
 
 const useFormData = (initialData, action) => {
-
     const [data, setData] = useState(initialData);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
         setData({
@@ -11,15 +11,22 @@ const useFormData = (initialData, action) => {
     };
 
     const handleSubmit = async () => {
+        setIsLoading(true);
         try {
             return await action(data);
         } catch (err) {
-            console.log(err)
+            console.log(err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
+    const resetData = () => {
+        setData(initialData);
+    };
+
     return {
-        data, handleChange, handleSubmit,
+        data, handleChange, handleSubmit, resetData, isLoading,
     };
 };
 

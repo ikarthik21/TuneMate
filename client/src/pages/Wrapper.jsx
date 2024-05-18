@@ -17,7 +17,7 @@ const Wrapper = ({children}) => {
                 {children}
             </div>
             <Modal closeModal={closeModal} isOpen={isOpen} modalRef={modalRef}>
-                <Login/>
+                <Login closeModal={closeModal}/>
             </Modal>
         </div>
     )

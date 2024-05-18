@@ -51,28 +51,30 @@ export const UserController = () => {
                     }
                 });
             }
-        }, async login(req, res) {
+        },
+        async login(req, res) {
             const {email, password} = req.body;
             const prisma = await getPrismaInstance();
-
             const user = await prisma.users.findUnique({where: {email}});
-
             if (user) {
                 try {
                     const userid = user.id;
                     const result = await bcrypt.compare(password, user.password);
                     if (!result) {
-                        return res.status(401).json({message: 'Wrong Username or Password'});
+                        return res.status(200).json({
+                            data: {message: 'Wrong Username or Password', type: "error"}
+                        });
                     }
-                    const token = jwt.sign({userid: userid}, process.env.TOKEN_SECRET);
-                    return res.status(200).json({token, message: "Login successful"})
+                    const accessToken = jwt.sign({userid: userid}, process.env.TOKEN_SECRET);
+                    return res.status(200).json({data: {accessToken, message: "Login successful", type: "success"}});
                 } catch (err) {
                     console.log(err);
-                    return res.status(500).json({message: 'Internal Server Error'});
+                    return res.status(500).json({
+                        data: {message: 'Internal Server Error'}
+                    });
                 }
             }
-            return res.status(404).json({message: "user not found"});
-
+            return res.status(200).json({data: {message: 'User not found', type: "error"}});
         }
     }
 }
