@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Freeman&family=Protest+Revolution&family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200..1000&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -102,3 +105,36 @@ body,
 
 }
 
+.mukta-medium {
+    font-family: "Mukta", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+    letter-spacing: 1px;
+}
+
+
+.montserrat-font {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.montserrat-bol {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+.nunito-sans-bold {
+    font-family: "Nunito Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-variation-settings: "wdth" 100,
+    "YTLC" 500;
+    letter-spacing: 0.5px;
+
+}
