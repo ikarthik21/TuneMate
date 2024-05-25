@@ -51,8 +51,7 @@ export const UserController = () => {
                     }
                 });
             }
-        },
-        async login(req, res) {
+        }, async login(req, res) {
             const {email, password} = req.body;
             const prisma = await getPrismaInstance();
             const user = await prisma.users.findUnique({where: {email}});
@@ -65,7 +64,7 @@ export const UserController = () => {
                             data: {message: 'Wrong Username or Password', type: "error"}
                         });
                     }
-                    const accessToken = jwt.sign({userid: userid}, process.env.TOKEN_SECRET);
+                    const accessToken = jwt.sign({userid: userid, username: user.username}, process.env.TOKEN_SECRET);
                     return res.status(200).json({data: {accessToken, message: "Login successful", type: "success"}});
                 } catch (err) {
                     console.log(err);

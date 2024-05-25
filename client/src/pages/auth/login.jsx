@@ -22,8 +22,9 @@ const Login = ({closeModal}) => {
             if (response.data.accessToken) {
                 setAccessToken(response.data.accessToken);
                 closeModal();
-                Toast({type: response.data.type, message: response.data.message});
+
             }
+            Toast({type: response.data.type, message: response.data.message});
         }
     }
 
