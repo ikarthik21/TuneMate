@@ -4,6 +4,9 @@ import {LogOut} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import useSearchStore from "@/store/use-search.js";
 import {FiSearch} from "react-icons/fi";
+import {IoClose} from "react-icons/io5";
+import UserLogo from '@/assets/images/user.png';
+
 
 // eslint-disable-next-line react/prop-types
 const NavBar = ({openModal}) => {
@@ -25,12 +28,23 @@ const NavBar = ({openModal}) => {
                 onChange={(e) => setSearch(e.target.value)}
             />
 
+
+            {
+                search && <div className={"p-3  transform hover:scale-110"}>
+                    <IoClose size={20} cursor={"pointer"} onClick={() => {
+                        setSearch("")
+                    }}/>
+                </div>
+
+            }
+
+
         </div>
 
 
         {isAuthenticated ?
             <div className={" cursor-pointer flex items-center justify-center bg-neutral-800 p-2 rounded-2xl"}>
-                <img src="./src/assets/images/user.png" alt="user" className={"h-10 w-10  mr-2"}/>
+                <img src={UserLogo} alt="user" className={"h-10 w-10  mr-2"}/>
                 <h2 className={"mr-2 text-[14px]"}>{username}</h2>
                 <LogOut size={24} onClick={removeAccessToken}/>
 
