@@ -1,15 +1,16 @@
 import useSearchStore from "@/store/use-search.js";
 import {useDebounce} from '@/hooks/useDebounce.js';
-
-import {getSearchResults} from '@/service/api/music_apis.js';
+import MusicServiceInstance from '@/service/api/music_apis.js';
 import useSWR from "swr";
+import usePlayerStore from '@/store/use-player.js';
 
 const SearchResults = () => {
     const {search} = useSearchStore();
+    const {playSong} = usePlayerStore();
     const debouncedSearch = useDebounce(search, 300);
     const {
         data, error, isLoading
-    } = useSWR(debouncedSearch ? ['search', debouncedSearch] : null, () => getSearchResults(debouncedSearch));
+    } = useSWR(debouncedSearch ? ['search', debouncedSearch] : null, () => MusicServiceInstance.getSearchResults(debouncedSearch));
 
     if (isLoading) return <div>
         <h1>Loading.....</h1>
@@ -43,11 +44,14 @@ const SearchResults = () => {
                 <h1 className={"mukta-medium text-2xl"}>Songs</h1>
                 {data?.songs?.results?.map((song) => {
                     return <div key={song.id} className={"flex m-2"}>
-                        <div className={"flex items-center  w-96 hover:bg-[#18181b] cursor-pointer p-3 rounded-xl"}>
+                        <div className={"flex items-center w-[30rem] hover:bg-[#18181b] cursor-pointer p-3 rounded-xl"}
+                             onClick={() => playSong(song.id)}>
                             <img src={song.image[1].url} alt="" className={"h-12 w-12 rounded-xl"}/>
                             <div className={"flex flex-col ml-2"}>
                                 <h3 className={"nunito-sans-bold"}>{song.title}</h3>
-                                <p className={"text-sm text-[#6a6a6a] nunito-sans-bold"}>{song.singers}</p>
+                                <p style={{
+                                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"
+                                }} className={"text-sm text-[#6a6a6a] nunito-sans-bold"}>{song.singers}</p>
                             </div>
                         </div>
                     </div>
@@ -78,8 +82,7 @@ const SearchResults = () => {
 
                 })}
             </div>
-        </div>
-        }
+        </div>}
 
         {/*artists*/}
         {data?.artists?.results.length > 0 && <div className={"flex flex-col"}>
@@ -103,8 +106,7 @@ const SearchResults = () => {
 
                 })}
             </div>
-        </div>
-        }
+        </div>}
 
         {/*playlists*/}
         {data?.playlists?.results.length > 0 && <div className={"flex flex-col"}>
@@ -132,8 +134,7 @@ const SearchResults = () => {
 
                 })}
             </div>
-        </div>
-        }
+        </div>}
 
     </div>);
 };

@@ -7,11 +7,29 @@ const apiClient = axios.create({
 });
 
 
-export const getSearchResults = async (query) => {
-    try {
-        const response = await apiClient.get(ENDPOINTS.search(query));
-        return response.data.data;
-    } catch (err) {
-        return err;
+class MusicService {
+    getSearchResults = async (query) => {
+        try {
+            const response = await apiClient.get(ENDPOINTS.search(query));
+            return response.data.data;
+        } catch (err) {
+            return err;
+        }
     }
-};
+
+    getSingleSong = async (songid) => {
+        try {
+            const response = await apiClient.get(ENDPOINTS.song(songid));
+            return response.data.data;
+        } catch (err) {
+            return err;
+        }
+    };
+
+
+}
+
+
+const MusicServiceInstance = new MusicService();
+
+export default MusicServiceInstance;
