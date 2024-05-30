@@ -6,7 +6,7 @@ import useSearchStore from "@/store/use-search.js";
 import {FiSearch} from "react-icons/fi";
 import {IoClose} from "react-icons/io5";
 import UserLogo from '@/assets/images/user.png';
-
+import {Link} from 'react-router-dom';
 
 // eslint-disable-next-line react/prop-types
 const NavBar = ({openModal}) => {
@@ -15,7 +15,10 @@ const NavBar = ({openModal}) => {
 
     return (<nav
         className="flex h-[70px] text-white bg-[#18181b] fixed top-0  left-0 p-2  lg:px-4 items-center w-full justify-between   border-b border-[#2D2E35]">
-        <h1 className={"logo_font text-2xl md:text-3xl ml-2 font-semibold tracking-wide text-white "}>TuneMate</h1>
+
+        <Link to={"/"}>
+            <h1 className={"black-han-sans-regular text-2xl md:text-3xl ml-2 font-semibold tracking-wide text-amber-50 "}>TuneMate</h1>
+        </Link>
 
         <div className="flex items-center justify-center bg-[#222328] border-[#606064] rounded-full border relative">
             <div className="p-3">
