@@ -8,7 +8,7 @@ import {useRef} from "react";
 
 
 const Player = () => {
-    const {song, isPlaying, setIsPlaying} = usePlayerStore();
+    const {song, isPlaying, setIsPlaying, volume, setVolume} = usePlayerStore();
 
     const AudioRef = useRef();
 
@@ -20,6 +20,22 @@ const Player = () => {
         } else {
             AudioRef.current.pause();
             setIsPlaying(false);
+        }
+    };
+
+    const handleVolumeChange = (e) => {
+        const newVolume = Number(e.target.value);
+        setVolume(newVolume);
+        AudioRef.current.volume = newVolume / 100;
+    }
+
+    const handleMute = () => {
+        if (volume > 0) {
+            setVolume(0);
+            AudioRef.current.volume = 0;
+        } else {
+            setVolume(50);
+            AudioRef.current.volume = 0.5;
         }
     };
 
@@ -44,11 +60,11 @@ const Player = () => {
                     <IoPlaySkipForward size={20} color="#4d4d4d" className={"cursor-pointer"}/>
                 </div>
                 <div className={"m-2"}>
-                    <MusicSeek duration={600}/>
+                    <MusicSeek AudioRef={AudioRef}/>
                 </div>
             </div>
             <div className="flex-1 flex justify-end items-center">
-                <Volume/>
+                <Volume volume={volume} handleVolumeChange={handleVolumeChange} handleMute={handleMute}/>
             </div>
         </div>
     </div>);

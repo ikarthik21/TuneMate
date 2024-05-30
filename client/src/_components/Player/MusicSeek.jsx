@@ -1,36 +1,55 @@
 import {useState, useEffect} from 'react';
+import PropTypes from 'prop-types';
+import {formatTime} from '@/utils/MusicUtils.js';
 
-// eslint-disable-next-line react/prop-types
-const MusicSeek = ({duration}) => {
+
+const MusicSeek = ({AudioRef}) => {
     const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
 
-    // Update the current time of the song every second
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            setCurrentTime(prevTime => prevTime + 1);
-        }, 1000);
+        if (AudioRef.current) {
+            const handleTimeUpdate = () => {
+                setCurrentTime(AudioRef.current.currentTime);
+            };
+            const handleLoadedMetadata = () => {
+                setDuration(AudioRef.current.duration);
+            };
 
-        return () => clearInterval(intervalId);
-    }, []);
+            AudioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+            AudioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
 
 
-    const formatTime = (timeInSeconds) => {
-        const minutes = Math.floor(timeInSeconds / 60);
-        const seconds = Math.floor(timeInSeconds % 60);
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+    }, [AudioRef]);
+
+    const handleSeek = (e) => {
+        if (AudioRef.current) {
+            const newTime = (e.target.value / 100) * duration;
+            AudioRef.current.currentTime = newTime;
+            setCurrentTime(newTime);
+        }
     };
 
-    const progress = (currentTime / duration) * 100;
-
-    return (<div className="flex items-center justify-between w-full">
-        <div className="text-sm text-gray-500 mr-2 ">{formatTime(currentTime)}</div>
-
-        <div className="w-96 bg-gray-200 rounded-full  h-1">
-            <div className="bg-blue-500 rounded-full h-full" style={{width: `${progress}%`}}></div>
-        </div>
-
-        <div className="text-sm text-gray-500 ml-2">{formatTime(duration)}</div>
+    return (<div className="flex items-center">
+        <span className="text-sm mr-2">{formatTime(currentTime)}</span>
+        <input
+            type="range"
+            min="0"
+            max="100"
+            value={(currentTime / duration) * 100 || 0}
+            onChange={handleSeek}
+            className="w-96 h-1 bg-gray-300 rounded-lg cursor-pointer"
+        />
+        <span className="text-sm ml-2">{formatTime(duration)}</span>
     </div>);
+};
+
+
+MusicSeek.propTypes = {
+    AudioRef: PropTypes.shape({
+        current: PropTypes.instanceOf(Element)
+    }).isRequired
 };
 
 export default MusicSeek;

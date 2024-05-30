@@ -6,6 +6,8 @@ const usePlayerStore = create((set) => ({
     song: null,
     error: null,
     isPlaying: false,
+    volume: 60,
+    setVolume: value => set({volume: value}),
     setIsPlaying: (value) => set({isPlaying: value}),
     playSong: async (id) => {
         set({isLoading: true, error: null});
