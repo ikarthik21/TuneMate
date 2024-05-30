@@ -8,7 +8,7 @@ const SideOptions = () => {
 
                 <div className={"flex items-center cursor-pointer bg-neutral-800 p-2 rounded overflow-hidden"}>
                     <img src={UserLogo} alt="" className={"h-11  w-11 rounded-full"}/>
-                    <h1 className={"ml-4"}>Bollywood</h1>
+                    <h1 className={"ml-4"}>Coming Soon</h1>
                 </div>
             </div>
 

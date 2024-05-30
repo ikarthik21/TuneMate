@@ -1,25 +1,40 @@
-import {useState} from "react";
+import {FaVolumeDown} from "react-icons/fa";
+import {FaVolumeMute} from "react-icons/fa";
 
-const VolumeSlider = () => {
-    const [volume, setVolume] = useState(50); // Initial volume set to 50
+// eslint-disable-next-line react/prop-types
+const VolumeSlider = ({volume, handleVolumeChange, handleMute}) => {
+    const isMuted = volume === 0;
 
-    const handleVolumeChange = (event) => {
-        const newVolume = event.target.value;
-        setVolume(newVolume);
-        // Here you can add additional logic to control the volume
-    };
-
-    return (<div className={"flex items-center justify-center"}>
-        <span className={"text-sm"}>{volume}</span>
-        <input
-            type="range"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={handleVolumeChange}
-            className="h-1 slider ml-4"
-        />
-    </div>);
+    return (
+        <div className={"flex items-center justify-center"}>
+            <div>
+                {isMuted ? (
+                    <FaVolumeMute
+                        size={23}
+                        onClick={handleMute}
+                        className={"cursor-pointer"}
+                    />
+                ) : (
+                    <FaVolumeDown
+                        size={23}
+                        onClick={handleMute}
+                        className={"cursor-pointer"}
+                    />
+                )}
+            </div>
+            <input
+                type="range"
+                min="0"
+                max="100"
+                value={volume}
+                onChange={handleVolumeChange}
+                className="h-1 slider ml-4"
+                style={{
+                    background: `linear-gradient(to right, #59c2ef ${volume}%, #ccc ${volume}%)`
+                }}
+            />
+        </div>
+    );
 };
 
 export default VolumeSlider;

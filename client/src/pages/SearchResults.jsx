@@ -1,15 +1,17 @@
 import useSearchStore from "@/store/use-search.js";
 import {useDebounce} from '@/hooks/useDebounce.js';
-
-import {getSearchResults} from '@/service/api/music_apis.js';
+import MusicServiceInstance from '@/service/api/music_apis.js';
 import useSWR from "swr";
+import usePlayerStore from '@/store/use-player.js';
+import {decodeHtmlEntities, truncateString} from '@/utils/MusicUtils.js';
 
 const SearchResults = () => {
     const {search} = useSearchStore();
+    const {playSong} = usePlayerStore();
     const debouncedSearch = useDebounce(search, 300);
     const {
         data, error, isLoading
-    } = useSWR(debouncedSearch ? ['search', debouncedSearch] : null, () => getSearchResults(debouncedSearch));
+    } = useSWR(debouncedSearch ? ['search', debouncedSearch] : null, () => MusicServiceInstance.getSearchResults(debouncedSearch));
 
     if (isLoading) return <div>
         <h1>Loading.....</h1>
@@ -32,7 +34,7 @@ const SearchResults = () => {
                                  className={"h-36 w-36 rounded-xl"}/>
                             <div className={"flex flex-col ml-5"}>
                                 <h1 className={"text-2xl mukta-medium "}>{data?.topQuery?.results[0]?.title}</h1>
-                                <p className={"text-sm montserrat-font mt-1"}>{data?.topQuery?.results[0]?.singers}</p>
+                                <p className={"text-xs montserrat-font mt-1"}>{truncateString(decodeHtmlEntities(data?.topQuery?.results[0]?.singers))}</p>
                             </div>
                         </div>
                     </div>
@@ -43,11 +45,12 @@ const SearchResults = () => {
                 <h1 className={"mukta-medium text-2xl"}>Songs</h1>
                 {data?.songs?.results?.map((song) => {
                     return <div key={song.id} className={"flex m-2"}>
-                        <div className={"flex items-center  w-96 hover:bg-[#18181b] cursor-pointer p-3 rounded-xl"}>
+                        <div className={"flex items-center w-[25rem] hover:bg-[#18181b] cursor-pointer p-3 rounded-xl"}
+                             onClick={() => playSong(song.id)}>
                             <img src={song.image[1].url} alt="" className={"h-12 w-12 rounded-xl"}/>
                             <div className={"flex flex-col ml-2"}>
-                                <h3 className={"nunito-sans-bold"}>{song.title}</h3>
-                                <p className={"text-sm text-[#6a6a6a] nunito-sans-bold"}>{song.singers}</p>
+                                <h3 className={"nunito-sans-bold"}>{decodeHtmlEntities(song.title)}</h3>
+                                <p className={"text-xs text-[#6a6a6a] nunito-sans-bold"}>{truncateString(decodeHtmlEntities(song.singers))}</p>
                             </div>
                         </div>
                     </div>
@@ -65,21 +68,17 @@ const SearchResults = () => {
 
                         <img src={album.image[1].url} alt="" className={"rounded-xl"}/>
 
-                        <div style={{width: "calc(100% - 1rem)"}} className={"flex flex-col mt-1"}>
-                            <h3 className={"mt-1 mb-1 nunito-sans-bold"} style={{
-                                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"
-                            }} dangerouslySetInnerHTML={{__html: album.title}}></h3>
-                            <p style={{
-                                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"
-                            }} className={"text-xs text-[#6a6a6a] nunito-sans-bold"}><span
-                                className={"mr-1"}>{album.year} •</span>{album.artist}</p>
+                        <div className={"flex flex-col mt-1"}>
+                            <h3 className={"mt-1 mb-1 nunito-sans-bold"}>{truncateString(decodeHtmlEntities(album.title))}</h3>
+                            <p className={"text-xs text-[#6a6a6a] nunito-sans-bold"}><span
+                                className={"mr-1"}>{album.year} •</span>{truncateString(decodeHtmlEntities(album.artist))}
+                            </p>
                         </div>
                     </div>
 
                 })}
             </div>
-        </div>
-        }
+        </div>}
 
         {/*artists*/}
         {data?.artists?.results.length > 0 && <div className={"flex flex-col"}>
@@ -92,19 +91,15 @@ const SearchResults = () => {
 
                         <img src={artist.image[1].url} alt="" className={"rounded-xl"}/>
 
-                        <div style={{width: "calc(100% - 1rem)"}} className={"flex flex-col mt-1"}>
-                            <h3 className={"mt-1 mb-1 nunito-sans-bold"} style={{
-                                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"
-                            }} dangerouslySetInnerHTML={{__html: artist.title}}></h3>
-
-                            <p className={"text-xs text-[#6a6a6a] nunito-sans-bold"}>{artist.description}</p>
+                        <div className={"flex flex-col mt-1"}>
+                            <h3 className={"mt-1 mb-1 nunito-sans-bold"}>{truncateString(decodeHtmlEntities(artist.title))}</h3>
+                            <p className={"text-xs text-[#6a6a6a] nunito-sans-bold"}>{truncateString(decodeHtmlEntities(artist.description))}</p>
                         </div>
                     </div>
 
                 })}
             </div>
-        </div>
-        }
+        </div>}
 
         {/*playlists*/}
         {data?.playlists?.results.length > 0 && <div className={"flex flex-col"}>
@@ -117,23 +112,18 @@ const SearchResults = () => {
 
                         <img src={playlist.image[1].url} alt="" className={"rounded-xl"}/>
 
-                        <div style={{width: "calc(100% - 1rem)"}} className={"flex flex-col mt-1"}>
-                            <h3 className={"mt-1 mb-1 nunito-sans-bold"} style={{
-                                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"
-                            }} dangerouslySetInnerHTML={{__html: playlist.title}}></h3>
-
-                            <p style={{
-                                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"
-                            }} className={"text-xs"}><span
-                                className={"mr-1"}>{playlist.language} •</span>{playlist.description}</p>
+                        <div className={"flex flex-col mt-1"}>
+                            <h3 className={"mt-1 mb-1 nunito-sans-bold"}>{truncateString(decodeHtmlEntities(playlist.title))}</h3>
+                            <p className={"text-xs"}><span
+                                className={"mr-1"}>{truncateString(decodeHtmlEntities(playlist.language))} •</span>{truncateString(decodeHtmlEntities(playlist.description))}
+                            </p>
 
                         </div>
                     </div>
 
                 })}
             </div>
-        </div>
-        }
+        </div>}
 
     </div>);
 };
