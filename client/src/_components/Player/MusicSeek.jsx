@@ -17,10 +17,7 @@ const MusicSeek = ({AudioRef}) => {
             };
             AudioRef.current.addEventListener('timeupdate', handleTimeUpdate);
             AudioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
-            return () => {
-                AudioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-                AudioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
-            };
+
         }
     }, [AudioRef]);
 

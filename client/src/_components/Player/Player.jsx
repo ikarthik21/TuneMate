@@ -41,14 +41,14 @@ const Player = () => {
 
 
     return (<div
-        className={"fixed bottom-0 bg-[#18181b]  border-t border-[#2D2E35]  left-0 w-full  pr-4 pl-4   rounded text-amber-50"}>
+        className={"fixed bottom-0 bg-[#18181b]  border-t border-[#2D2E35]  left-0 w-full  pr-4 pl-4   rounded text-amber-50 z-50"}>
         <div className={"flex justify-between items-center"}>
-            <div className={" flex-1"}>
+            <div className={"flex-1"}>
                 <MusicInfo song={song}/>
             </div>
             <div className={"flex flex-col justify-center items-center flex-1"}>
                 <audio src={song?.downloadUrl[4].url} autoPlay ref={AudioRef}></audio>
-                <div className={"m-2 mt-4 flex items-center justify-center"}>
+                <div className={" mt-4 flex items-center justify-center"}>
                     <IoPlaySkipBack size={20} color="#4d4d4d" className={"mr-8 cursor-pointer"}/>
 
                     <div className={"bg-white mr-8 p-2 rounded-full flex items-center justify-center cursor-pointer"}

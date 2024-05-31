@@ -1,10 +1,10 @@
 import {truncateString, decodeHtmlEntities} from "@/utils/MusicUtils.js";
 
 const MusicInfo = ({song}) => {
-    if (!song) return null;
 
     const getAllArtists = (song) => {
-        return song?.artists.primary.map(artist => artist.name).join("  ") || "";
+        const artists = song?.artists.primary.map(artist => artist.name).join("  ") || "";
+        return truncateString(artists, 50);
     };
 
     return (
@@ -15,7 +15,7 @@ const MusicInfo = ({song}) => {
             <div className="flex flex-col ml-4 justify-center">
                 <h3 className="mt-1 mb-1 nunito-sans-bold">{decodeHtmlEntities(song?.name)}</h3>
                 <div className="flex items-center">
-                    <p className="text-xs mr-1">{truncateString(getAllArtists(song))}</p>
+                    <p className="text-xs mr-1">{truncateString(decodeHtmlEntities(getAllArtists(song)))}</p>
                 </div>
             </div>
         </div>);

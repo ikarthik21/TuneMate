@@ -4,15 +4,20 @@ export const formatTime = (seconds) => {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 };
 
-export function truncateString(str, limit = 50) {
-    if (str.length > limit) {
-        return str.slice(0, limit) + '...';
+export function truncateString(str, length = 50) {
+    if (typeof str !== 'string') {
+        return '';
     }
-    return str;
+    return str.length > length ? str.substring(0, length) + '...' : str;
 }
 
-export const decodeHtmlEntities = (str) => {
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = str;
-    return textarea.value;
-};
+export function decodeHtmlEntities(text) {
+    if (typeof text !== 'string') {
+        return '';
+    }
+    const element = document.createElement('div');
+    if (text) {
+        element.innerHTML = text;
+    }
+    return element.textContent || element.innerText || '';
+}

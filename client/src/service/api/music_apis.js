@@ -26,6 +26,35 @@ class MusicService {
         }
     };
 
+    getAlbumById = async (id) => {
+        try {
+            const response = await apiClient.get(ENDPOINTS.album(id));
+            return response.data.data;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    getArtistById = async (id) => {
+        try {
+            const response = await apiClient.get(ENDPOINTS.artist(id));
+            return response.data.data;
+        } catch (err) {
+            return err;
+        }
+
+    }
+
+    getPlaylistById = async (id) => {
+        try {
+            const response = await apiClient.get(ENDPOINTS.playlist(id));
+            return response.data.data;
+        } catch (err) {
+            return err;
+        }
+
+    }
+
 
 }
 
