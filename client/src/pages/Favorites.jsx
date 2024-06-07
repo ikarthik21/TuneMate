@@ -40,39 +40,44 @@ const Favorites = () => {
     </div>);
 
     const renderSongsList = () => (<div className="flex flex-col mt-4 w-[50vw] mb-5">
-        {favorites?.map((song, index) => (<div
-            key={song.id}
-            className="flex flex-col m-1 p-3 cursor-pointer hover:bg-[#18181b] rounded-xl"
-            onClick={() => playSong(song.id)}
-            onMouseEnter={() => handleMouseEnter(song.id)}
-            onMouseLeave={handleMouseLeave}
-        >
-            <div className="flex items-center">
-                <div className="mr-2">
-                    <h3>{index + 1}</h3>
-                </div>
-                <div className="flex items-center flex-1 ml-2">
-                    <img src={song.imageUrl} alt={song.name} className="h-9 w-9 rounded"/>
-                    <div className={"flex flex-col ml-4"}>
-                        <h1 className="nunito-sans-bold"> {truncateString(decodeHtmlEntities(song.name))}</h1>
-                        <p className="mr-2 text-xs text-[#6a6a6a] nunito-sans-bold">
-                            {truncateString(decodeHtmlEntities(song.primaryArtists))}
-                        </p>
+        {favorites.length > 0 ? <>
+            {favorites?.map((song, index) => (<div
+                key={song.id}
+                className="flex flex-col m-1 p-3 cursor-pointer hover:bg-[#18181b] rounded-xl"
+                onClick={() => playSong(song.id)}
+                onMouseEnter={() => handleMouseEnter(song.id)}
+                onMouseLeave={handleMouseLeave}
+            >
+                <div className="flex items-center">
+                    <div className="mr-2">
+                        <h3>{index + 1}</h3>
+                    </div>
+                    <div className="flex items-center flex-1 ml-2">
+                        <img src={song.imageUrl} alt={song.name} className="h-9 w-9 rounded"/>
+                        <div className={"flex flex-col ml-4"}>
+                            <h1 className="nunito-sans-bold"> {truncateString(decodeHtmlEntities(song.name))}</h1>
+                            <p className="mr-2 text-xs text-[#6a6a6a] nunito-sans-bold">
+                                {truncateString(decodeHtmlEntities(song.primaryArtists))}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-center">
+                        <div>
+                            {hoveredItemId === song.id && (<IoMdRemoveCircle color={"#59c2ef"}
+                                                                             size={20}
+                                                                             onClick={(e) => removeSongFromFavorites(e, song.id)}
+                            />)}
+                        </div>
+                        <div>
+                            <p className={"ml-4"}>{formatTime(song.duration)}</p>
+                        </div>
                     </div>
                 </div>
-                <div className="flex items-center justify-center">
-                    <div>
-                        {hoveredItemId === song.id && (<IoMdRemoveCircle color={"#59c2ef"}
-                                                                         size={20}
-                                                                         onClick={(e) => removeSongFromFavorites(e, song.id)}
-                        />)}
-                    </div>
-                    <div>
-                        <p className={"ml-4"}>{formatTime(song.duration)}</p>
-                    </div>
-                </div>
-            </div>
-        </div>))}
+            </div>))}</> : <div className={"flex items-center min-h-48 justify-center"}>
+            <h1>No Favorite Songs added</h1>
+
+        </div>}
+
     </div>);
 
     return (<Wrapper>
