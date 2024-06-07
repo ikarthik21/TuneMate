@@ -5,7 +5,7 @@ import usePlayerStore from "@/store/use-player.js";
 import Wrapper from "@/pages/Wrapper.jsx";
 import {IoMdRemoveCircle} from "react-icons/io";
 import useHover from "@/hooks/useHover.js";
-import FavoritesLogo from '@/assets/images/favorites.png';
+import {MdFavorite} from "react-icons/md";
 
 const Favorites = () => {
     const {playSong} = usePlayerStore();
@@ -27,11 +27,9 @@ const Favorites = () => {
 
 
     const renderAlbumDetails = () => (<div className="flex items-center">
-        <div className="flex items-end pt-20 p-4">
-            <img
-                src={FavoritesLogo}
-                alt={"Favorites"}
-                className="rounded transform transition-transform duration-500 hover:scale-105 h-28 w-28"/>
+        <div className="flex items-end pt-20 p-4 ">
+
+            <MdFavorite size={120} cursor={"pointer"} color={"#59c2ef"}/>
             <div className="ml-8 flex items-start flex-col">
                 <h1 className="text-7xl ubuntu-bold">Your Favorites</h1>
                 <p className={"mt-4 ml-4"}>{favorites.length} Songs</p>
