@@ -2,7 +2,7 @@ import Wrapper from "@/pages/Wrapper.jsx";
 import useSWR from "swr";
 import MusicServiceInstance from "@/service/api/music_apis.js";
 import {useParams} from "react-router-dom";
-import {formatTime, truncateString} from '@/utils/MusicUtils.js';
+import {formatTime, truncateString, decodeHtmlEntities} from '@/utils/MusicUtils.js';
 import usePlayerStore from "@/store/use-player.js";
 
 const Album = () => {
@@ -26,7 +26,7 @@ const Album = () => {
                     className="rounded transform transition-transform duration-500 hover:scale-105 h-40 w-40"
                 />
                 <div className="ml-8">
-                    <h1 className="text-7xl ubuntu-bold">{truncateString(album?.name, 15)}</h1>
+                    <h1 className="text-7xl ubuntu-bold">{truncateString(decodeHtmlEntities(album?.name), 15)}</h1>
                     <p className="mt-4">{album?.description}</p>
                     <p>{album?.songCount} Songs</p>
                 </div>
@@ -47,7 +47,7 @@ const Album = () => {
                             <h3>{index + 1}</h3>
                         </div>
                         <div className="flex flex-col flex-1 ml-2">
-                            <h1 className="nunito-sans-bold">{song.name}</h1>
+                            <h1 className="nunito-sans-bold">{decodeHtmlEntities(song.name)}</h1>
                             <div className="flex items-center">
                                 {song.artists.primary.map(artist => (
                                     <p

@@ -21,3 +21,9 @@ export function decodeHtmlEntities(text) {
     }
     return element.textContent || element.innerText || '';
 }
+
+
+export const getAllArtists = (song) => {
+    const artists = song?.artists.primary.map(artist => artist.name).join("  ") || "";
+    return truncateString(artists, 50);
+};

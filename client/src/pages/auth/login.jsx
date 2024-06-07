@@ -1,5 +1,5 @@
 import useFormData from "@/hooks/useFormData.js";
-import {loginUser} from "@/service/api/api.js";
+import tuneMateInstance from "@/service/api/api.js";
 import Toast from "@/utils/Toast.js";
 import {useState} from "react";
 import Register from "@/pages/auth/register.jsx";
@@ -13,7 +13,7 @@ const Login = ({closeModal}) => {
 
     const {handleChange, handleSubmit} = useFormData({
         email: '', password: ''
-    }, loginUser);
+    }, tuneMateInstance.loginUser);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -22,7 +22,6 @@ const Login = ({closeModal}) => {
             if (response.data.accessToken) {
                 setAccessToken(response.data.accessToken);
                 closeModal();
-
             }
             Toast({type: response.data.type, message: response.data.message});
         }

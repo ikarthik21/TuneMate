@@ -1,5 +1,5 @@
 import useFormData from "@/hooks/useFormData.js";
-import {registerUser} from "@/service/api/api.js";
+import tuneMateInstance from "@/service/api/api.js";
 import Toast from "@/utils/Toast.js";
 
 
@@ -8,7 +8,7 @@ const Register = ({setShowLogin}) => {
 
     const {data, handleChange, handleSubmit} = useFormData({
         email: '', password: '', confirmPassword: '',
-    }, registerUser);
+    }, tuneMateInstance.registerUser);
 
     const handleRegister = async (e) => {
         e.preventDefault();

@@ -14,11 +14,12 @@ datasource db {
 }
 
 model users {
-  id         String  @id @default(uuid()) @map("_id")
-  email      String  @unique
-  username   String  @unique @default("")
-  password   String  @default("")
-  profileImg String  @default("")
-  role       String  @default("user")
-  verified   Boolean @default(false)
+  id            String   @id @default(uuid()) @map("_id")
+  email         String   @unique
+  username      String   @unique @default("")
+  password      String   @default("")
+  profileImg    String   @default("")
+  role          String   @default("user")
+  verified      Boolean  @default(false)
+  favoriteSongs String[] @default([])
 }

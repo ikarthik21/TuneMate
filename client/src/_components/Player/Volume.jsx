@@ -28,9 +28,9 @@ const VolumeSlider = ({volume, handleVolumeChange, handleMute}) => {
                 max="100"
                 value={volume}
                 onChange={handleVolumeChange}
-                className="h-1 slider ml-4"
+                className="slider ml-4"
                 style={{
-                    background: `linear-gradient(to right, #59c2ef ${volume}%, #ccc ${volume}%)`
+                    background: `linear-gradient(to right, #0066C7 ${volume}%, #ccc ${volume}%)`
                 }}
             />
         </div>

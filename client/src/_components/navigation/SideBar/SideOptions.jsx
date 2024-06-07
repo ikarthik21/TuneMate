@@ -1,4 +1,6 @@
-import UserLogo from '@/assets/images/user.png';
+import {Link} from 'react-router-dom';
+import {MdFavorite} from "react-icons/md";
+
 
 const SideOptions = () => {
     return (<div className={"mt-4  "}>
@@ -6,10 +8,14 @@ const SideOptions = () => {
             <h1>Your Playlists</h1>
             <div className={"flex flex-col mt-4"}>
 
-                <div className={"flex items-center cursor-pointer bg-neutral-800 p-2 rounded overflow-hidden"}>
-                    <img src={UserLogo} alt="" className={"h-11  w-11 rounded-full"}/>
-                    <h1 className={"ml-4"}>Coming Soon</h1>
-                </div>
+
+                <Link to={"/favorites"}>
+                    <div className={"flex items-center cursor-pointer bg-[#222328] px-2 py-3 rounded overflow-hidden"}>
+                        <MdFavorite size={30} cursor={"pointer"} color={"#59c2ef"}/>
+                        <h1 className={"ml-4"}>Favorites</h1>
+                    </div>
+                </Link>
+
             </div>
 
         </div>

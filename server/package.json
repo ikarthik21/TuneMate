@@ -5,7 +5,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start" : "node --env-file .env server.js",
+    "start": "node --env-file .env server.js",
+    "startdev": "nodemon --env-file .env server.js",
     "build": "npx prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "5.13.0",
+    "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "express": "^4.19.2",
