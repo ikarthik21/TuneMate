@@ -15,7 +15,7 @@ const Favorites = () => {
     const removeSongFromFavorites = async (e, songId) => {
         try {
             e.stopPropagation();
-            const response = await tuneMateInstance.ManageSongInFavorites(songId);
+            await tuneMateInstance.ManageSongInFavorites(songId);
             mutate("favorites");
         } catch (error) {
             console.error("Error removing song from favorites:", error);
