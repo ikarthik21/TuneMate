@@ -4,15 +4,20 @@ import useSWR from "swr";
 import MusicServiceInstance from "@/service/api/music_apis.js";
 import {decodeHtmlEntities, formatTime, truncateString} from "@/utils/MusicUtils.js";
 import Wrapper from "@/pages/Wrapper.jsx";
+import {FaPlay} from "react-icons/fa";
 
 const Playlist = () => {
     const {id} = useParams();
-    const {playSong} = usePlayerStore();
+    const {playSong, loadPlaylist, playSongByIndex} = usePlayerStore();
 
     const {data: playlist, error, isLoading} = useSWR(
         id ? ['playlist', id] : null,
         () => MusicServiceInstance.getPlaylistById(id)
     );
+
+    const handlePlayWholeList = async () => {
+        await loadPlaylist(playlist?.songs);
+    };
 
     if (isLoading) return <div><h1>Loading.....</h1></div>;
     if (error) return <div><h1>Error.....</h1></div>;
@@ -38,11 +43,19 @@ const Playlist = () => {
 
     const renderSongsList = () => (
         <div className="flex flex-col mt-4 w-[50vw]">
+            <div className={"items-center flex "}>
+                <div
+                    className={"p-4 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer ml-8 mt-4 mb-4"}
+                    onClick={handlePlayWholeList}>
+                    <FaPlay size={14} color={"black"} className={"relative  left-[2px]"}/>
+                </div>
+            </div>
+
             {playlist?.songs.map((song, index) => (
                 <div
                     key={song.id}
                     className="flex flex-col m-1 p-3 cursor-pointer hover:bg-[#18181b] rounded-xl"
-                    onClick={() => playSong(song.id)}
+                    onClick={() => playlist?.songs.length > 0 ? playSongByIndex(index) : playSong(song.id)}
                 >
                     <div className="flex items-center">
                         <div className="mr-2">

@@ -1,16 +1,27 @@
-import {FaPlay, FaPause} from "react-icons/fa";
+import {FaPause, FaPlay} from "react-icons/fa";
 import MusicSeek from "@/_components/Player/MusicSeek.jsx";
 import Volume from "@/_components/Player/Volume.jsx";
 import MusicInfo from "@/_components/Player/MusicInfo.jsx";
 import {IoPlaySkipBack, IoPlaySkipForward} from "react-icons/io5";
 import usePlayerStore from '@/store/use-player.js';
-import {useRef} from "react";
+import {useEffect, useRef} from "react";
 
 
 const Player = () => {
-    const {song, isPlaying, setIsPlaying, volume, setVolume} = usePlayerStore();
+    const {song, isPlaying, setIsPlaying, volume, setVolume, playNext, playPrevious} = usePlayerStore();
 
     const AudioRef = useRef();
+
+    useEffect(() => {
+        const audio = AudioRef.current;
+        const handleEnded = async () => {
+            await playNext();
+        };
+        audio.addEventListener('ended', handleEnded);
+        return () => {
+            audio.removeEventListener('ended', handleEnded);
+        };
+    }, [playNext]);
 
 
     const handleAudioPlay = () => {
@@ -49,7 +60,7 @@ const Player = () => {
             <div className={"flex flex-col justify-center items-center flex-1"}>
                 <audio src={song?.downloadUrl[4].url} autoPlay ref={AudioRef}></audio>
                 <div className={" mt-4 flex items-center justify-center"}>
-                    <IoPlaySkipBack size={20} color="#4d4d4d" className={"mr-8 cursor-pointer"}/>
+                    <IoPlaySkipBack size={20} className={"mr-8 cursor-pointer"} onClick={playPrevious}/>
 
                     <div className={"bg-white mr-8 p-2 rounded-full flex items-center justify-center cursor-pointer"}
                          onClick={handleAudioPlay}>
@@ -57,7 +68,7 @@ const Player = () => {
                             <FaPlay size={15} color={"black"} className={" relative left-[2px] "}/>}
                     </div>
 
-                    <IoPlaySkipForward size={20} color="#4d4d4d" className={"cursor-pointer"}/>
+                    <IoPlaySkipForward size={20} className={"cursor-pointer"} onClick={playNext}/>
                 </div>
                 <div className={"m-2"}>
                     <MusicSeek AudioRef={AudioRef}/>
