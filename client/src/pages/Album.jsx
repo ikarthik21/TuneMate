@@ -8,7 +8,7 @@ import {FaPlay} from "react-icons/fa";
 
 const Album = () => {
     const {id} = useParams();
-    const {playSong, loadPlaylist, playSongByIndex} = usePlayerStore();
+    const {playSong, playlist, loadPlaylist, playSongByIndex} = usePlayerStore();
 
     const {
         data: album,
@@ -52,7 +52,7 @@ const Album = () => {
         {album?.songs.map((song, index) => (<div
             key={song.id}
             className="flex flex-col m-1 p-3 cursor-pointer hover:bg-[#18181b] rounded-xl"
-            onClick={() => album?.songs.length > 0 ? playSongByIndex(index) : playSong(song.id)}
+            onClick={() => playlist.length > 0 ? playSongByIndex(index) : playSong(song.id)}
 
         >
             <div className="flex items-center">
