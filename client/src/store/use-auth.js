@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import {jwtDecode} from "jwt-decode";
+import {tuneMateClient} from '@/service/api/api.js';
 
 const useAuthStore = create((set) => ({
     accessToken: getAccessToken(),
@@ -14,6 +15,7 @@ const useAuthStore = create((set) => ({
     },
     removeAccessToken: () => {
         document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+        delete tuneMateClient.defaults.headers['Authorization'];
         set({accessToken: null, isAuthenticated: false, username: null});
     },
 }));

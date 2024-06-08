@@ -1,5 +1,5 @@
 import useFormData from "@/hooks/useFormData.js";
-import tuneMateInstance from "@/service/api/api.js";
+import tuneMateInstance, {tuneMateClient} from "@/service/api/api.js";
 import Toast from "@/utils/Toast.js";
 import {useState} from "react";
 import Register from "@/pages/auth/register.jsx";
@@ -21,6 +21,7 @@ const Login = ({closeModal}) => {
         if (response.data) {
             if (response.data.accessToken) {
                 setAccessToken(response.data.accessToken);
+                tuneMateClient.defaults.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
                 closeModal();
             }
             Toast({type: response.data.type, message: response.data.message});

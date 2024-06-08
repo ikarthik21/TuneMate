@@ -1,15 +1,15 @@
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import usePlayerStore from "@/store/use-player.js";
 import useSWR from "swr";
 import MusicServiceInstance from "@/service/api/music_apis.js";
-import { truncateString, decodeHtmlEntities, formatTime } from "@/utils/MusicUtils.js";
+import {decodeHtmlEntities, formatTime, truncateString} from "@/utils/MusicUtils.js";
 import Wrapper from "@/pages/Wrapper.jsx";
 
 const Playlist = () => {
-    const { id } = useParams();
-    const { playSong } = usePlayerStore();
+    const {id} = useParams();
+    const {playSong} = usePlayerStore();
 
-    const { data: playlist, error, isLoading } = useSWR(
+    const {data: playlist, error, isLoading} = useSWR(
         id ? ['playlist', id] : null,
         () => MusicServiceInstance.getPlaylistById(id)
     );
@@ -49,7 +49,7 @@ const Playlist = () => {
                             <h3>{index + 1}</h3>
                         </div>
                         <div className="flex items-center flex-1 ml-2">
-                            <img src={song.image[1].url} alt={song.name} className="h-9 w-9 rounded" />
+                            <img src={song.image[1].url} alt={song.name} className="h-9 w-9 rounded"/>
                             <h1 className="nunito-sans-bold ml-4">{song.name}</h1>
                         </div>
                         <div className="flex items-center">

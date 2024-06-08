@@ -5,7 +5,7 @@ import {ENDPOINTS} from "@/service/API_ENDPOINTS.js";
 const baseURL = import.meta.env.VITE_BACKEND_URL;
 const token = Cookies.get('accessToken');
 
-const tuneMateClient = axios.create({
+export const tuneMateClient = axios.create({
     baseURL, headers: {
         'Authorization': token ? `Bearer ${token}` : undefined
     }

@@ -2,18 +2,22 @@ import jwt from "jsonwebtoken";
 
 export const extractAndVerifyToken = (authHeader) => {
     if (!authHeader) {
-        throw new Error('Authorization header missing');
+        console.log('Authorization header missing');
+        return false;
     }
 
     const token = authHeader.split(' ')[1];
 
     if (!token) {
-        throw new Error('Token missing');
+        console.log('Token missing');
+        return false;
     }
+
     try {
         return jwt.verify(token, process.env.TOKEN_SECRET);
     } catch (err) {
-        throw new Error('Invalid token');
+        console.log('Invalid token');
+        return false;
     }
 };
 

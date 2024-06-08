@@ -1,16 +1,18 @@
-import {truncateString, decodeHtmlEntities, getAllArtists} from "@/utils/MusicUtils.js";
+import {decodeHtmlEntities, getAllArtists, truncateString} from "@/utils/MusicUtils.js";
 import {MdFavorite} from "react-icons/md";
 import tuneMateInstance from '@/service/api/api.js';
 import Toast from "@/utils/Toast.js";
 import useSWR, {mutate} from "swr";
 import {IoMdAddCircle} from "react-icons/io";
+import useAuthStore from "@/store/use-auth.js";
 
 
 // eslint-disable-next-line react/prop-types
 const MusicInfo = ({song}) => {
+    const {isAuthenticated} = useAuthStore();
     const {
         data, error
-    } = useSWR(song?.id ? `checkinfavorites-${song.id}` : null, () => tuneMateInstance.checkSonginFavorites(song.id));
+    } = useSWR(song?.id && isAuthenticated ? `checkinfavorites-${song.id}` : null, () => tuneMateInstance.checkSonginFavorites(song.id));
 
 
     const handleFavorite = async (song_id) => {
@@ -42,10 +44,17 @@ const MusicInfo = ({song}) => {
             </div>
             <div className="ml-4">
 
-                {data?.isFavorite ?
-                    <MdFavorite size={22} cursor={"pointer"} color={"#59c2ef"} onClick={() => handleFavorite(song.id)}
-                    /> : <IoMdAddCircle size={22} cursor={"pointer"} color={"#59c2ef"}
-                                        onClick={() => handleFavorite(song.id)}/>}
+
+                {
+                    isAuthenticated && <>
+                        {data?.isFavorite ?
+                            <MdFavorite size={22} cursor={"pointer"} color={"#59c2ef"}
+                                        onClick={() => handleFavorite(song.id)}
+                            /> : <IoMdAddCircle size={22} cursor={"pointer"} color={"#59c2ef"}
+                                                onClick={() => handleFavorite(song.id)}/>}
+                    </>
+                }
+
 
             </div>
         </div>)}

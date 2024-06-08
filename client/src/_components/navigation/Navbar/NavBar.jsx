@@ -22,7 +22,7 @@ const NavBar = ({openModal}) => {
 
 
     return (<nav
-        className="flex h-[70px] text-white bg-[#18181b] fixed top-0 left-0 p-2 lg:px-4 items-center w-full justify-between border-b border-[#2D2E35]">
+        className="flex h-[70px] text-white bg-[#18181b] fixed top-0 left-0 p-2 lg:px-4 items-center w-full justify-between border-b border-[#2D2E35] z-50">
         <Link to={"/"}>
             <h1 className="black-han-sans-regular text-2xl md:text-3xl ml-2 font-semibold tracking-wide text-amber-50">TuneMate</h1>
         </Link>
