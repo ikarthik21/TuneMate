@@ -8,6 +8,7 @@ import useAuthStore from "@/store/use-auth.js";
 import {decodeHtmlEntities, formatTime, truncateString} from "@/utils/MusicUtils.js";
 import {IoMdRemoveCircle} from "react-icons/io";
 import {FaPlay} from "react-icons/fa";
+import Toast from "@/utils/Toast.js";
 
 const Favorites = () => {
     const {playSong, loadPlaylist, playlist, playSongByIndex} = usePlayerStore();
@@ -20,7 +21,8 @@ const Favorites = () => {
     const removeSongFromFavorites = async (e, songId) => {
         try {
             e.stopPropagation();
-            await tuneMateInstance.ManageSongInFavorites(songId);
+            const response = await tuneMateInstance.ManageSongInFavorites(songId);
+            Toast({type: response.type, message: response.message, duration: 400});
             mutate("favorites");
         } catch (error) {
             console.error("Error removing song from favorites:", error);
