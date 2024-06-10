@@ -22,4 +22,5 @@ model users {
   role          String   @default("user")
   verified      Boolean  @default(false)
   favoriteSongs String[] @default([])
+  playerState   Json
 }

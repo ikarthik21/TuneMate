@@ -15,7 +15,7 @@ const Playlist = () => {
     } = useSWR(id ? ['playlist', id] : null, () => MusicServiceInstance.getPlaylistById(id));
 
     const handlePlayWholeList = async () => {
-        await loadPlaylist(PlayList?.songs);
+        await loadPlaylist({id: Playlist?.id, songs: PlayList?.songs});
     };
 
     if (isLoading) return <div><h1>Loading.....</h1></div>;
@@ -51,7 +51,8 @@ const Playlist = () => {
         {PlayList?.songs.map((song, index) => (<div
             key={song.id}
             className="flex flex-col m-1 p-3 cursor-pointer hover:bg-[#18181b] rounded-xl"
-            onClick={() => playlist.length > 0 ? playSongByIndex(index) : playSong(song.id)}
+            onClick={() => (playlist.songs.length > 0 && playlist.id === PlayList.id) ? playSongByIndex(index) : playSong(song.id)}
+
         >
             <div className="flex items-center">
                 <div className="mr-2">

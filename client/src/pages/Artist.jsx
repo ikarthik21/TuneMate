@@ -12,14 +12,12 @@ const Artist = () => {
     const {playSong, loadPlaylist, playlist, playSongByIndex} = usePlayerStore();
 
     const {
-        data: artist,
-        error,
-        isLoading
+        data: artist, error, isLoading
     } = useSWR(id ? ['artist', id] : null, () => MusicServiceInstance.getArtistById(id));
 
 
     const handlePlayWholeList = async () => {
-        await loadPlaylist(artist?.topSongs);
+        await loadPlaylist({id: artist.id, songs: artist?.topSongs});
     };
 
     if (isLoading) return <div><h1>Loading.....</h1></div>;
@@ -58,7 +56,7 @@ const Artist = () => {
         {artist?.topSongs.map((song, index) => (<div
             key={song.id}
             className="flex flex-col m-1 p-3 cursor-pointer hover:bg-[#18181b] rounded-xl"
-            onClick={() => playlist.length > 0 ? playSongByIndex(index) : playSong(song.id)}
+            onClick={() => (playlist.songs.length > 0 && playlist.id === artist.id) ? playSongByIndex(index) : playSong(song.id)}
         >
             <div className="flex items-center">
                 <div className="mr-2">

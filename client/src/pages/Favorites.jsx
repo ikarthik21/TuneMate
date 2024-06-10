@@ -31,7 +31,7 @@ const Favorites = () => {
 
 
     const handlePlayWholeList = async () => {
-        await loadPlaylist(favorites);
+        await loadPlaylist({id: "favsongs", songs: favorites});
     };
 
     if (isLoading) return <div><h1>Loading.....</h1></div>;
@@ -61,7 +61,7 @@ const Favorites = () => {
             {favorites?.length > 0 ? (favorites.map((song, index) => (<div
                 key={song.id}
                 className="flex flex-col m-1 p-3 cursor-pointer hover:bg-[#18181b] rounded-xl"
-                onClick={() => playlist.length > 0 ? playSongByIndex(index) : playSong(song.id)}
+                onClick={() => (playlist.songs.length > 0 && playlist.id === "favsongs") ? playSongByIndex(index) : playSong(song.id)}
                 onMouseEnter={() => handleMouseEnter(song.id)}
                 onMouseLeave={handleMouseLeave}
             >

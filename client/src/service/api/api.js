@@ -48,9 +48,27 @@ class TuneMateService {
             return err;
         }
     }
-    checkSonginFavorites = async (id) => {
+
+    checkSongInFavorites = async (id) => {
         try {
             const response = await tuneMateClient.post(ENDPOINTS.checkinfavorites, {id});
+            return response.data;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    savePlayerState = async (state) => {
+        try {
+            const response = await tuneMateClient.post(ENDPOINTS.savePlayerState, {playerState: state});
+            return response.data;
+        } catch (err) {
+            return err;
+        }
+    }
+    getPlayerState = async () => {
+        try {
+            const response = await tuneMateClient.get(ENDPOINTS.loadPlayerState);
             return response.data;
         } catch (err) {
             return err;

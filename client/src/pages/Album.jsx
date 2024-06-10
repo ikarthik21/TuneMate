@@ -9,16 +9,13 @@ import {FaPlay} from "react-icons/fa";
 const Album = () => {
     const {id} = useParams();
     const {playSong, playlist, loadPlaylist, playSongByIndex} = usePlayerStore();
-
     const {
-        data: album,
-        error,
-        isLoading
+        data: album, error, isLoading
     } = useSWR(id ? ['album', id] : null, () => MusicServiceInstance.getAlbumById(id));
 
 
     const handlePlayWholeList = async () => {
-        await loadPlaylist(album?.songs);
+        await loadPlaylist({id: album?.id, songs: album?.songs});
     };
 
     if (isLoading) return <div><h1>Loading.....</h1></div>;
@@ -52,7 +49,7 @@ const Album = () => {
         {album?.songs.map((song, index) => (<div
             key={song.id}
             className="flex flex-col m-1 p-3 cursor-pointer hover:bg-[#18181b] rounded-xl"
-            onClick={() => playlist.length > 0 ? playSongByIndex(index) : playSong(song.id)}
+            onClick={() => (playlist.songs.length > 0 && playlist.id === album.id) ? playSongByIndex(index) : playSong(song.id)}
 
         >
             <div className="flex items-center">

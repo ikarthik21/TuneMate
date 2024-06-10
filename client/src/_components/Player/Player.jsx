@@ -5,12 +5,24 @@ import MusicInfo from "@/_components/Player/MusicInfo.jsx";
 import {IoPlaySkipBack, IoPlaySkipForward} from "react-icons/io5";
 import usePlayerStore from '@/store/use-player.js';
 import {useEffect, useRef} from "react";
+import useAuthStore from "@/store/use-auth.js";
 
 
 const Player = () => {
-    const {song, isPlaying, setIsPlaying, volume, setVolume, playNext, playPrevious} = usePlayerStore();
+    const {
+        song, isPlaying, setIsPlaying, loadPlayerState, volume, setVolume, playNext, playPrevious
+    } = usePlayerStore();
+    const {isAuthenticated} = useAuthStore()
 
     const AudioRef = useRef();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            (async function load() {
+                await loadPlayerState();
+            })();
+        }
+    }, [isAuthenticated, loadPlayerState]);
 
     useEffect(() => {
         const audio = AudioRef.current;
@@ -34,21 +46,8 @@ const Player = () => {
         }
     };
 
-    const handleVolumeChange = (e) => {
-        const newVolume = Number(e.target.value);
-        setVolume(newVolume);
-        AudioRef.current.volume = newVolume / 100;
-    }
 
-    const handleMute = () => {
-        if (volume > 0) {
-            setVolume(0);
-            AudioRef.current.volume = 0;
-        } else {
-            setVolume(50);
-            AudioRef.current.volume = 0.5;
-        }
-    };
+
 
 
     return (<div
@@ -75,7 +74,7 @@ const Player = () => {
                 </div>
             </div>
             <div className="flex-1 flex justify-end items-center">
-                <Volume volume={volume} handleVolumeChange={handleVolumeChange} handleMute={handleMute}/>
+                <Volume AudioRef={AudioRef}/>
             </div>
         </div>
     </div>);

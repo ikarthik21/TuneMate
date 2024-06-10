@@ -12,7 +12,7 @@ const MusicInfo = ({song}) => {
     const {isAuthenticated} = useAuthStore();
     const {
         data, error
-    } = useSWR(song?.id && isAuthenticated ? `checkinfavorites-${song.id}` : null, () => tuneMateInstance.checkSonginFavorites(song.id));
+    } = useSWR(song?.id && isAuthenticated ? `checkinfavorites-${song.id}` : null, () => tuneMateInstance.checkSongInFavorites(song.id));
 
 
     const handleFavorite = async (song_id) => {
