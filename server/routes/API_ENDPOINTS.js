@@ -3,7 +3,6 @@ const ENDPOINTS = {
     register: "/auth/register",
     ManageSongInFavorites: '/songs/favorites',
     favorites: "/user/favorites",
-    checkinfavorites: "/user/favorites/check",
     updatePlayerState: "/user/updatePlayerState",
     getPlayerState: "/user/getPlayerState"
 }

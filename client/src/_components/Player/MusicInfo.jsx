@@ -2,35 +2,25 @@ import {decodeHtmlEntities, getAllArtists, truncateString} from "@/utils/MusicUt
 import {MdFavorite} from "react-icons/md";
 import tuneMateInstance from '@/service/api/api.js';
 import Toast from "@/utils/Toast.js";
-import useSWR, {mutate} from "swr";
 import {IoMdAddCircle} from "react-icons/io";
 import useAuthStore from "@/store/use-auth.js";
+import usePlayerStore from "@/store/use-player.js";
 
 
 // eslint-disable-next-line react/prop-types
 const MusicInfo = ({song}) => {
     const {isAuthenticated} = useAuthStore();
-    const {data, error} = useSWR(
-        song?.id && isAuthenticated ? `checkinfavorites-${song.id}` : null,
-        () => tuneMateInstance.checkSongInFavorites(song.id)
-    );
+    const {Favorites, getFavorites} = usePlayerStore();
 
     const handleFavorite = async (song_id) => {
         try {
             const response = await tuneMateInstance.ManageSongInFavorites(song_id);
             Toast({type: response.type, message: response.message, duration: 400});
-            mutate("favorites");
-            mutate(`checkinfavorites-${song.id}`);
+            await getFavorites();
         } catch (err) {
             console.log(`Error managing favorite status for song_id: }`, err);
-            mutate(`checkinfavorites-${song.id}`);
         }
     };
-
-
-    if (error) {
-        console.error("Error fetching favorite status:", error);
-    }
 
     return (<>
         {!!song && (<div className="flex items-center">
@@ -46,7 +36,7 @@ const MusicInfo = ({song}) => {
             <div className="ml-4">
                 {
                     isAuthenticated && <>
-                        {data?.isFavorite ?
+                        {Favorites.includes(song.id) ?
                             <MdFavorite size={22} cursor={"pointer"} color={"#59c2ef"}
                                         onClick={() => handleFavorite(song.id)}
                             /> : <IoMdAddCircle size={22} cursor={"pointer"} color={"#59c2ef"}

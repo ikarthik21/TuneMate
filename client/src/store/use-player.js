@@ -13,6 +13,7 @@ const usePlayerStore = create((set, get) => ({
     songId: '',
     currentSongIndex: null,
     volume: 50,
+    Favorites: [],
 
     setVolume: async (value) => {
         try {
@@ -105,6 +106,11 @@ const usePlayerStore = create((set, get) => ({
         } catch (error) {
             console.error('Error loading player state', error.message, error.stack);
         }
+    },
+    getFavorites: async () => {
+        const data = await tuneMateInstance.getFavorites();
+        const Favorites = data.map(item => item.id);
+        set({ Favorites: Favorites });
     }
 }));
 

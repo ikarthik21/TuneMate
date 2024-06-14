@@ -43,7 +43,6 @@ export const fetchPlaylistData = async (id, type) => {
         return {songs: data.topSongs}
     } else if (type === "FAVORITES") {
         const data = await tuneMateInstance.getFavorites();
-        console.log(data)
         return {id: "FAVORITES", songs: data}
     }
 };

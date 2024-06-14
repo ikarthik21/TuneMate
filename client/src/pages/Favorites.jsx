@@ -61,7 +61,7 @@ const Favorites = () => {
             {favorites?.length > 0 ? (favorites.map((song, index) => (<div
                 key={song.id}
                 className="flex flex-col m-1 p-3 cursor-pointer hover:bg-[#18181b] rounded-xl"
-                onClick={() => (playlist.songs.length > 0 && playlist.id === "favsongs") ? playSongByIndex(index) : playSong(song.id)}
+                onClick={() => (playlist.songs.length > 0 && playlist.id === "FAVORITES") ? playSongByIndex(index) : playSong(song.id)}
                 onMouseEnter={() => handleMouseEnter(song.id)}
                 onMouseLeave={handleMouseLeave}
             >

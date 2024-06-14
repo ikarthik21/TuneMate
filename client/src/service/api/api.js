@@ -48,16 +48,6 @@ class TuneMateService {
             return err;
         }
     }
-
-    checkSongInFavorites = async (id) => {
-        try {
-            const response = await tuneMateClient.post(ENDPOINTS.checkinfavorites, {id});
-            return response.data;
-        } catch (err) {
-            return err;
-        }
-    }
-
     updatePlayerState = async (state) => {
         try {
             const response = await tuneMateClient.post(ENDPOINTS.updatePlayerState, {state});
