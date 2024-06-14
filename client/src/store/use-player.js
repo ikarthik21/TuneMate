@@ -9,7 +9,7 @@ const usePlayerStore = create((set, get) => ({
     song: null,
     error: null,
     playlist: {},
-    b : false,
+    isPlaying: false,
     songId: '',
     currentSongIndex: null,
     volume: 50,
