@@ -2,7 +2,7 @@ import Wrapper from "@/pages/Wrapper.jsx";
 import {useParams} from "react-router-dom";
 import useSWR from "swr";
 import MusicServiceInstance from "@/service/api/music_apis.js";
-import {formatTime, truncateString} from "@/utils/MusicUtils.js";
+import {formatTime, decodeHtmlEntities, truncateString} from "@/utils/MusicUtils.js";
 import {MdVerified} from "react-icons/md";
 import usePlayerStore from "@/store/use-player.js";
 import {FaPlay} from "react-icons/fa";
@@ -17,7 +17,7 @@ const Artist = () => {
 
 
     const handlePlayWholeList = async () => {
-        await loadPlaylist({id: artist.id, songs: artist?.topSongs});
+        await loadPlaylist({id, type: "ARTIST", index: 0});
     };
 
     if (isLoading) return <div><h1>Loading.....</h1></div>;
@@ -64,7 +64,7 @@ const Artist = () => {
                 </div>
                 <div className="flex items-center flex-1 ml-2">
                     <img src={song.image[1].url} alt={song.name} className="h-9 w-9 rounded"/>
-                    <h1 className="nunito-sans-bold ml-4">{song.name}</h1>
+                    <h1 className="nunito-sans-bold ml-4">{decodeHtmlEntities(song.name)}</h1>
                 </div>
                 <div className="flex items-center">
                     <p>{formatTime(song.duration)}</p>

@@ -1,50 +1,79 @@
 import {create} from 'zustand';
 import MusicServiceInstance from '@/service/api/music_apis.js';
-import tuneMateInstance from "@/service/api/api.js";
+import tuneMateInstance from '@/service/api/api.js';
+import {throttle} from 'lodash';
+import {fetchPlaylistData} from '@/utils/MusicUtils.js';
 
 const usePlayerStore = create((set, get) => ({
-    isLoading: false, song: null, error: null, playlist: {}, isPlaying: false, currentSongIndex: null, volume: 60,
+    isLoading: false,
+    song: null,
+    error: null,
+    playlist: {},
+    b : false,
+    songId: '',
+    currentSongIndex: null,
+    volume: 50,
 
-    setVolume: (value) => {
-        set({volume: value});
-        get().savePlayerState();
+    setVolume: async (value) => {
+        try {
+            set({volume: value});
+            await tuneMateInstance.updatePlayerState({Volume: value});
+        } catch (error) {
+            console.error('Failed to set volume', error);
+        }
     },
 
-    setIsPlaying: (value) => set({isPlaying: value}),
+    setIsPlaying: (value) => {
+        set({isPlaying: value});
+    },
 
     playSong: async (id) => {
-        set({isLoading: true, error: null});
+        set({isLoading: true, error: null, songId: id});
         try {
             const response = await MusicServiceInstance.getSingleSong(id);
             const result = response[0];
-            set((state) => {
-                const newState = {...state, isLoading: false, isPlaying: true, song: result};
-                tuneMateInstance.savePlayerState(newState);
-                return newState;
-            });
+            set((state) => ({
+                ...state, isLoading: false, isPlaying: true, song: result
+            }));
+            await tuneMateInstance.updatePlayerState({songId: id});
         } catch (error) {
+            console.error('Error fetching song', error);
             set({isLoading: false, error: 'Error fetching song'});
         }
     },
 
-    loadPlaylist: async (list) => {
-        set({playlist: list, currentSongIndex: 0});
-        if (list.songs.length > 0) {
-            await get().playSong(list.songs[0].id);
+    loadPlaylist: async ({id, type, index}) => {
+        try {
+            const data = await fetchPlaylistData(id, type);
+            const songs = data.songs || [];
+            set({playlist: {id: data.id, songs}});
+            const currentSongIndex = index === 0 ? 0 : get().currentSongIndex;
+            set({currentSongIndex});
+            if (songs.length > 0) {
+                await get().playSong(songs[currentSongIndex].id);
+                await tuneMateInstance.updatePlayerState({
+                    playListId: id, currentSongIndex: currentSongIndex, playListType: type
+                });
+            } else {
+                console.warn('No songs found in the playlist');
+            }
+        } catch (error) {
+            console.error(`Error loading playlist (ID: ${id}, Type: ${type})`, error.message, error.stack);
         }
     },
 
-    playNext: async () => {
+    playNext: throttle(async () => {
         const {playlist, currentSongIndex} = get();
         if (currentSongIndex === null || currentSongIndex >= playlist.songs.length - 1) {
             return;
         }
         const nextIndex = currentSongIndex + 1;
         set({currentSongIndex: nextIndex});
+        await tuneMateInstance.updatePlayerState({currentSongIndex: nextIndex});
         await get().playSong(playlist.songs[nextIndex].id);
-    },
+    }, 500),
 
-    playPrevious: async () => {
+    playPrevious: throttle(async () => {
         const {playlist, currentSongIndex} = get();
         if (currentSongIndex === null || currentSongIndex <= 0) {
             return;
@@ -52,7 +81,8 @@ const usePlayerStore = create((set, get) => ({
         const prevIndex = currentSongIndex - 1;
         set({currentSongIndex: prevIndex});
         await get().playSong(playlist.songs[prevIndex].id);
-    },
+        await tuneMateInstance.updatePlayerState({currentSongIndex: prevIndex});
+    }, 500),
 
     playSongByIndex: async (index) => {
         const {playlist} = get();
@@ -60,20 +90,22 @@ const usePlayerStore = create((set, get) => ({
             return;
         }
         set({currentSongIndex: index});
+        await tuneMateInstance.updatePlayerState({currentSongIndex: index});
         await get().playSong(playlist.songs[index].id);
-    }, loadPlayerState: async () => {
+    },
+
+    loadPlayerState: async () => {
         try {
             const {playerState} = await tuneMateInstance.getPlayerState();
-            set(playerState);
-        } catch (err) {
-            console.log(err);
+            const {songId, currentSongIndex, playListId, Volume, playListType} = playerState;
+            await get().playSong(songId);
+            set({currentSongIndex});
+            set({volume: Volume});
+            await get().loadPlaylist({id: playListId, type: playListType});
+        } catch (error) {
+            console.error('Error loading player state', error.message, error.stack);
         }
-    },
-    savePlayerState: async () => {
-        const {song, playlist, isPlaying, currentSongIndex, volume, currentTime} = get();
-        const state = {song, playlist, isPlaying, currentSongIndex, volume, currentTime};
-        await tuneMateInstance.savePlayerState(state);
-    },
+    }
 }));
 
 export default usePlayerStore;

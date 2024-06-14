@@ -4,7 +4,7 @@ export const ENDPOINTS = {
     ManageSongInFavorites: 'api/songs/favorites',
     favorites: 'api/user/favorites',
     checkinfavorites: 'api/user/favorites/check',
-    savePlayerState: 'api/user/savePlayerState',
+    updatePlayerState: 'api/user/updatePlayerState',
     loadPlayerState: 'api/user/getPlayerState',
 };
 

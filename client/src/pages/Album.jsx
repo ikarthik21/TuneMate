@@ -15,8 +15,15 @@ const Album = () => {
 
 
     const handlePlayWholeList = async () => {
-        await loadPlaylist({id: album?.id, songs: album?.songs});
+        await loadPlaylist({id: album?.id, type: "ALBUM", index: 0});
     };
+
+
+    const allArtists = (artists) => {
+        let str = "";
+        artists.map(artist => str += artist.name)
+        return str;
+    }
 
     if (isLoading) return <div><h1>Loading.....</h1></div>;
     if (error) return <div><h1>Error.....</h1></div>;
@@ -59,12 +66,7 @@ const Album = () => {
                 <div className="flex flex-col flex-1 ml-2">
                     <h1 className="nunito-sans-bold">{decodeHtmlEntities(song.name)}</h1>
                     <div className="flex items-center">
-                        {song.artists.primary.map(artist => (<p
-                            key={artist.id}
-                            className="mr-2 text-xs text-[#6a6a6a] nunito-sans-bold"
-                        >
-                            {artist.name}
-                        </p>))}
+                        <p className="mr-2 text-xs text-[#6a6a6a] nunito-sans-bold">{truncateString(allArtists(album.artists.primary))}</p>
                     </div>
                 </div>
                 <div className="flex items-center">

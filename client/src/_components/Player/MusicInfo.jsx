@@ -10,10 +10,10 @@ import useAuthStore from "@/store/use-auth.js";
 // eslint-disable-next-line react/prop-types
 const MusicInfo = ({song}) => {
     const {isAuthenticated} = useAuthStore();
-    const {
-        data, error
-    } = useSWR(song?.id && isAuthenticated ? `checkinfavorites-${song.id}` : null, () => tuneMateInstance.checkSongInFavorites(song.id));
-
+    const {data, error} = useSWR(
+        song?.id && isAuthenticated ? `checkinfavorites-${song.id}` : null,
+        () => tuneMateInstance.checkSongInFavorites(song.id)
+    );
 
     const handleFavorite = async (song_id) => {
         try {
@@ -27,14 +27,15 @@ const MusicInfo = ({song}) => {
         }
     };
 
+
     if (error) {
         console.error("Error fetching favorite status:", error);
     }
 
     return (<>
-        {song && (<div className="flex items-center">
+        {!!song && (<div className="flex items-center">
             <div>
-                <img src={song?.image[1].url} alt={`song img`} className="h-14 w-14 rounded-xl"/>
+                <img src={song?.image[1].url} alt={`song img`} className="h-14 w-14 rounded-md"/>
             </div>
             <div className="flex flex-col ml-4 justify-center">
                 <h3 className="mt-1 mb-1 nunito-sans-bold">{truncateString(decodeHtmlEntities(song?.name), 25)}</h3>
@@ -43,8 +44,6 @@ const MusicInfo = ({song}) => {
                 </div>
             </div>
             <div className="ml-4">
-
-
                 {
                     isAuthenticated && <>
                         {data?.isFavorite ?
@@ -54,8 +53,6 @@ const MusicInfo = ({song}) => {
                                                 onClick={() => handleFavorite(song.id)}/>}
                     </>
                 }
-
-
             </div>
         </div>)}
     </>);

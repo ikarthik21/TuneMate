@@ -31,7 +31,7 @@ const Favorites = () => {
 
 
     const handlePlayWholeList = async () => {
-        await loadPlaylist({id: "favsongs", songs: favorites});
+        await loadPlaylist({id: "FAVORITES", type: "FAVORITES", index: 0});
     };
 
     if (isLoading) return <div><h1>Loading.....</h1></div>;

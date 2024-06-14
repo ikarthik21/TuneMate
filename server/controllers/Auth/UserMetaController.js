@@ -86,24 +86,38 @@ export const UserMetaController = () => {
             });
 
             return res.status(200).json({isFavorite: isFavorite});
-        }, async savePlayerState(req, res) {
+        }, async updatePlayerState(req, res) {
             const authUser = isAuthUser(req);
-            const {playerState} = req.body;
-            // if (!playerState) {
-            //     return res.status(200).json({message: "Can't save playerState"});
-            //
-            // }
-            const prisma = await getPrismaInstance();
 
-            const updatedUser = await prisma.users.update({
-                where: {
-                    id: authUser.userid
-                }, data: {
-                    playerState: playerState
-                }
-            });
+            if (!authUser) {
+                return res.status(401).json({error: 'Unauthorized'});
+            }
 
+            const {state} = req.body;
 
+            if (!state || typeof state !== 'object') {
+                return res.status(400).json({error: 'Invalid state'});
+            }
+
+            try {
+                const prisma = await getPrismaInstance();
+                const updatedUser = await prisma.users.update({
+                    where: {
+                        id: authUser.userid
+                    }, data: {
+                        playerState: {
+
+                            ...(await prisma.users.findUnique({
+                                where: {id: authUser.userid}, select: {playerState: true}
+                            })).playerState, ...state
+                        }
+                    }
+                });
+                res.json(updatedUser);
+            } catch (error) {
+                console.error('Error updating player state:', error);
+                res.status(500).json({error: 'Internal server error'});
+            }
         }, async getPlayerState(req, res) {
             const authUser = isAuthUser(req);
             const prisma = await getPrismaInstance();
@@ -115,7 +129,7 @@ export const UserMetaController = () => {
                     playerState: true
                 }
             })
-            
+
 
             return res.status(200).json({playerState: playerState});
         }
