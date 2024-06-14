@@ -5,14 +5,12 @@ export const extractAndVerifyToken = (authHeader) => {
         console.log('Authorization header missing');
         return false;
     }
-
     const token = authHeader.split(' ')[1];
 
     if (!token) {
         console.log('Token missing');
         return false;
     }
-
     try {
         return jwt.verify(token, process.env.TOKEN_SECRET);
     } catch (err) {

@@ -38,7 +38,13 @@ export const UserController = () => {
                 const hashedPassword = await bcrypt.hash(password, 10);
                 await prisma.users.create({
                     data: {
-                        email: email, username: username, password: hashedPassword, playerState: {},
+                        email: email, username: username, password: hashedPassword, playerState: {
+                            songId: "",
+                            playListId: "",
+                            currentSongIndex: -1,
+                            Volume: 50,
+                            playListType:""
+                        },
                     },
                 });
                 return res.status(201).json({data: {message: "User created successfully", type: "success"}});

@@ -14,9 +14,10 @@ const Playlist = () => {
         data: PlayList, error, isLoading
     } = useSWR(id ? ['playlist', id] : null, () => MusicServiceInstance.getPlaylistById(id));
 
-    const handlePlayWholeList = async () => {
-        await loadPlaylist({id: Playlist?.id, songs: PlayList?.songs});
+    const handlePlayWholeList = async (id) => {
+        await loadPlaylist({id, type: "PLAYLIST", index: 0});
     };
+
 
     if (isLoading) return <div><h1>Loading.....</h1></div>;
     if (error) return <div><h1>Error.....</h1></div>;
@@ -43,7 +44,7 @@ const Playlist = () => {
         <div className={"items-center flex "}>
             <div
                 className={"p-4 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer ml-8 mt-4 mb-4"}
-                onClick={handlePlayWholeList}>
+                onClick={() => handlePlayWholeList(PlayList.id)}>
                 <FaPlay size={14} color={"black"} className={"relative  left-[2px]"}/>
             </div>
         </div>

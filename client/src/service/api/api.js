@@ -58,9 +58,9 @@ class TuneMateService {
         }
     }
 
-    savePlayerState = async (state) => {
+    updatePlayerState = async (state) => {
         try {
-            const response = await tuneMateClient.post(ENDPOINTS.savePlayerState, {playerState: state});
+            const response = await tuneMateClient.post(ENDPOINTS.updatePlayerState, {state});
             return response.data;
         } catch (err) {
             return err;
