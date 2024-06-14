@@ -15,7 +15,6 @@ router.post(ENDPOINTS.login, UserController().login);
 
 // user meta routes
 router.post(ENDPOINTS.ManageSongInFavorites, UserMetaController().manageUserFavorites);
-router.post(ENDPOINTS.checkinfavorites, UserMetaController().checkInFavorites);
 router.get(ENDPOINTS.favorites, UserMetaController().getFavorites);
 router.post(ENDPOINTS.updatePlayerState, UserMetaController().updatePlayerState);
 router.get(ENDPOINTS.getPlayerState, UserMetaController().getPlayerState);

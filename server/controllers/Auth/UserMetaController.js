@@ -70,22 +70,6 @@ export const UserMetaController = () => {
                 console.error("Error Occurred", error);
                 return res.status(500).json({message: "Internal Server Error"});
             }
-        }, async checkInFavorites(req, res) {
-            const authUser = isAuthUser(req);
-            const {id} = req.body;
-            if (!id) {
-                return res.status(200).json({isFavorite: false});
-            }
-            const prisma = await getPrismaInstance();
-            const isFavorite = !!await prisma.users.findFirst({
-                where: {
-                    id: authUser.userid, favoriteSongs: {
-                        has: id
-                    }
-                }
-            });
-
-            return res.status(200).json({isFavorite: isFavorite});
         }, async updatePlayerState(req, res) {
             const authUser = isAuthUser(req);
 

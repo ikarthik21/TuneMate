@@ -3,7 +3,6 @@ export const ENDPOINTS = {
     register: "/api/auth/register",
     ManageSongInFavorites: 'api/songs/favorites',
     favorites: 'api/user/favorites',
-    checkinfavorites: 'api/user/favorites/check',
     updatePlayerState: 'api/user/updatePlayerState',
     loadPlayerState: 'api/user/getPlayerState',
 };
