@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import {ENDPOINTS} from "@/service/API_ENDPOINTS.js";
+import {ENDPOINTS} from "@/service/endpoints/API_ENDPOINTS.js";
 
 const baseURL = import.meta.env.VITE_BACKEND_URL;
 const token = Cookies.get('accessToken');
@@ -13,6 +13,15 @@ export const tuneMateClient = axios.create({
 
 
 class TuneMateService {
+    getPlaylists = async () => {
+        try {
+            const response = await tuneMateClient.get(ENDPOINTS.getPlaylists);
+            return response.data.playlists;
+        } catch (err) {
+            return err;
+        }
+    }
+
     loginUser = async (data) => {
         try {
             const response = await tuneMateClient.post(ENDPOINTS.login, data);
@@ -48,6 +57,7 @@ class TuneMateService {
             return err;
         }
     }
+
     updatePlayerState = async (state) => {
         try {
             const response = await tuneMateClient.post(ENDPOINTS.updatePlayerState, {state});
@@ -56,6 +66,7 @@ class TuneMateService {
             return err;
         }
     }
+
     getPlayerState = async () => {
         try {
             const response = await tuneMateClient.get(ENDPOINTS.loadPlayerState);
@@ -64,6 +75,43 @@ class TuneMateService {
             return err;
         }
     }
+
+    createNewPlaylist = async (data) => {
+        try {
+            const response = await tuneMateClient.post(ENDPOINTS.createNewPlaylist, {playlist: data});
+            return response.data;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    saveSongInPlaylist = async (data) => {
+        try {
+            const response = await tuneMateClient.post(ENDPOINTS.saveSongInPlaylist, data);
+            return response.data;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    removeSongFromPlaylist = async (id) => {
+        try {
+            const response = await tuneMateClient.post(ENDPOINTS.removeSongFromPlaylist, id);
+            return response.data;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    getUserPlaylist = async (id) => {
+        try {
+            const response = await tuneMateClient.get(ENDPOINTS.playlist(id));
+            return response.data.playlist[0];
+        } catch (err) {
+            return err;
+        }
+    }
+
 
 }
 

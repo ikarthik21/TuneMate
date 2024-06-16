@@ -5,5 +5,11 @@ export const ENDPOINTS = {
     favorites: 'api/user/favorites',
     updatePlayerState: 'api/user/updatePlayerState',
     loadPlayerState: 'api/user/getPlayerState',
+    createNewPlaylist: 'api/playlists/createNewPlaylist',
+    getPlaylists: 'api/playlists/all',
+    saveSongInPlaylist: 'api/songs/saveSongInPlaylist',
+    removeSongFromPlaylist: 'api/songs/removeSongFromPlaylist',
+    playlist: (id) => `api/user/playlist/${id}`,
+
 };
 

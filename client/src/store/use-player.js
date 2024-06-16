@@ -51,7 +51,7 @@ const usePlayerStore = create((set, get) => ({
             const currentSongIndex = index === 0 ? 0 : get().currentSongIndex;
             set({currentSongIndex});
             if (songs.length > 0) {
-                await get().playSong(songs[currentSongIndex].id);
+                if (index === 0) await get().playSong(songs[currentSongIndex].id);
                 await tuneMateInstance.updatePlayerState({
                     playListId: id, currentSongIndex: currentSongIndex, playListType: type
                 });
@@ -99,10 +99,10 @@ const usePlayerStore = create((set, get) => ({
         try {
             const {playerState} = await tuneMateInstance.getPlayerState();
             const {songId, currentSongIndex, playListId, Volume, playListType} = playerState;
-            await get().playSong(songId);
             set({currentSongIndex});
             set({volume: Volume});
             await get().loadPlaylist({id: playListId, type: playListType});
+            await get().playSong(songId);
         } catch (error) {
             console.error('Error loading player state', error.message, error.stack);
         }
@@ -110,7 +110,7 @@ const usePlayerStore = create((set, get) => ({
     getFavorites: async () => {
         const data = await tuneMateInstance.getFavorites();
         const Favorites = data.map(item => item.id);
-        set({ Favorites: Favorites });
+        set({Favorites: Favorites});
     }
 }));
 

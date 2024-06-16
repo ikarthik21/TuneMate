@@ -52,11 +52,11 @@ const Player = () => {
     return (
         (
             <div
-                className="fixed bottom-0 bg-[#18181b] border-t border-[#2D2E35] left-0 w-full pr-4 pl-4 rounded text-amber-50 z-50">
+                className="fixed bottom-0 bg-[#18181b] border-t border-[#2D2E35] left-0 w-full pr-4 pl-4 rounded text-amber-50 z-30">
                 <div className="flex justify-between items-center">
                     <div className="flex-1">
                         {
-                            Favorites?.length > 0 && <MusicInfo song={song}/>
+                            <MusicInfo song={song}/>
                         }
 
                     </div>

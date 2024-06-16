@@ -11,9 +11,9 @@ export const UserController = () => {
             const prisma = await getPrismaInstance();
 
             try {
-                const existingUserByEmail = await prisma.users.findUnique({where: {email}});
+                const existingUserByEmail = await prisma.User.findUnique({where: {email}});
 
-                const existingUserByUsername = await prisma.users.findUnique({where: {username}});
+                const existingUserByUsername = await prisma.User.findUnique({where: {username}});
 
                 if (existingUserByEmail && existingUserByUsername) {
                     return res.status(200).json({
@@ -36,14 +36,14 @@ export const UserController = () => {
                 }
 
                 const hashedPassword = await bcrypt.hash(password, 10);
-                await prisma.users.create({
+                await prisma.User.create({
                     data: {
                         email: email, username: username, password: hashedPassword, playerState: {
                             songId: "",
                             playListId: "",
                             currentSongIndex: -1,
                             Volume: 50,
-                            playListType:""
+                            playListType: ""
                         },
                     },
                 });
@@ -61,7 +61,7 @@ export const UserController = () => {
         async login(req, res) {
             const {email, password} = req.body;
             const prisma = await getPrismaInstance();
-            const user = await prisma.users.findUnique({where: {email}});
+            const user = await prisma.User.findUnique({where: {email}});
             if (user) {
                 try {
                     const userid = user.id;

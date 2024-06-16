@@ -1,6 +1,6 @@
 import useFormData from "@/hooks/useFormData.js";
 import tuneMateInstance from "@/service/api/api.js";
-import Toast from "@/utils/Toast.js";
+import Toast from "@/utils/Toasts/Toast.js";
 
 
 // eslint-disable-next-line react/prop-types
