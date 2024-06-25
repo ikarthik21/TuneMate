@@ -1,15 +1,15 @@
 export const ENDPOINTS = {
     login: "/api/auth/login",
     register: "/api/auth/register",
-    ManageSongInFavorites: 'api/songs/favorites',
-    favorites: 'api/user/favorites',
-    updatePlayerState: 'api/user/updatePlayerState',
-    loadPlayerState: 'api/user/getPlayerState',
+    ManageSongInFavorites: 'api/meta/songs/favorites',
+    favorites: 'api/meta/user/favorites',
+    updatePlayerState: 'api/meta/user/updatePlayerState',
+    loadPlayerState: 'api/meta/user/getPlayerState',
     createNewPlaylist: 'api/playlists/createNewPlaylist',
     getPlaylists: 'api/playlists/all',
-    saveSongInPlaylist: 'api/songs/saveSongInPlaylist',
-    removeSongFromPlaylist: 'api/songs/removeSongFromPlaylist',
-    playlist: (id) => `api/user/playlist/${id}`,
+    saveSongInPlaylist: 'api/playlists/songs/saveSongInPlaylist',
+    removeSongFromPlaylist: 'api/playlists/songs/removeSongFromPlaylist',
+    playlist: (id) => `api/playlists/user/playlist/${id}`,
 
 };
 

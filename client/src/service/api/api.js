@@ -13,6 +13,7 @@ export const tuneMateClient = axios.create({
 
 
 class TuneMateService {
+
     getPlaylists = async () => {
         try {
             const response = await tuneMateClient.get(ENDPOINTS.getPlaylists);

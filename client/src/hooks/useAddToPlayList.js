@@ -13,7 +13,7 @@ const useAddToPlaylist = () => {
     const [playlistName, setPlaylistName] = useState("");
     const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
     const [selectedPlaylists, setSelectedPlaylists] = useState([]);
-    const [initialPlaylists, setInitialPlaylists] = useState([]); // Track initial state of playlists
+    const [initialPlaylists, setInitialPlaylists] = useState([]);
 
 
     const {
@@ -26,7 +26,7 @@ const useAddToPlaylist = () => {
                 .filter((playlist) => playlist.songs.includes(song.id))
                 .map((playlist) => playlist.id);
             setSelectedPlaylists(initialSelectedPlaylists);
-            setInitialPlaylists(initialSelectedPlaylists); // Set initial state
+            setInitialPlaylists(initialSelectedPlaylists);
         }
     }, [playlists, song]);
 
@@ -66,15 +66,16 @@ const useAddToPlaylist = () => {
             id, name, duration, image: image[2].url, artists,
         };
 
-        // Determine which playlists to add the song to and which to remove it from
+
         const playlistsToAdd = selectedPlaylists.filter((id) => !initialPlaylists.includes(id));
         const playlistsToRemove = initialPlaylists.filter((id) => !selectedPlaylists.includes(id));
 
-        // Add song to selected playlists
+
         if (playlistsToAdd.length > 0) {
             const response = await tuneMateInstance.saveSongInPlaylist({
                 song: compressedSong, playlists: playlistsToAdd,
             });
+
             ImageToast({
                 type: response.data.type, message: response.data.message, image: compressedSong.image
             });
@@ -90,6 +91,7 @@ const useAddToPlaylist = () => {
         }
 
         mutate("user-playlists");
+
     };
 
     return {

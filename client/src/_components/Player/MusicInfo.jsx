@@ -10,7 +10,7 @@ import useAddListStore from "@/store/use-addList.js";
 const MusicInfo = ({song}) => {
     const {isAuthenticated} = useAuthStore();
     const {Favorites} = usePlayerStore();
-    const {isAddToPlaylistVisible, showAddToPlaylist} = useAddListStore();
+    const {isAddToPlaylistVisible, showAddToPlaylist, component} = useAddListStore();
 
 
     return (<>
@@ -32,11 +32,11 @@ const MusicInfo = ({song}) => {
                     {Favorites.includes(song.id) ?
 
                         <MdFavorite size={22} cursor={"pointer"} color={"#59c2ef"} onClick={() => {
-                            showAddToPlaylist(song.id)
+                            showAddToPlaylist(song.id, "MUSIC_INFO")
                         }}/> : <IoMdAddCircle size={22} cursor={"pointer"} color={"#59c2ef"}
-                                              onClick={() => showAddToPlaylist(song.id)}/>}
+                                              onClick={() => showAddToPlaylist(song.id, "MUSIC_INFO")}/>}
 
-                    {isAddToPlaylistVisible  && <AddToPlaylist/>}
+                    {isAddToPlaylistVisible && component === "MUSIC_INFO" && <AddToPlaylist/>}
                 </div>}
             </div>
         </div>)}

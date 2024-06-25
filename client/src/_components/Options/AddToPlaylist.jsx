@@ -61,7 +61,7 @@ const AddToPlaylist = () => {
     if (error) return <div><h1>Error.....</h1></div>;
 
     return (<div ref={addMenuRef}
-                 className="rounded-lg w-72 z-50 bg-[#18181b] border-[#2D2E35] border p-4 absolute bottom-10 left-1">
+                 className="rounded-lg w-72 z-50 bg-[#18181b] border-[#2D2E35] border p-4 absolute bottom-4 left-1">
         <div className="flex flex-col">
             <h3 className="nunito-sans-bold text-sm">Add To Playlist</h3>
             <div
@@ -85,7 +85,7 @@ const AddToPlaylist = () => {
                     />
                 </div>
                 <div className="flex items-center justify-end mt-2">
-                    <Button variant="ghost" className="h-8" onClick={handleToggleCreatePlaylist}>
+                    <Button variant="ghost" className="h-8" onClick={hideAddToPlaylist}>
                         Cancel
                     </Button>
                     {playlistName.length > 0 && (
@@ -133,10 +133,17 @@ const AddToPlaylist = () => {
             </div>
 
 
-            <div className="flex items-center justify-end mt-2">
-                <Button variant="ghost" className="h-8" onClick={hideAddToPlaylist}>Cancel</Button>
+            <div className="flex items-center justify-end mt-4">
+                <Button variant="ghost" className="h-8" onClick={(e) => {
+                    e.stopPropagation()
+                    hideAddToPlaylist()
+                }}>Cancel</Button>
                 <Button className="h-8 w-14 button_variant_1 text-black"
-                        onClick={handleSaveChanges}>Save</Button>
+                        onClick={async (e) => {
+                            e.stopPropagation()
+                            await handleSaveChanges()
+                            hideAddToPlaylist()
+                        }}>Save</Button>
             </div>
         </div>
     </div>);

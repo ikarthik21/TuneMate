@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node --env-file .env server.js",
-    "startdev": "nodemon --env-file .env server.js",
+    "dev": "nodemon --env-file .env server.js",
     "build": "npx prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

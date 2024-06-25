@@ -3,6 +3,7 @@ import MusicServiceInstance from '@/service/api/music_apis.js';
 import tuneMateInstance from '@/service/api/api.js';
 import {throttle} from 'lodash';
 import {fetchPlaylistData} from '@/utils/MusicUtils.js';
+import {createRef} from 'react';
 
 const usePlayerStore = create((set, get) => ({
     isLoading: false,
@@ -14,6 +15,7 @@ const usePlayerStore = create((set, get) => ({
     currentSongIndex: null,
     volume: 50,
     Favorites: [],
+    AudioRef: createRef(),
 
     setVolume: async (value) => {
         try {
@@ -111,6 +113,16 @@ const usePlayerStore = create((set, get) => ({
         const data = await tuneMateInstance.getFavorites();
         const Favorites = data.map(item => item.id);
         set({Favorites: Favorites});
+    },
+    handleAudioPlay: () => {
+        const audio = get().AudioRef.current;
+        if (audio && audio.paused) {
+            audio.play();
+            set({isPlaying: true});
+        } else if (audio) {
+            audio.pause();
+            set({isPlaying: false});
+        }
     }
 }));
 

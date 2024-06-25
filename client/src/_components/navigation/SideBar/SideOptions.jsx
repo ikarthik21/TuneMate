@@ -26,7 +26,7 @@ const SideOptions = () => {
                     <div
                         className={"flex items-center cursor-pointer hover:bg-[#222328] px-2 py-2  rounded overflow-hidden"}>
                         <img src={FavImg} alt="" className={"h-10 w-10 rounded"}/>
-                        <h1 className={"ml-3 text-sm"}>Favorites</h1>
+                        <h1 className={"ml-3 text-sm nunito-sans-bold"}>Favorites</h1>
                     </div>
                 </Link>
 
@@ -36,12 +36,12 @@ const SideOptions = () => {
                         return (<Link to={`/u/playlists/${playlist.id}`} key={playlist.id}>
                             <div
                                 className={"flex items-center cursor-pointer hover:bg-[#222328] px-2 py-2  rounded overflow-hidden  mt-1 mb-1"}>
-                                {playlist.image ? <img src={playlist.image} alt="" className={"h-10 w-10 rounded"}/> :
+                                {playlist.image ? <img src={playlist.image} alt="" className={"h-11 w-11 rounded"}/> :
                                     <BiSolidPlaylist size={35} color={"#59c2ef"} className={"m-[2px] "}/>}
 
                                 {!collapse && <div className={"flex flex-col justify-center ml-3"}>
-                                    <h1 className={"text-sm"}>{playlist.name}</h1>
-                                    <p className={"text-xs"}>{playlist.songs.length} songs</p>
+                                    <h1 className={"text-sm nunito-sans-bold"}>{playlist.name}</h1>
+                                    <p className={"text-xs text-[#6a6a6a] nunito-sans-bold"}>{playlist.songs.length} songs</p>
                                 </div>}
 
                             </div>
