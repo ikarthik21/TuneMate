@@ -1,10 +1,16 @@
 const ENDPOINTS = {
-    login: "/auth/login",
-    register: "/auth/register",
+    login: "/login",
+    register: "/register",
     ManageSongInFavorites: '/songs/favorites',
     favorites: "/user/favorites",
     updatePlayerState: "/user/updatePlayerState",
-    getPlayerState: "/user/getPlayerState"
+    getPlayerState: "/user/getPlayerState",
+    createNewPlaylist: "/createNewPlaylist",
+    getPlaylists: "/all",
+    saveSongInPlaylist: "/songs/saveSongInPlaylist",
+    removeSongFromPlaylist: "/songs/removeSongFromPlaylist",
+    playlist: "/user/playlist/:id",
+
 }
 
 export default ENDPOINTS;

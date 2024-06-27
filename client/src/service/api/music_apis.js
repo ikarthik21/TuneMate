@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {ENDPOINTS} from "@/service/MUSIC_ENDPOINTS.js";
+import {ENDPOINTS} from "@/service/endpoints/MUSIC_ENDPOINTS.js";
 
 
 const apiClient = axios.create({

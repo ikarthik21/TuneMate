@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node --env-file .env server.js",
-    "startdev": "nodemon --env-file .env server.js",
+    "dev": "nodemon --env-file .env server.js",
     "build": "npx prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "5.13.0"
+    "prisma": "5.13.0",
+    "uuid": "^10.0.0"
   }
 }

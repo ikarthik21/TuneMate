@@ -22,7 +22,7 @@ export const extractAndVerifyToken = (authHeader) => {
 export const isAuthUser = (req, res, next) => {
     const authHeader = req.headers.authorization;
     const authUser = extractAndVerifyToken(authHeader)
-    if (!authUser) return res.status(404).json({message: "Invalid Request"});
+    if (!authUser) return res.json({message: "Invalid Request"});
     return authUser;
 }
 

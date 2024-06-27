@@ -3,6 +3,7 @@ import MusicServiceInstance from '@/service/api/music_apis.js';
 import tuneMateInstance from '@/service/api/api.js';
 import {throttle} from 'lodash';
 import {fetchPlaylistData} from '@/utils/MusicUtils.js';
+import {createRef} from 'react';
 
 const usePlayerStore = create((set, get) => ({
     isLoading: false,
@@ -14,6 +15,7 @@ const usePlayerStore = create((set, get) => ({
     currentSongIndex: null,
     volume: 50,
     Favorites: [],
+    AudioRef: createRef(),
 
     setVolume: async (value) => {
         try {
@@ -51,7 +53,7 @@ const usePlayerStore = create((set, get) => ({
             const currentSongIndex = index === 0 ? 0 : get().currentSongIndex;
             set({currentSongIndex});
             if (songs.length > 0) {
-                await get().playSong(songs[currentSongIndex].id);
+                if (index === 0) await get().playSong(songs[currentSongIndex].id);
                 await tuneMateInstance.updatePlayerState({
                     playListId: id, currentSongIndex: currentSongIndex, playListType: type
                 });
@@ -99,10 +101,10 @@ const usePlayerStore = create((set, get) => ({
         try {
             const {playerState} = await tuneMateInstance.getPlayerState();
             const {songId, currentSongIndex, playListId, Volume, playListType} = playerState;
-            await get().playSong(songId);
             set({currentSongIndex});
             set({volume: Volume});
             await get().loadPlaylist({id: playListId, type: playListType});
+            await get().playSong(songId);
         } catch (error) {
             console.error('Error loading player state', error.message, error.stack);
         }
@@ -110,7 +112,17 @@ const usePlayerStore = create((set, get) => ({
     getFavorites: async () => {
         const data = await tuneMateInstance.getFavorites();
         const Favorites = data.map(item => item.id);
-        set({ Favorites: Favorites });
+        set({Favorites: Favorites});
+    },
+    handleAudioPlay: () => {
+        const audio = get().AudioRef.current;
+        if (audio && audio.paused) {
+            audio.play();
+            set({isPlaying: true});
+        } else if (audio) {
+            audio.pause();
+            set({isPlaying: false});
+        }
     }
 }));
 

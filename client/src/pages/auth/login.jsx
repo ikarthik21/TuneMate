@@ -1,6 +1,6 @@
 import useFormData from "@/hooks/useFormData.js";
 import tuneMateInstance, {tuneMateClient} from "@/service/api/api.js";
-import Toast from "@/utils/Toast.js";
+import Toast from "@/utils/Toasts/Toast.js";
 import {useState} from "react";
 import Register from "@/pages/auth/register.jsx";
 import useAuthStore from "@/store/use-auth.js";

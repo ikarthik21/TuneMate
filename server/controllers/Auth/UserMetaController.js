@@ -10,14 +10,14 @@ export const UserMetaController = () => {
             try {
                 const authUser = isAuthUser(req);
                 const prisma = await getPrismaInstance();
-                const user = await prisma.users.findUnique({
+                const user = await prisma.User.findUnique({
                     where: {id: authUser.userid}
                 });
                 if (!user) {
                     return res.status(404).json({message: "User not found"});
                 }
                 const isFavorite = user.favoriteSongs.some(song => song === songId);
-                await prisma.users.update({
+                await prisma.User.update({
                     where: {id: authUser.userid}, data: {
                         favoriteSongs: {
                             set: isFavorite ? user.favoriteSongs.filter((song) => song !== songId.toString()) : [...user.favoriteSongs, songId.toString()]
@@ -38,7 +38,11 @@ export const UserMetaController = () => {
             const authUser = isAuthUser(req);
             const prisma = await getPrismaInstance();
 
-            const {favoriteSongs} = await prisma.users.findUnique({
+            if (!authUser) {
+                return res.status(404).json({message: "User not found"});
+            }
+
+            const {favoriteSongs} = await prisma.User.findUnique({
                 where: {id: authUser.userid}, select: {
                     favoriteSongs: true
                 }
@@ -85,13 +89,13 @@ export const UserMetaController = () => {
 
             try {
                 const prisma = await getPrismaInstance();
-                const updatedUser = await prisma.users.update({
+                const updatedUser = await prisma.User.update({
                     where: {
                         id: authUser.userid
                     }, data: {
                         playerState: {
 
-                            ...(await prisma.users.findUnique({
+                            ...(await prisma.User.findUnique({
                                 where: {id: authUser.userid}, select: {playerState: true}
                             })).playerState, ...state
                         }
@@ -106,7 +110,7 @@ export const UserMetaController = () => {
             const authUser = isAuthUser(req);
             const prisma = await getPrismaInstance();
 
-            const {playerState} = await prisma.users.findFirst({
+            const {playerState} = await prisma.User.findFirst({
                 where: {
                     id: authUser.userid
                 }, select: {
