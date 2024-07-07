@@ -76,7 +76,7 @@ export const PlayListController = () => {
                         return prisma.playlist.update({
                             where: {id: playlist.id}, data: {
                                 songs: {
-                                    push: song
+                                    push: {...song, addedAt: new Date()},
                                 }, image: song.image
                             }
                         });
@@ -107,6 +107,8 @@ export const PlayListController = () => {
                     }
                 });
 
+                playlist[0].songs.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
+
                 if (!playlist) return res.status(404).json({message: "Playlist not found"});
 
                 return res.status(200).json({playlist: playlist});
@@ -134,10 +136,8 @@ export const PlayListController = () => {
                     const lastSong = updatedSongs.length > 0 ? updatedSongs[updatedSongs.length - 1] : null;
 
                     return prisma.playlist.update({
-                        where: {id: playlist.id},
-                        data: {
-                            songs: {set: updatedSongs},
-                            image: lastSong ? lastSong.image : ""
+                        where: {id: playlist.id}, data: {
+                            songs: {set: updatedSongs}, image: lastSong ? lastSong.image : ""
                         }
                     });
                 });
@@ -145,8 +145,7 @@ export const PlayListController = () => {
                 await Promise.all(updates);
                 res.status(200).json({
                     data: {
-                        message: "Song removed",
-                        type: "success"
+                        message: "Song removed", type: "success"
                     }
                 });
 

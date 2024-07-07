@@ -4,7 +4,7 @@ import tuneMateInstance from "@/service/api/api.js";
 import Wrapper from "@/pages/Wrapper.jsx";
 import usePlayerStore from "@/store/use-player.js";
 import useAuthStore from "@/store/use-auth.js";
-import {decodeHtmlEntities, formatTime, truncateString} from "@/utils/MusicUtils.js";
+import {decodeHtmlEntities, formatRelativeTime, formatTime, truncateString} from "@/utils/MusicUtils.js";
 import {FaPause, FaPlay} from "react-icons/fa";
 import {IoMdRemoveCircle} from "react-icons/io";
 import {BiSolidPlaylist} from "react-icons/bi";
@@ -65,7 +65,6 @@ const UserPlaylists = () => {
                 <FaPlay size={14} color={"black"} className={"relative  left-[2px]"}/>
             </div>
         </div>
-
         {isAuthenticated && (<div className="flex flex-col mt-4 w-[50vw] mb-5">
             {user_playlist.songs?.length > 0 ? (user_playlist.songs.map((song, index) => (
 
@@ -80,7 +79,7 @@ const UserPlaylists = () => {
                     }}
                 >
                     <div className="flex items-center ">
-                        <div className="mr-2 flex items-center justify-center">
+                        <div className="mr-2 flex items-center justify-center w-4">
                             {(hoveredItemId === song.id || clickedItemId === song.id) ? ((songId === song.id) ? (isPlaying ? (
                                 <FaPause size={16} color={`${songId === song.id ? '#59c2ef' : 'white'}`}
                                          onClick={handleAudioPlay}/>) : (
@@ -114,8 +113,13 @@ const UserPlaylists = () => {
                                 {isAddToPlaylistVisible && song.id === selectedSongId && component === "USER_LIST" &&
                                     <AddToPlaylist/>}
                             </div>
+                            <p className={`${songId === song.id ? 'text-[#59c2ef]' : 'text-white'} ml-4 text-sm`}>
+                                {formatRelativeTime(song.addedAt)}
+                            </p>
+                            <p className={`${songId === song.id ? 'text-[#59c2ef]' : 'text-white'} ml-4`}>
+                                {formatTime(song.duration)}
+                            </p>
 
-                            <p className="ml-4">{formatTime(song.duration)}</p>
                         </div>
                     </div>
                 </div>))) : (<div className="flex items-center min-h-48 justify-center">

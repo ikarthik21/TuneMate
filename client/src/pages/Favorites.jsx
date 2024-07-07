@@ -33,7 +33,6 @@ const Favorites = () => {
             console.error("Error removing song from favorites:", error);
         }
     };
-    console.log(favorites)
 
     const handlePlayWholeList = async () => {
         await loadPlaylist({id: "FAVORITES", type: "FAVORITES", index: 0});
@@ -65,62 +64,63 @@ const Favorites = () => {
 
             {favorites?.length > 0 ? (favorites.map((song, index) => (
 
-                <div
-                key={song.id}
-                className={`flex flex-col m-1 p-3 rounded-xl ${clickedItemId === song.id ? "bg-[#1B1B1B]" : "hover:bg-[#2e2e34] "}`}
-                onMouseEnter={() => handleMouseEnter(song.id)}
-                onMouseLeave={handleMouseLeave}
+                    <div
+                        key={song.id}
+                        className={`flex flex-col m-1 p-3 rounded-xl ${clickedItemId === song.id ? "bg-[#1B1B1B]" : "hover:bg-[#2e2e34] "}`}
+                        onMouseEnter={() => handleMouseEnter(song.id)}
+                        onMouseLeave={handleMouseLeave}
 
-                onDoubleClick={() => (playlist.songs.length > 0 && playlist.id === "FAVORITES") ? playSongByIndex(index) : playSong(song.id)}
-
-
-                onClick={() => {
-                    setClickedItemId(song.id)
-                }}
+                        onDoubleClick={() => (playlist.songs.length > 0 && playlist.id === "FAVORITES") ? playSongByIndex(index) : playSong(song.id)}
 
 
-            >
-                <div className="flex items-center ">
-                    <div className="mr-2 flex items-center justify-center">
-                        {(hoveredItemId === song.id || clickedItemId === song.id) ? ((songId === song.id) ? (isPlaying ? (
-                            <FaPause size={16} color={`${songId === song.id ? '#59c2ef' : 'white'}`}
-                                     onClick={handleAudioPlay}/>) : (
-                            <FaPlay size={13} color={`${songId === song.id ? '#59c2ef' : 'white'}`}
-                                    className="relative left-[2px]"
-                                    onClick={handleAudioPlay}/>)) : (
-                            <FaPlay size={13} color="white" className="relative left-[2px]"
-                                    onClick={() => (playlist.songs.length > 0 && playlist.id === "FAVORITES") ? playSongByIndex(index) : playSong(song.id)}/>)) : (
-                            <h3 className={`${songId === song.id ? 'text-[#59c2ef]' : ''}`}> {index + 1}</h3>)}
+                        onClick={() => {
+                            setClickedItemId(song.id)
+                        }}
 
-                    </div>
-                    <div className="flex items-center flex-1 ml-2">
-                        <img src={song.imageUrl} alt={song.name} className="h-9 w-9 rounded"/>
-                        <div className="flex flex-col ml-4">
-                            <h1 className={`nunito-sans-bold ${songId === song.id ? 'text-[#59c2ef]' : ''}`}>
-                                {truncateString(decodeHtmlEntities(song.name))}
-                            </h1>
-                            <p className="mr-2 text-xs text-[#6a6a6a] nunito-sans-bold">
-                                {truncateString(decodeHtmlEntities(song.primaryArtists))}
-                            </p>
+
+                    >
+                        <div className="flex items-center ">
+                            <div className="mr-2 flex items-center justify-center w-4">
+                                {(hoveredItemId === song.id || clickedItemId === song.id) ? ((songId === song.id) ? (isPlaying ? (
+                                    <FaPause size={16} color={`${songId === song.id ? '#59c2ef' : 'white'}`}
+                                             onClick={handleAudioPlay}/>) : (
+                                    <FaPlay size={13} color={`${songId === song.id ? '#59c2ef' : 'white'}`}
+                                            className="relative left-[2px]"
+                                            onClick={handleAudioPlay}/>)) : (
+                                    <FaPlay size={13} color="white" className="relative left-[2px]"
+                                            onClick={() => (playlist.songs.length > 0 && playlist.id === "FAVORITES") ? playSongByIndex(index) : playSong(song.id)}/>)) : (
+                                    <h3 className={`${songId === song.id ? 'text-[#59c2ef]' : ''}`}> {index + 1}</h3>)}
+
+                            </div>
+                            <div className="flex items-center flex-1 ml-2">
+                                <img src={song.imageUrl} alt={song.name} className="h-9 w-9 rounded"/>
+                                <div className="flex flex-col ml-4">
+                                    <h1 className={`nunito-sans-bold ${songId === song.id ? 'text-[#59c2ef]' : ''}`}>
+                                        {truncateString(decodeHtmlEntities(song.name))}
+                                    </h1>
+                                    <p className="mr-2 text-xs text-[#6a6a6a] nunito-sans-bold">
+                                        {truncateString(decodeHtmlEntities(song.primaryArtists))}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-center">
+                                <div>
+                                    {hoveredItemId === song.id && (<IoMdRemoveCircle
+                                        color="#59c2ef"
+                                        size={20}
+                                        onClick={(e) => removeSongFromFavorites(e, song.id)}
+                                    />)}
+                                </div>
+                                <p className={`${songId === song.id ? 'text-[#59c2ef]' : 'text-white'} ml-4`}>
+                                    {formatTime(song.duration)}
+                                </p>
+
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex items-center justify-center">
-                        <div>
-                            {hoveredItemId === song.id && (<IoMdRemoveCircle
-                                color="#59c2ef"
-                                size={20}
-                                onClick={(e) => removeSongFromFavorites(e, song.id)}
-                            />)}
-                        </div>
-                        <div>
-                            <p className="ml-4">{formatTime(song.duration)}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>)))
+                    </div>)))
                 : (<div className="flex items-center min-h-48 justify-center">
-                <h1>No Favorite Songs added</h1>
-            </div>)}
+                    <h1>No Favorite Songs added</h1>
+                </div>)}
         </div>)}
     </div>);
 
