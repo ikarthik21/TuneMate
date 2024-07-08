@@ -9,6 +9,7 @@ export const ENDPOINTS = {
     getPlaylists: 'api/playlists/all',
     saveSongInPlaylist: 'api/playlists/songs/saveSongInPlaylist',
     removeSongFromPlaylist: 'api/playlists/songs/removeSongFromPlaylist',
+    recommended: 'api/tunemate/recommended',
     playlist: (id) => `api/playlists/user/playlist/${id}`,
 
 };

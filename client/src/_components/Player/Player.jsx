@@ -42,8 +42,8 @@ const Player = () => {
         <div className="flex justify-between items-center">
             <div className="flex-1">
                 {<MusicInfo song={song}/>}
-
             </div>
+
             <div className="flex flex-col justify-center items-center flex-1">
                 <audio src={song?.downloadUrl[4].url} autoPlay ref={AudioRef}></audio>
                 <div className="mt-4 flex items-center justify-center">

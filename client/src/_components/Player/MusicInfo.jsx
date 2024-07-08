@@ -5,13 +5,12 @@ import useAuthStore from "@/store/use-auth.js";
 import usePlayerStore from "@/store/use-player.js";
 import AddToPlaylist from "@/_components/Options/AddToPlaylist.jsx";
 import useAddListStore from "@/store/use-addList.js";
-
+import AdminAddToPlaylist from "@/_components/admin/AdminAddToPlaylist.jsx";
 // eslint-disable-next-line react/prop-types
 const MusicInfo = ({song}) => {
-    const {isAuthenticated} = useAuthStore();
+    const {isAuthenticated, role} = useAuthStore();
     const {Favorites} = usePlayerStore();
     const {isAddToPlaylistVisible, showAddToPlaylist, component} = useAddListStore();
-
 
     return (<>
         {!!song && (<div className="flex items-center ">
@@ -36,7 +35,10 @@ const MusicInfo = ({song}) => {
                         }}/> : <IoMdAddCircle size={22} cursor={"pointer"} color={"#59c2ef"}
                                               onClick={() => showAddToPlaylist(song.id, "MUSIC_INFO")}/>}
 
-                    {isAddToPlaylistVisible && component === "MUSIC_INFO" && <AddToPlaylist/>}
+                    {isAddToPlaylistVisible && component === "MUSIC_INFO" && role === "user" && <AddToPlaylist/>}
+                    {isAddToPlaylistVisible && component === "MUSIC_INFO" && role === "admin" && <AdminAddToPlaylist/>}
+
+
                 </div>}
             </div>
         </div>)}

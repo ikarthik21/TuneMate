@@ -89,7 +89,7 @@ const UserPlaylists = () => {
                 </div>
             </div>)}
 
-        <div className="flex flex-col mt-4 w-[60vw] mb-5">
+        <div className="flex flex-col mt-4 w-[60vw] mb-5 z-30">
             {/*Song Meta Header */}
             <div className="grid grid-cols-10 gap-4 p-3 rounded bg-[#1b1b1b] sticky top-[138px] left-0 z-40 mb-2">
                 <div className="col-span-1 flex justify-center items-center">

@@ -71,7 +71,11 @@ export const UserController = () => {
                             data: {message: 'Wrong Username or Password', type: "error"}
                         });
                     }
-                    const accessToken = jwt.sign({userid: userid, username: user.username}, process.env.TOKEN_SECRET);
+                    const accessToken = jwt.sign({
+                        userid: userid,
+                        username: user.username,
+                        role: user.role
+                    }, process.env.TOKEN_SECRET);
                     return res.status(200).json({data: {accessToken, message: "Login successful", type: "success"}});
                 } catch (err) {
                     console.log(err);

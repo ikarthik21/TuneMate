@@ -112,6 +112,14 @@ class TuneMateService {
             return err;
         }
     }
+    getTuneMateRecommended = async () => {
+        try {
+            const response = await tuneMateClient.get(ENDPOINTS.recommended);
+            return response.data;
+        } catch (err) {
+            return err;
+        }
+    }
 
 
 }
