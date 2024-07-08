@@ -61,9 +61,10 @@ const useAddToPlaylist = () => {
 
     const handleSaveChanges = async () => {
         const artists = getAllArtists(song);
-        const {id, name, duration, image} = song;
+
+        const {id, name, duration, image, album} = song;
         const compressedSong = {
-            id, name, duration, image: image[2].url, artists,
+            id, name, duration, image: image[2].url, artists, album: album.name
         };
 
 

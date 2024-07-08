@@ -27,13 +27,12 @@ export const UserMetaController = () => {
                 return res.status(200).json({
                     message: isFavorite ? "Removed from Favorites" : "Added to Favorites", type: "success"
                 });
-            } catch (error) {
+            }
+            catch (error) {
                 const status = error.message.includes("token") ? 401 : 500;
                 console.log(error.message);
                 return res.status(status).json({message: error.message});
             }
-
-
         }, async getFavorites(req, res) {
             const authUser = isAuthUser(req);
             const prisma = await getPrismaInstance();

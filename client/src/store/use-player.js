@@ -48,8 +48,8 @@ const usePlayerStore = create((set, get) => ({
     loadPlaylist: async ({id, type, index}) => {
         try {
             const data = await fetchPlaylistData(id, type);
-            const songs = data.songs || [];
-            set({playlist: {id: data.id, songs}});
+            const songs = data?.songs || [];
+            set({playlist: {id: data?.id, songs}});
             const currentSongIndex = index === 0 ? 0 : get().currentSongIndex;
             set({currentSongIndex});
             if (songs.length > 0) {

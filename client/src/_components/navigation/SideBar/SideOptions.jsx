@@ -3,9 +3,11 @@ import useSWR from "swr";
 import tuneMateInstance from "@/service/api/api.js";
 import useAuthStore from "@/store/use-auth.js";
 import {BiSolidPlaylist} from "react-icons/bi";
+import {IoLibrary} from "react-icons/io5";
 import FavImg from '@/assets/images/favorites.png';
 import {useSidebar} from "@/store/use-sidebar.js";
 import usePlayerStore from "@/store/use-player.js";
+
 
 const SideOptions = () => {
     const {isAuthenticated} = useAuthStore();
@@ -18,11 +20,21 @@ const SideOptions = () => {
     if (isLoading) return <div><h1>Loading.....</h1></div>;
     if (error) return <div><h1>Error.....</h1></div>;
 
-    return (<div className={"mt-4  "}>
+    return (<div className={"mt-4"}>
         <div className={"flex flex-col"}>
-            <h1 className={"nunito-sans-bold overflow-hidden"}>Your Playlists</h1>
+
+
             <div className={"flex flex-col mt-4"}>
 
+                <div
+                    className={"flex items-center cursor-pointer   px-2 py-2  rounded overflow-hidden"}>
+                    <div>
+                        <IoLibrary size={35} color={"#59c2ef"} className={"m-[2px] "}/>
+                    </div>
+                    <div>
+                        <h1 className={"nunito-sans-bold overflow-hidden ml-4"}>Your Playlists</h1>
+                    </div>
+                </div>
 
                 <Link to={"/favorites"}>
                     <div

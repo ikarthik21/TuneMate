@@ -15,13 +15,11 @@ const SideBar = () => {
     }, [matches, onCollapse, onExpand]);
 
     return (<aside
-        className={cn("fixed left-0 flex flex-col rounded-tr-lg w-60 h-full border-t  border-b  bg-[#18181b] border-r border-[#2D2E35]   mt-[70px]  transition-width duration-500 p-2", collapse && "w-[4.5rem] transition-width duration-500 ")}>
-
+        className={cn("fixed left-0 flex flex-col rounded-tr-lg w-64 h-full border-t  border-b  bg-[#18181b] border-r border-[#2D2E35]   mt-[70px]  transition-width duration-500 p-2", collapse && "w-[4.7rem] transition-width duration-500 ")}>
         <div className={"flex flex-col"}>
             <Toggle/>
             <SideOptions/>
         </div>
-
     </aside>)
 }
 
