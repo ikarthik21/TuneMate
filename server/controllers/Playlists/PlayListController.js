@@ -111,7 +111,7 @@ export const PlayListController = () => {
                     }
                 });
 
-                playlist[0].songs.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
+                playlist[0]?.songs.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
 
                 if (!playlist) return res.status(404).json({message: "Playlist not found"});
 

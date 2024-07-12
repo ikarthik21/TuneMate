@@ -27,18 +27,14 @@ const MusicInfo = ({song}) => {
             </div>
 
             <div className="ml-4 mb-6">
-                {isAuthenticated && <div className={"absolute "}>
+                {isAuthenticated && <div className={"absolute"}>
                     {Favorites.includes(song.id) ?
-
                         <MdFavorite size={22} cursor={"pointer"} color={"#59c2ef"} onClick={() => {
                             showAddToPlaylist(song.id, "MUSIC_INFO")
                         }}/> : <IoMdAddCircle size={22} cursor={"pointer"} color={"#59c2ef"}
                                               onClick={() => showAddToPlaylist(song.id, "MUSIC_INFO")}/>}
-
                     {isAddToPlaylistVisible && component === "MUSIC_INFO" && role === "user" && <AddToPlaylist/>}
                     {isAddToPlaylistVisible && component === "MUSIC_INFO" && role === "admin" && <AdminAddToPlaylist/>}
-
-
                 </div>}
             </div>
         </div>)}

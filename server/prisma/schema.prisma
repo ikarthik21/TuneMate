@@ -39,10 +39,9 @@ model Playlist {
 }
 
 model Recommended {
-  id     String @id @default(uuid()) @map("_id")
-  name   String @default("")
-  image  String @default("")
-  userId String
-  type   String @default("public")
-  songs  Json[] @default([])
+  id    String @id @default(uuid()) @map("_id")
+  name  String @default("")
+  image String @default("")
+  type  String @default("public")
+  songs Json[] @default([])
 }
