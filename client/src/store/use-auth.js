@@ -6,15 +6,18 @@ const useAuthStore = create((set) => ({
     accessToken: getAccessToken(),
     isAuthenticated: !!getAccessToken(),
     username: getUsernameFromToken(getAccessToken()),
+    role: getUserRole(),
     setAccessToken: (token) => {
-        document.cookie = `accessToken=${token}; path=/;`;
         const decodedToken = jwtDecode(token);
+        document.cookie = `role=${decodedToken.role}; path=/;`;
+        document.cookie = `accessToken=${token}; path=/;`;
         set({
-            accessToken: token, isAuthenticated: true, username: decodedToken.username,
+            accessToken: token, isAuthenticated: true, username: decodedToken.username, role: decodedToken.role
         });
     },
     removeAccessToken: () => {
         document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+        document.cookie = 'role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
         delete tuneMateClient.defaults.headers['Authorization'];
         set({accessToken: null, isAuthenticated: false, username: null});
     },
@@ -25,6 +28,17 @@ function getAccessToken() {
     for (let cookie of cookies) {
         const [name, value] = cookie.trim().split('=');
         if (name === 'accessToken') {
+            return value;
+        }
+    }
+    return null;
+}
+
+function getUserRole() {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'role') {
             return value;
         }
     }

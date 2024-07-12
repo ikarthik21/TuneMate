@@ -12,7 +12,7 @@ export const PlayListController = () => {
 
                 const existingPlaylist = await prisma.playlist.findFirst({
                     where: {
-                        name: playlist, userId: authUser.id
+                        name: playlist, userId: authUser.userid
                     }
                 });
 
@@ -35,14 +35,15 @@ export const PlayListController = () => {
             }
 
 
-        }, async getPlaylists(req, res) {
+        },
+        async getPlaylists(req, res) {
             try {
                 const authUser = isAuthUser(req);
                 const prisma = await getPrismaInstance();
 
                 const playlists = await prisma.playlist.findMany({
                     where: {
-                        userId: authUser.id
+                        userId: authUser.userid
                     }, select: {
                         id: true, name: true, image: true, userId: true, type: true, songs: true
                     },
@@ -58,7 +59,8 @@ export const PlayListController = () => {
             } catch (err) {
                 console.log(err);
             }
-        }, async saveSongInPlaylist(req, res) {
+        },
+        async saveSongInPlaylist(req, res) {
             const {playlists, song} = req.body;
             try {
                 const authUser = isAuthUser(req);
@@ -66,7 +68,7 @@ export const PlayListController = () => {
 
                 const allPlaylists = await prisma.playlist.findMany({
                     where: {
-                        id: {in: playlists}, userId: authUser.id
+                        id: {in: playlists}, userId: authUser.userid
                     }, select: {id: true, songs: true}
                 });
 
@@ -95,7 +97,9 @@ export const PlayListController = () => {
                     message: "An error occurred while adding the song to playlists"
                 });
             }
-        }, async getPlaylistSongs(req, res) {
+        },
+
+        async getPlaylistSongs(req, res) {
             const {id: playlist_id} = req.params;
             try {
                 const authUser = isAuthUser(req);
@@ -103,11 +107,11 @@ export const PlayListController = () => {
 
                 const playlist = await prisma.playlist.findMany({
                     where: {
-                        userId: authUser.id, id: playlist_id
+                        userId: authUser.userid, id: playlist_id
                     }
                 });
 
-                playlist[0].songs.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
+                playlist[0]?.songs.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
 
                 if (!playlist) return res.status(404).json({message: "Playlist not found"});
 
@@ -126,7 +130,7 @@ export const PlayListController = () => {
 
                 const allPlaylists = await prisma.playlist.findMany({
                     where: {
-                        id: {in: playlists}, userId: authUser.id
+                        id: {in: playlists}, userId: authUser.userid
                     }, select: {id: true, songs: true}
                 });
 

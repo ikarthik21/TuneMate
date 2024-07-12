@@ -9,16 +9,16 @@ import {getAllArtists} from "@/utils/MusicUtils.js";
 
 const useAddToPlaylist = () => {
     const {song} = usePlayerStore();
-    const {isAuthenticated} = useAuthStore();
+    const {isAuthenticated, role} = useAuthStore();
     const [playlistName, setPlaylistName] = useState("");
     const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
     const [selectedPlaylists, setSelectedPlaylists] = useState([]);
     const [initialPlaylists, setInitialPlaylists] = useState([]);
 
-
     const {
         data: playlists, error, isLoading,
-    } = useSWR(isAuthenticated ? "user-playlists" : null, () => tuneMateInstance.getPlaylists());
+    } = useSWR(isAuthenticated ? (role === 'admin' ? 'tunemate-recommended' : 'user-playlists') : null, () => (role === 'admin' ? tuneMateInstance.getTuneMateRecommended() : tuneMateInstance.getPlaylists()));
+
 
     useEffect(() => {
         if (playlists && playlists.length > 0 && song) {
@@ -42,12 +42,12 @@ const useAddToPlaylist = () => {
 
     const handleCreatePlaylist = async () => {
         try {
-            const response = await tuneMateInstance.createNewPlaylist(playlistName);
+            const response = await tuneMateInstance.createNewPlaylist(playlistName, role);
             Toast({type: response.data.type, message: response.data.message});
             if (response.data.type === "success") {
                 setShowCreatePlaylist(false);
                 setPlaylistName("");
-                mutate("user-playlists");
+                role === 'admin' ? mutate("tunemate-recommended") : mutate("user-playlists");
             }
         } catch (err) {
             console.error(err);
@@ -75,8 +75,7 @@ const useAddToPlaylist = () => {
         if (playlistsToAdd.length > 0) {
             const response = await tuneMateInstance.saveSongInPlaylist({
                 song: compressedSong, playlists: playlistsToAdd,
-            });
-
+            }, role);
             ImageToast({
                 type: response.data.type, message: response.data.message, image: compressedSong.image
             });
@@ -85,13 +84,13 @@ const useAddToPlaylist = () => {
         if (playlistsToRemove.length > 0) {
             const response = await tuneMateInstance.removeSongFromPlaylist({
                 id: id, playlists: playlistsToRemove,
-            });
+            }, role);
             ImageToast({
                 type: response.data.type, message: response.data.message, image: compressedSong.image
             });
         }
 
-        mutate("user-playlists");
+        role === 'admin' ? mutate("tunemate-recommended") : mutate("user-playlists");
 
     };
 

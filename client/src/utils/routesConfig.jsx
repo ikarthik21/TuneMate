@@ -14,6 +14,7 @@ const routesConfig = [
     {path: "/search", element: <SearchResults/>},
     {path: "/favorites", element: <Favorites/>},
     {path: "/u/playlists/:id", element: <UserPlaylists/>},
+    {path: "/recommended/:id", element: <UserPlaylists/>},
 ]
 
 

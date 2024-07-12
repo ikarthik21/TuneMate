@@ -10,7 +10,11 @@ const ENDPOINTS = {
     saveSongInPlaylist: "/songs/saveSongInPlaylist",
     removeSongFromPlaylist: "/songs/removeSongFromPlaylist",
     playlist: "/user/playlist/:id",
-
+    recommended: "/tunemate/recommended",
+    createRecommended: '/tunemate/createRecommended',
+    addSongToRecommended: '/tunemate/recommended/add',
+    removeSongFromRecommended: '/tunemate/recommended/remove',
+    recommendedPlaylist: `/tunemate/recommended/:id`,
 }
 
 export default ENDPOINTS;

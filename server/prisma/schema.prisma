@@ -37,3 +37,11 @@ model Playlist {
 
   @@index([userId], name: "userId_index")
 }
+
+model Recommended {
+  id    String @id @default(uuid()) @map("_id")
+  name  String @default("")
+  image String @default("")
+  type  String @default("public")
+  songs Json[] @default([])
+}

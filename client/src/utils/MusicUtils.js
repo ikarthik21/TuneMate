@@ -46,6 +46,8 @@ export const fetchPlaylistData = async (id, type) => {
     } else if (type === "FAVORITES") {
         const data = await tuneMateInstance.getFavorites();
         return {id: "FAVORITES", songs: data}
+    } else if (type === "RECOMMENDED_PLAYLIST") {
+        return await tuneMateInstance.getRecommendedPlaylist(id);
     }
 };
 
