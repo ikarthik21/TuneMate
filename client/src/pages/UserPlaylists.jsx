@@ -25,10 +25,11 @@ const UserPlaylists = () => {
 
     const {isPlaying, songId} = usePlayerStore();
     const location = useLocation();
+    const isRecommended = location.pathname.startsWith('/recommended');
 
     const {
         data: single_playlist, error, isLoading
-    } = useSWR(id ? (location.pathname.startsWith('/recommended') ? ['recommended-playlist', id] : ['user-playlist', id]) : null, () => location.pathname.startsWith('/recommended') ? tuneMateInstance.getRecommendedPlaylist(id) : tuneMateInstance.getUserPlaylist(id));
+    } = useSWR(id ? (isRecommended ? ['recommended-playlist', id] : ['user-playlist', id]) : null, () => isRecommended ? tuneMateInstance.getRecommendedPlaylist(id) : tuneMateInstance.getUserPlaylist(id));
 
     useEffect(() => {
         const handleScroll = () => {
@@ -79,20 +80,19 @@ const UserPlaylists = () => {
 
     const renderSongsList = () => (<div className={"flex flex-col"}>
         {/* On Scroll NAV */}
-        {isScrolled && (
-            <div className={"items-center flex bg-[#0e0e10] z-30   sticky top-[70px] left-0 rounded"}>
-                <div
-                    className={"p-3 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer ml-8 mt-4 mb-4"}
-                    onClick={handlePlayWholeList}>
-                    <FaPlay size={15} color={"black"} className={"relative left-[2px]"}/>
-                </div>
-                <div className={"flex items-center ml-4"}>
-                    {single_playlist.image ? (<img src={single_playlist?.image} alt="Image"
-                                                   className="rounded transform transition-transform duration-500 hover:scale-105 h-11 w-11"/>) : (
-                        <BiSolidPlaylist size={100} color={"#59c2ef"}/>)}
-                    <h1 className="text-2xl ubuntu-bold ml-4">{single_playlist.name}</h1>
-                </div>
-            </div>)}
+        {isScrolled && (<div className={"items-center flex bg-[#0e0e10] z-30   sticky top-[70px] left-0 rounded"}>
+            <div
+                className={"p-3 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer ml-8 mt-4 mb-4"}
+                onClick={handlePlayWholeList}>
+                <FaPlay size={15} color={"black"} className={"relative left-[2px]"}/>
+            </div>
+            <div className={"flex items-center ml-4"}>
+                {single_playlist.image ? (<img src={single_playlist?.image} alt="Image"
+                                               className="rounded transform transition-transform duration-500 hover:scale-105 h-11 w-11"/>) : (
+                    <BiSolidPlaylist size={100} color={"#59c2ef"}/>)}
+                <h1 className="text-2xl ubuntu-bold ml-4">{single_playlist.name}</h1>
+            </div>
+        </div>)}
 
         <div className="flex flex-col mt-4 mb-5">
             {/*Song Meta Header */}
@@ -107,7 +107,7 @@ const UserPlaylists = () => {
                     <h1 className="nunito-sans-bold">Album</h1>
                 </div>
                 <div className="col-span-2 flex justify-center items-center">
-                    <p>Date Added</p>
+                    {isRecommended ? <p>Plays</p> : <p>Date Added</p>}
                 </div>
                 <div className="col-span-1 flex justify-center items-center">
                 </div>
@@ -153,7 +153,7 @@ const UserPlaylists = () => {
                 </div>
                 <div className="col-span-2 flex justify-center items-center">
                     <p className={`${songId === song.id ? 'text-[#59c2ef]' : 'text-white'} ml-4 text-sm`}>
-                        {formatRelativeTime(song.addedAt)}
+                        {isRecommended ? song.playCount : formatRelativeTime(song.addedAt)}
                     </p>
                 </div>
                 <div className="flex justify-center items-center">
