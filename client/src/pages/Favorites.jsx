@@ -60,7 +60,7 @@ const Favorites = () => {
             </div>
         </div>
 
-        {isAuthenticated && (<div className="flex flex-col mt-4 w-[50vw] mb-5">
+        {isAuthenticated && (<div className="flex flex-col mt-4  mb-5">
 
             {favorites?.length > 0 ? (favorites.map((song, index) => (
 

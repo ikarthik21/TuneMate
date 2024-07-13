@@ -17,15 +17,15 @@ const Home = () => {
 
     return (<Wrapper>
 
-        <div>
+        <div className={"mb-12"}>
             <h1 className={"text-2xl ubuntu-bold"}>Tunemate Recommended</h1>
             <div className="flex flex-col">
-                <div className="flex items-center">
+                <div className="flex items-center flex-wrap">
                     {recommended?.map((playlist) => (<Link to={`/recommended/${playlist.id}`} key={playlist.id}
                                                            className="flex cursor-pointer flex-col m-2 hover:bg-[#18181b] p-3 rounded-xl w-52 h-64 justify-center">
 
                         {playlist.image ? <img src={playlist.image} alt="" className="rounded-xl"/> :
-                            <BiSolidPlaylist size={180} color={"#59c2ef"} className={"m-[2px] "}/>}
+                            <BiSolidPlaylist size={170} color={"#59c2ef"} className={"m-[2px] "}/>}
                         <div className="flex flex-col mt-1">
                             <h3 className="mt-1 mb-1 nunito-sans-bold">{truncateString(decodeHtmlEntities(playlist.name), 20)}</h3>
                             <p>

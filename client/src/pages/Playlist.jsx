@@ -40,7 +40,7 @@ const Playlist = () => {
     </div>);
 
 
-    const renderSongsList = () => (<div className="flex flex-col mt-4 w-[50vw]">
+    const renderSongsList = () => (<div className="flex flex-col mt-4">
         <div className={"items-center flex "}>
             <div
                 className={"p-4 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer ml-8 mt-4 mb-4"}
