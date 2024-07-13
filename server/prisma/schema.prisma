@@ -24,6 +24,7 @@ model User {
   favoriteSongs String[]   @default([])
   playerState   Json
   playlists     Playlist[]
+  history       Json[]     @default([])
 }
 
 model Playlist {

@@ -118,6 +118,55 @@ export const UserMetaController = () => {
 
 
             return res.status(200).json({playerState: playerState});
+        }, async getUserSongHistory(req, res) {
+            try {
+                const authUser = req.authUser;
+                const prisma = await getPrismaInstance();
+
+                const history = await prisma.User.findUnique({
+                    where: {id: authUser.userid}, select: {history: true}
+                })
+
+                return res.status(200).json(history);
+
+            } catch (e) {
+                console.error('Error Fetching Song History:', e);
+                res.status(500).json({error: 'Internal Server Error'});
+            }
+
+        }, async addSongToHistory(req, res) {
+            try {
+                const authUser = req.authUser;
+                const {song} = req.body;
+                const prisma = await getPrismaInstance();
+
+                const user = await prisma.User.findUnique({
+                    where: {id: authUser.userid}, select: {history: true}
+                });
+
+
+                let history = user.history || [];
+
+
+                if (history.length > 20) {
+                    history.pop();
+                }
+
+                const existingIndex = history.findIndex(item => item.id === song.id);
+
+                if (existingIndex > -1) {
+                    history.splice(existingIndex, 1);
+                }
+                history.unshift(song);
+                await prisma.user.update({
+                    where: {id: authUser.userid}, data: {history: history}
+                });
+
+                res.status(200).json({message: 'Song added to history'});
+            } catch (e) {
+                console.error('Error adding song to history:', e);
+                res.status(500).json({error: 'Internal Server Error'});
+            }
         }
 
     }

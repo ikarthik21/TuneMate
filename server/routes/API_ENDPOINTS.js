@@ -5,6 +5,8 @@ const ENDPOINTS = {
     favorites: "/user/favorites",
     updatePlayerState: "/user/updatePlayerState",
     getPlayerState: "/user/getPlayerState",
+    addSongToHistory: '/user/addSongToHistory',
+    getUserSongHistory: "/user/SongsHistory",
     createNewPlaylist: "/createNewPlaylist",
     getPlaylists: "/all",
     saveSongInPlaylist: "/songs/saveSongInPlaylist",
