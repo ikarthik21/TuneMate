@@ -1,4 +1,4 @@
-import {extractFields, isAuthUser} from "../../utils/serverutils.js";
+import {extractFields} from "../../utils/serverutils.js";
 import {getPrismaInstance} from "../../utils/prisma/prisma.js";
 import MusicServiceInstance from "../../service/api/api.js";
 
@@ -8,7 +8,7 @@ export const UserMetaController = () => {
             const {id: songId} = req.body;
 
             try {
-                const authUser = isAuthUser(req);
+                const authUser = req.authUser;
                 const prisma = await getPrismaInstance();
                 const user = await prisma.User.findUnique({
                     where: {id: authUser.userid}
@@ -27,14 +27,13 @@ export const UserMetaController = () => {
                 return res.status(200).json({
                     message: isFavorite ? "Removed from Favorites" : "Added to Favorites", type: "success"
                 });
-            }
-            catch (error) {
+            } catch (error) {
                 const status = error.message.includes("token") ? 401 : 500;
                 console.log(error.message);
                 return res.status(status).json({message: error.message});
             }
         }, async getFavorites(req, res) {
-            const authUser = isAuthUser(req);
+            const authUser = req.authUser;
             const prisma = await getPrismaInstance();
 
             if (!authUser) {
@@ -74,7 +73,7 @@ export const UserMetaController = () => {
                 return res.status(500).json({message: "Internal Server Error"});
             }
         }, async updatePlayerState(req, res) {
-            const authUser = isAuthUser(req);
+            const authUser = req.authUser;
 
             if (!authUser) {
                 return res.status(401).json({error: 'Unauthorized'});
@@ -106,7 +105,7 @@ export const UserMetaController = () => {
                 res.status(500).json({error: 'Internal server error'});
             }
         }, async getPlayerState(req, res) {
-            const authUser = isAuthUser(req);
+            const authUser = req.authUser;
             const prisma = await getPrismaInstance();
 
             const {playerState} = await prisma.User.findFirst({

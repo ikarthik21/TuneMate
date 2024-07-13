@@ -2,29 +2,19 @@ import jwt from "jsonwebtoken";
 
 export const extractAndVerifyToken = (authHeader) => {
     if (!authHeader) {
-        console.log('Authorization header missing');
         return false;
     }
     const token = authHeader.split(' ')[1];
 
     if (!token) {
-        console.log('Token missing');
         return false;
     }
     try {
         return jwt.verify(token, process.env.TOKEN_SECRET);
     } catch (err) {
-        console.log('Invalid token');
         return false;
     }
 };
-
-export const isAuthUser = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    const authUser = extractAndVerifyToken(authHeader)
-    if (!authUser) return res.json({message: "Invalid Request"});
-    return authUser;
-}
 
 
 export const extractFields = (data) => {

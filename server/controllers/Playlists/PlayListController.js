@@ -1,4 +1,3 @@
-import {isAuthUser} from "../../utils/serverutils.js";
 import {getPrismaInstance} from "../../utils/prisma/prisma.js";
 
 
@@ -7,7 +6,7 @@ export const PlayListController = () => {
         async createNewPlaylist(req, res) {
             const {playlist} = req.body;
             try {
-                const authUser = isAuthUser(req);
+                const authUser = req.authUser;
                 const prisma = await getPrismaInstance();
 
                 const existingPlaylist = await prisma.playlist.findFirst({
@@ -35,10 +34,9 @@ export const PlayListController = () => {
             }
 
 
-        },
-        async getPlaylists(req, res) {
+        }, async getPlaylists(req, res) {
             try {
-                const authUser = isAuthUser(req);
+                const authUser = req.authUser;
                 const prisma = await getPrismaInstance();
 
                 const playlists = await prisma.playlist.findMany({
@@ -59,11 +57,10 @@ export const PlayListController = () => {
             } catch (err) {
                 console.log(err);
             }
-        },
-        async saveSongInPlaylist(req, res) {
+        }, async saveSongInPlaylist(req, res) {
             const {playlists, song} = req.body;
             try {
-                const authUser = isAuthUser(req);
+                const authUser = req.authUser;
                 const prisma = await getPrismaInstance();
 
                 const allPlaylists = await prisma.playlist.findMany({
@@ -97,12 +94,10 @@ export const PlayListController = () => {
                     message: "An error occurred while adding the song to playlists"
                 });
             }
-        },
-
-        async getPlaylistSongs(req, res) {
+        }, async getPlaylistSongs(req, res) {
             const {id: playlist_id} = req.params;
             try {
-                const authUser = isAuthUser(req);
+                const authUser = req.authUser;
                 const prisma = await getPrismaInstance();
 
                 const playlist = await prisma.playlist.findMany({
@@ -125,7 +120,7 @@ export const PlayListController = () => {
         }, async removeSongFromPlaylist(req, res) {
             const {playlists, id: songId} = req.body;
             try {
-                const authUser = isAuthUser(req);
+                const authUser = req.authUser;
                 const prisma = await getPrismaInstance();
 
                 const allPlaylists = await prisma.playlist.findMany({

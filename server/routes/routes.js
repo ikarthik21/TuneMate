@@ -3,10 +3,11 @@ import authRouter from "./authRoutes.js";
 import userMetaRouter from "./userMetaRoutes.js";
 import playListRouter from "./playlistRoutes.js";
 import commonRouter from "./commonRoutes.js";
+import {isAuthUser} from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/', isAuthUser, (req, res) => {
     console.log("API hit to backend");
 });
 

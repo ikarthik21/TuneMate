@@ -1,16 +1,17 @@
 import {Router} from "express";
 import ENDPOINTS from "./API_ENDPOINTS.js";
 import {UserMetaController} from "../controllers/Auth/UserMetaController.js";
+import {isAuthUser} from "../middlewares/auth.js";
 
 const userMetaRouter = Router();
 
-userMetaRouter.post(ENDPOINTS.ManageSongInFavorites, UserMetaController().manageUserFavorites);
+userMetaRouter.post(ENDPOINTS.ManageSongInFavorites, isAuthUser, UserMetaController().manageUserFavorites);
 
-userMetaRouter.get(ENDPOINTS.favorites, UserMetaController().getFavorites);
+userMetaRouter.get(ENDPOINTS.favorites, isAuthUser, UserMetaController().getFavorites);
 
-userMetaRouter.post(ENDPOINTS.updatePlayerState, UserMetaController().updatePlayerState);
+userMetaRouter.post(ENDPOINTS.updatePlayerState, isAuthUser, UserMetaController().updatePlayerState);
 
-userMetaRouter.get(ENDPOINTS.getPlayerState, UserMetaController().getPlayerState);
+userMetaRouter.get(ENDPOINTS.getPlayerState, isAuthUser, UserMetaController().getPlayerState);
 
 
 export default userMetaRouter;

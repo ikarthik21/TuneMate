@@ -1,25 +1,26 @@
-import jwt from 'jsonwebtoken';
+import {extractAndVerifyToken} from "../utils/serverutils.js";
 
 
-const Auth = (req, res, next) => {
-
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-        return res.json({message: "Authentication Failed "});
+export const isAuthUser = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    const authUser = extractAndVerifyToken(authHeader);
+    if (!authUser) {
+        return res.status(401).json({message: "Invalid Request"});
     }
+    req.authUser = authUser
+    next();
+};
 
-    try {
-        const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-        if (decoded.role === "customer" || decoded.role === "admin") {
-            next();
-        } else {
-            return res.json({message: "Authentication Failed"});
-        }
-    } catch (error) {
-        return res.json({message: "Error in Authentication"});
+
+export const isAdmin = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    const authUser = extractAndVerifyToken(authHeader);
+    if (!authUser) {
+        return res.status(401).json({message: "Invalid Request"});
     }
-
-}
-
-export default Auth;
+    if (authUser.role !== "admin") {
+        return false;
+    }
+    req.authUser = authUser
+    next();
+};
