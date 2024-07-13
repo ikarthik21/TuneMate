@@ -80,7 +80,7 @@ const UserPlaylists = () => {
     const renderSongsList = () => (<div className={"flex flex-col"}>
         {/* On Scroll NAV */}
         {isScrolled && (
-            <div className={"items-center flex bg-[#0e0e10] z-30 w-[60vw] sticky top-[70px] left-0 rounded"}>
+            <div className={"items-center flex bg-[#0e0e10] z-30   sticky top-[70px] left-0 rounded"}>
                 <div
                     className={"p-3 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer ml-8 mt-4 mb-4"}
                     onClick={handlePlayWholeList}>
@@ -94,7 +94,7 @@ const UserPlaylists = () => {
                 </div>
             </div>)}
 
-        <div className="flex flex-col mt-4 w-[60vw] mb-5">
+        <div className="flex flex-col mt-4 mb-5">
             {/*Song Meta Header */}
             <div className="grid grid-cols-10 gap-4 p-3 rounded bg-[#1b1b1b] sticky top-[138px] left-0 z-30 mb-2">
                 <div className="col-span-1 flex justify-center items-center">

@@ -43,7 +43,7 @@ const Album = () => {
         </div>
     </div>);
 
-    const renderSongsList = () => (<div className="flex flex-col mt-4 w-[50vw]">
+    const renderSongsList = () => (<div className="flex flex-col mt-4">
 
         <div className={"items-center flex "}>
             <div
