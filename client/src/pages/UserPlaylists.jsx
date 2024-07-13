@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import useHover from "@/hooks/useHover.js";
 import useClick from "@/hooks/useClick.js";
 import Wrapper from "@/pages/Wrapper.jsx";
-import {decodeHtmlEntities, formatRelativeTime, formatTime, truncateString} from "@/utils/MusicUtils.js";
+import {decodeHtmlEntities, formatRelativeTime, formatTime, truncateString, formatPlayCount} from "@/utils/MusicUtils.js";
 import {IoMdRemoveCircle} from "react-icons/io";
 import AddToPlaylist from "@/_components/Options/AddToPlaylist.jsx";
 import {FaPause, FaPlay} from "react-icons/fa";
@@ -153,7 +153,7 @@ const UserPlaylists = () => {
                 </div>
                 <div className="col-span-2 flex justify-center items-center">
                     <p className={`${songId === song.id ? 'text-[#59c2ef]' : 'text-white'} ml-4 text-sm`}>
-                        {isRecommended ? song.playCount : formatRelativeTime(song.addedAt)}
+                        {isRecommended ? formatPlayCount(song.playCount) : formatRelativeTime(song.addedAt)}
                     </p>
                 </div>
                 <div className="flex justify-center items-center">

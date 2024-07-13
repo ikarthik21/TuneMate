@@ -26,12 +26,10 @@ export function decodeHtmlEntities(text) {
     return element.textContent || element.innerText || '';
 }
 
-
 export const getAllArtists = (song) => {
     const artists = song?.artists.primary.map(artist => artist.name).join("  ") || "";
     return truncateString(artists, 50);
 };
-
 
 export const fetchPlaylistData = async (id, type) => {
     if (type === "ALBUM") {
@@ -71,5 +69,17 @@ export const formatRelativeTime = (dateString) => {
     if (hours > 0) return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
     if (minutes > 0) return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
     return seconds === 1 ? '1 second ago' : `${seconds} seconds ago`;
+}
+
+export const formatPlayCount = (number) => {
+
+    let numStr = number.toString();
+    let [integerPart, decimalPart] = numStr.split('.');
+
+    const lastThreeDigits = integerPart.slice(-3);
+    const otherDigits = integerPart.slice(0, -3);
+    const formattedInteger = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + (otherDigits ? ',' : '') + lastThreeDigits;
+
+    return decimalPart ? formattedInteger + '.' + decimalPart : formattedInteger;
 }
 
