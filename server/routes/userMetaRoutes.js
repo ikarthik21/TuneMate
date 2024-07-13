@@ -13,5 +13,9 @@ userMetaRouter.post(ENDPOINTS.updatePlayerState, isAuthUser, UserMetaController(
 
 userMetaRouter.get(ENDPOINTS.getPlayerState, isAuthUser, UserMetaController().getPlayerState);
 
+userMetaRouter.get(ENDPOINTS.getUserSongHistory, isAuthUser, UserMetaController().getUserSongHistory);
+
+userMetaRouter.post(ENDPOINTS.addSongToHistory, isAuthUser, UserMetaController().addSongToHistory);
+
 
 export default userMetaRouter;

@@ -5,6 +5,8 @@ export const ENDPOINTS = {
     favorites: 'api/meta/user/favorites',
     updatePlayerState: 'api/meta/user/updatePlayerState',
     loadPlayerState: 'api/meta/user/getPlayerState',
+    addSongToHistory: 'api/meta/user/addSongToHistory',
+    getUserSongHistory: "api/meta/user/SongsHistory",
     createNewPlaylist: 'api/playlists/createNewPlaylist',
     getPlaylists: 'api/playlists/all',
     saveSongInPlaylist: 'api/playlists/songs/saveSongInPlaylist',

@@ -14,6 +14,16 @@ export const tuneMateClient = axios.create({
 
 class TuneMateService {
 
+    addSongToHistory = async (song) => {
+        try {
+            const response = await tuneMateClient.post(ENDPOINTS.addSongToHistory, song);
+            return response.data;
+        } catch (err) {
+            return err;
+        }
+
+    }
+
     getPlaylists = async () => {
         try {
             const response = await tuneMateClient.get(ENDPOINTS.getPlaylists);
@@ -76,6 +86,15 @@ class TuneMateService {
             return err;
         }
     }
+    getUserSongHistory = async () => {
+        try {
+            const response = await tuneMateClient.get(ENDPOINTS.getUserSongHistory);
+            return response.data.history;
+        } catch (err) {
+            return err;
+        }
+
+    }
 
     createNewPlaylist = async (data, role) => {
         try {
@@ -124,6 +143,7 @@ class TuneMateService {
             return err;
         }
     }
+
     getTuneMateRecommended = async () => {
         try {
             const response = await tuneMateClient.get(ENDPOINTS.recommended);
@@ -132,6 +152,7 @@ class TuneMateService {
             return err;
         }
     }
+
     getRecommendedPlaylist = async (id) => {
         try {
             const response = await tuneMateClient.get(ENDPOINTS.recommendedPlaylist(id));

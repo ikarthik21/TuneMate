@@ -2,8 +2,9 @@ import {create} from 'zustand';
 import MusicServiceInstance from '@/service/api/music_apis.js';
 import tuneMateInstance from '@/service/api/api.js';
 import {throttle} from 'lodash';
-import {fetchPlaylistData} from '@/utils/MusicUtils.js';
+import {fetchPlaylistData, getAllArtists} from '@/utils/MusicUtils.js';
 import {createRef} from 'react';
+import {mutate} from "swr";
 
 const usePlayerStore = create((set, get) => ({
     isLoading: false,
@@ -39,10 +40,22 @@ const usePlayerStore = create((set, get) => ({
                 ...state, isLoading: false, isPlaying: true, song: result
             }));
             await tuneMateInstance.updatePlayerState({songId: id});
+            await tuneMateInstance.addSongToHistory({
+                song: {
+                    id: result.id,
+                    name: result.name,
+                    duration: result.duration,
+                    image: result.image[2].url,
+                    artists: getAllArtists(result),
+                    album: result.album.name
+                }
+            })
+
         } catch (error) {
             console.error('Error fetching song', error);
             set({isLoading: false, error: 'Error fetching song'});
         }
+        mutate("user-song-history")
     },
 
     loadPlaylist: async ({id, type, index}) => {
