@@ -6,11 +6,12 @@ import useModal from "@/hooks/useModal.js";
 import SideBar from "@/_components/navigation/SideBar/SideBar.jsx";
 import Modal from "@/_components/Modals/Modal.jsx";
 import Login from "@/pages/auth/login.jsx";
+import {SkeletonTheme} from 'react-loading-skeleton';
 
 function App() {
     const {closeModal, openModal, modalRef, isOpen} = useModal();
 
-    return (<>
+    return (<SkeletonTheme baseColor="#202020" highlightColor="#444">
         <Router>
             <div className="z-50">
                 <NavBar openModal={openModal}/>
@@ -29,7 +30,7 @@ function App() {
             </Modal>
         </Router>
         <Player/>
-    </>);
+    </SkeletonTheme>);
 }
 
 export default App;

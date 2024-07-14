@@ -5,6 +5,7 @@ import usePlayerStore from "@/store/use-player.js";
 import Wrapper from "@/pages/Wrapper.jsx";
 import {decodeHtmlEntities, truncateString} from "@/utils/MusicUtils.js";
 import {FaPlay} from "react-icons/fa";
+import AlbumSkeleton from "@/_components/skeletons/AlbumSkeleton.jsx";
 
 const UserRecents = () => {
     const {hoveredItemId, handleMouseEnter, handleMouseLeave} = useHover();
@@ -17,15 +18,12 @@ const UserRecents = () => {
     if (error) return <div><h1>Error.....</h1></div>;
 
     return (<Wrapper>
-        {songHistory.length > 0 && (<div className="mb-8">
 
+        {songHistory.length > 0 && (<div className="mb-8">
             <div className={"flex items-center justify-between"}>
                 <h1 className="text-2xl ubuntu-bold">Recently Played</h1>
-
             </div>
-
-
-            <div className="flex flex-col">
+            {isLoading ? <AlbumSkeleton count={20}/> : <div className="flex flex-col">
                 <div className="flex flex-wrap ">
                     {songHistory?.map((song) => (<div
                         key={song.id}
@@ -64,9 +62,8 @@ const UserRecents = () => {
                         </div>
                     </div>))}
                 </div>
-            </div>
+            </div>}
         </div>)}
-
     </Wrapper>);
 };
 
