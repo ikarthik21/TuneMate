@@ -5,6 +5,7 @@ import MusicServiceInstance from "@/service/api/music_apis.js";
 import {decodeHtmlEntities, formatTime, truncateString} from "@/utils/MusicUtils.js";
 import Wrapper from "@/pages/Wrapper.jsx";
 import {FaPlay} from "react-icons/fa";
+import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
 
 const Playlist = () => {
     const {id} = useParams();
@@ -70,11 +71,12 @@ const Playlist = () => {
         </div>))}
     </div>);
 
+
     return (<Wrapper>
-        <div className="flex flex-col mb-8">
+        {isLoading ? <UserPlayListSkeleton count={10}/> : <>
             {renderPlaylistDetails()}
             {renderSongsList()}
-        </div>
+        </>}
     </Wrapper>);
 };
 

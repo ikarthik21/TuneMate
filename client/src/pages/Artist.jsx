@@ -2,10 +2,11 @@ import Wrapper from "@/pages/Wrapper.jsx";
 import {useParams} from "react-router-dom";
 import useSWR from "swr";
 import MusicServiceInstance from "@/service/api/music_apis.js";
-import {formatTime, decodeHtmlEntities, truncateString} from "@/utils/MusicUtils.js";
+import {decodeHtmlEntities, formatTime, truncateString} from "@/utils/MusicUtils.js";
 import {MdVerified} from "react-icons/md";
 import usePlayerStore from "@/store/use-player.js";
 import {FaPlay} from "react-icons/fa";
+import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
 
 const Artist = () => {
     const {id} = useParams();
@@ -73,11 +74,12 @@ const Artist = () => {
         </div>))}
     </div>);
 
+
     return (<Wrapper>
-        <div className="flex flex-col mb-8">
+        {isLoading ? <UserPlayListSkeleton count={10}/> : <>
             {renderArtistDetails()}
             {renderSongsList()}
-        </div>
+        </>}
     </Wrapper>);
 };
 

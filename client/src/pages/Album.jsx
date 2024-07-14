@@ -5,6 +5,7 @@ import {useParams} from "react-router-dom";
 import {decodeHtmlEntities, formatTime, truncateString} from '@/utils/MusicUtils.js';
 import usePlayerStore from "@/store/use-player.js";
 import {FaPlay} from "react-icons/fa";
+import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
 
 const Album = () => {
     const {id} = useParams();
@@ -25,7 +26,6 @@ const Album = () => {
         return str;
     }
 
-    if (isLoading) return <div><h1>Loading.....</h1></div>;
     if (error) return <div><h1>Error.....</h1></div>;
 
     const renderAlbumDetails = () => (<div className="flex items-center">
@@ -77,10 +77,10 @@ const Album = () => {
     </div>);
 
     return (<Wrapper>
-        <div className="flex flex-col mb-8">
+        {isLoading ? <UserPlayListSkeleton count={10}/> : <>
             {renderAlbumDetails()}
             {renderSongsList()}
-        </div>
+        </>}
     </Wrapper>);
 };
 

@@ -12,6 +12,7 @@ import {FaPause, FaPlay} from "react-icons/fa";
 import {BiSolidPlaylist} from "react-icons/bi";
 import useSWR from "swr";
 import tuneMateInstance from "@/service/api/api.js";
+import UserPlayListSkeleton from '@/_components/skeletons/UserPlayListSkeleton.jsx';
 
 const UserPlaylists = () => {
     const {id} = useParams();
@@ -41,7 +42,7 @@ const UserPlaylists = () => {
         };
     }, []);
 
-    if (isLoading) return <div><h1>Loading.....</h1></div>;
+
     if (error) return <div><h1>Error.....</h1></div>;
 
     const handlePlayWholeList = async () => {
@@ -176,8 +177,10 @@ const UserPlaylists = () => {
     </div>);
 
     return (<Wrapper>
-        {renderPlaylistDetails()}
-        {renderSongsList()}
+        {isLoading ? <UserPlayListSkeleton count={10}/> : <>
+            {renderPlaylistDetails()}
+            {renderSongsList()}
+        </>}
     </Wrapper>);
 };
 
