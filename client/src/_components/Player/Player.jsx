@@ -3,13 +3,16 @@ import MusicSeek from "@/_components/Player/MusicSeek.jsx";
 import Volume from "@/_components/Player/Volume.jsx";
 import MusicInfo from "@/_components/Player/MusicInfo.jsx";
 import {IoPlaySkipBack, IoPlaySkipForward} from "react-icons/io5";
+import {MdOutlineLoop} from "react-icons/md";
+import {FaShuffle} from "react-icons/fa6";
 import usePlayerStore from '@/store/use-player.js';
 import {useEffect} from "react";
 import useAuthStore from "@/store/use-auth.js";
 
 const Player = () => {
     const {
-        song, isPlaying, getFavorites, loadPlayerState, playNext, playPrevious, AudioRef, handleAudioPlay
+        song, isPlaying, getFavorites, loadPlayerState, playNext, playPrevious, AudioRef, handleAudioPlay, onLoop,
+        handleSongLoop, isShuffling, handleShuffle
     } = usePlayerStore();
     const {isAuthenticated} = useAuthStore()
 
@@ -24,17 +27,8 @@ const Player = () => {
     }, [getFavorites, isAuthenticated, loadPlayerState]);
 
     useEffect(() => {
-        const audio = AudioRef.current;
-        if (audio) {
-            const handleEnded = async () => {
-                await playNext();
-            };
-            audio.addEventListener('ended', handleEnded);
-            return () => {
-                audio.removeEventListener('ended', handleEnded);
-            };
-        }
-    }, [AudioRef, playNext]);
+        handleAudioPlay();
+    }, [handleAudioPlay]);
 
 
     return ((<div
@@ -47,7 +41,11 @@ const Player = () => {
             <div className="flex flex-col justify-center items-center flex-1">
                 <audio src={song?.downloadUrl[4].url} autoPlay ref={AudioRef}></audio>
                 <div className="mt-4 flex items-center justify-center">
+
+                    <FaShuffle size={18} className="mr-8 cursor-pointer" onClick={handleShuffle}
+                               color={isShuffling ? "#59c2ef" : ""}/>
                     <IoPlaySkipBack size={20} className="mr-8 cursor-pointer" onClick={playPrevious}/>
+
                     <div
                         className="bg-white mr-8 p-2 rounded-full flex items-center justify-center cursor-pointer"
                         onClick={handleAudioPlay}>
@@ -55,6 +53,10 @@ const Player = () => {
                             <FaPlay size={15} color="black" className="relative left-[2px]"/>}
                     </div>
                     <IoPlaySkipForward size={20} className="cursor-pointer" onClick={playNext}/>
+
+                    <MdOutlineLoop size={20} className="cursor-pointer ml-8" color={onLoop ? "#59c2ef" : ""}
+                                   onClick={handleSongLoop}/>
+
                 </div>
                 <div className="m-2">
                     <MusicSeek AudioRef={AudioRef}/>

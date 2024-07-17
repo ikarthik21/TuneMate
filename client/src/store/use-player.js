@@ -6,6 +6,10 @@ import {fetchPlaylistData, getAllArtists} from '@/utils/MusicUtils.js';
 import {createRef} from 'react';
 import {mutate} from "swr";
 
+const getRandomIndex = (arrayLength) => {
+    return Math.floor(Math.random() * arrayLength);
+};
+
 const usePlayerStore = create((set, get) => ({
     isLoading: false,
     song: null,
@@ -17,7 +21,8 @@ const usePlayerStore = create((set, get) => ({
     volume: 50,
     Favorites: [],
     AudioRef: createRef(),
-
+    onLoop: false,
+    isShuffling: false,
     setVolume: async (value) => {
         try {
             set({volume: value});
@@ -26,11 +31,9 @@ const usePlayerStore = create((set, get) => ({
             console.error('Failed to set volume', error);
         }
     },
-
     setIsPlaying: (value) => {
         set({isPlaying: value});
     },
-
     playSong: async (id) => {
         set({isLoading: true, error: null, songId: id});
         try {
@@ -79,25 +82,38 @@ const usePlayerStore = create((set, get) => ({
     },
 
     playNext: throttle(async () => {
-        const {playlist, currentSongIndex} = get();
-        if (currentSongIndex === null || currentSongIndex >= playlist.songs.length - 1) {
+        const {playlist, currentSongIndex, isShuffling} = get();
+        if (playlist.songs.length === 0) {
             return;
         }
-        const nextIndex = currentSongIndex + 1;
+        let nextIndex;
+        if (isShuffling) {
+            nextIndex = getRandomIndex(playlist.songs.length, currentSongIndex);
+        } else {
+            nextIndex = (currentSongIndex + 1) % playlist.songs.length;
+        }
         set({currentSongIndex: nextIndex});
         await tuneMateInstance.updatePlayerState({currentSongIndex: nextIndex});
         await get().playSong(playlist.songs[nextIndex].id);
     }, 500),
 
+
     playPrevious: throttle(async () => {
-        const {playlist, currentSongIndex} = get();
-        if (currentSongIndex === null || currentSongIndex <= 0) {
+        const {playlist, currentSongIndex, isShuffling} = get();
+        if (playlist.songs.length === 0) {
             return;
         }
-        const prevIndex = currentSongIndex - 1;
+        let prevIndex;
+        if (isShuffling) {
+            prevIndex = getRandomIndex(playlist.songs.length, currentSongIndex);
+            console.log("isShuffling")
+            console.log(prevIndex)
+        } else {
+            prevIndex = (currentSongIndex - 1 + playlist.songs.length) % playlist.songs.length;
+        }
         set({currentSongIndex: prevIndex});
-        await get().playSong(playlist.songs[prevIndex].id);
         await tuneMateInstance.updatePlayerState({currentSongIndex: prevIndex});
+        await get().playSong(playlist.songs[prevIndex].id);
     }, 500),
 
     playSongByIndex: async (index) => {
@@ -109,13 +125,14 @@ const usePlayerStore = create((set, get) => ({
         await tuneMateInstance.updatePlayerState({currentSongIndex: index});
         await get().playSong(playlist.songs[index].id);
     },
-
     loadPlayerState: async () => {
         try {
             const {playerState} = await tuneMateInstance.getPlayerState();
-            const {songId, currentSongIndex, playListId, Volume, playListType} = playerState;
+            const {songId, currentSongIndex, playListId, Volume, playListType,onLoop,isShuffling} = playerState;
             set({currentSongIndex});
             set({volume: Volume});
+            set({onLoop: onLoop});
+            set({isShuffling: isShuffling});
             await get().loadPlaylist({id: playListId, type: playListType});
             await get().playSong(songId);
         } catch (error) {
@@ -136,6 +153,29 @@ const usePlayerStore = create((set, get) => ({
             audio.pause();
             set({isPlaying: false});
         }
+
+        if (audio) {
+            audio.onended = () => {
+                if (get().onLoop) {
+                    audio.currentTime = 0;
+                    audio.play();
+                } else {
+                    get().playNext();
+                }
+            };
+        }
+
+
+    },
+    handleSongLoop: async () => {
+        let currentStatus = get().onLoop;
+        set({onLoop: !currentStatus});
+        await tuneMateInstance.updatePlayerState({onLoop: !currentStatus});
+    },
+    handleShuffle: async () => {
+        let currentStatus = get().isShuffling;
+        set({isShuffling: !currentStatus});
+        await tuneMateInstance.updatePlayerState({isShuffling: !currentStatus});
     }
 }));
 
