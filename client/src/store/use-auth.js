@@ -6,6 +6,7 @@ const useAuthStore = create((set) => ({
     accessToken: getAccessToken(),
     isAuthenticated: !!getAccessToken(),
     username: getUsernameFromToken(getAccessToken()),
+    userId: getUserIdFromToken(getAccessToken()),
     role: getUserRole(),
     setAccessToken: (token) => {
         const decodedToken = jwtDecode(token);
@@ -50,6 +51,17 @@ function getUsernameFromToken(token) {
     try {
         const decodedToken = jwtDecode(token);
         return decodedToken.username || null;
+    } catch (error) {
+        console.error('Invalid token:', error);
+        return null;
+    }
+}
+
+function getUserIdFromToken(token) {
+    if (!token) return null;
+    try {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.userid || null;
     } catch (error) {
         console.error('Invalid token:', error);
         return null;

@@ -6,6 +6,7 @@ import Playlist from "@/pages/Playlist.jsx";
 import Favorites from "@/pages/Favorites.jsx";
 import UserPlaylists from "@/pages/UserPlaylists.jsx";
 import UserRecents from "@/pages/UserRecents.jsx";
+import WebSocketComponent from '@/pages/WebSocketComponent.jsx'
 
 const routesConfig = [{path: "/", element: <Home/>}, {path: "/albums/:id", element: <Album/>}, {
     path: "/artists/:id", element: <Artist/>
@@ -13,7 +14,7 @@ const routesConfig = [{path: "/", element: <Home/>}, {path: "/albums/:id", eleme
     path: "/recent", element: <UserRecents/>
 }, {path: "/favorites", element: <Favorites/>}, {
     path: "/u/playlists/:id", element: <UserPlaylists/>
-}, {path: "/recommended/:id", element: <UserPlaylists/>},]
+}, {path: "/recommended/:id", element: <UserPlaylists/>}, {path: "/web", element: <WebSocketComponent/>}]
 
 
 export default routesConfig;

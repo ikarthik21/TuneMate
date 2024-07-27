@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {formatTime} from '@/utils/MusicUtils.js';
 
@@ -37,7 +37,7 @@ const MusicSeek = ({AudioRef}) => {
             max="100"
             value={(currentTime / duration) * 100 || 0}
             onChange={handleSeek}
-            className="w-96 h-1 bg-gray-300 rounded-lg cursor-pointer"
+            className="min-w-80 h-1 bg-gray-300 rounded-lg cursor-pointer"
         />
         <span className="text-sm ml-2">{formatTime(duration)}</span>
     </div>);

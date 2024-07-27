@@ -66,9 +66,9 @@ const Home = () => {
 
                         <div className="flex flex-col mt-1">
                             <h3 className="mt-1 mb-1 nunito-sans-bold">{truncateString(decodeHtmlEntities(playlist.name), 20)}</h3>
-                            <p>
+                            <div>
                                 <p className={"text-xs text-[#6a6a6a] nunito-sans-bold"}>{playlist.songs.length} songs</p>
-                            </p>
+                            </div>
                         </div>
                     </Link>))}
                 </div>}

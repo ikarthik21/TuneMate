@@ -8,13 +8,27 @@ import {FaShuffle} from "react-icons/fa6";
 import usePlayerStore from '@/store/use-player.js';
 import {useEffect} from "react";
 import useAuthStore from "@/store/use-auth.js";
+import {GrSync} from "react-icons/gr";
+import Connect from "@/_components/UserSync/Connect.jsx";
+import useConnectBoxStore from "@/store/use-connectbox.js";
 
 const Player = () => {
     const {
-        song, isPlaying, getFavorites, loadPlayerState, playNext, playPrevious, AudioRef, handleAudioPlay, onLoop,
-        handleSongLoop, isShuffling, handleShuffle
+        song,
+        isPlaying,
+        getFavorites,
+        loadPlayerState,
+        playNext,
+        playPrevious,
+        AudioRef,
+        handleAudioPlay,
+        onLoop,
+        handleSongLoop,
+        isShuffling,
+        handleShuffle
     } = usePlayerStore();
     const {isAuthenticated} = useAuthStore()
+    const {isConnectVisible, showConnectBox} = useConnectBoxStore();
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -62,9 +76,16 @@ const Player = () => {
                     <MusicSeek AudioRef={AudioRef}/>
                 </div>
             </div>
+
+
             <div className="flex-1 flex justify-end items-center">
+                {isConnectVisible && <div className={"relative border"}>
+                    <Connect/>
+                </div>}
+                <GrSync className={"mr-8 cursor-pointer"} onClick={showConnectBox}/>
                 <Volume AudioRef={AudioRef}/>
             </div>
+
         </div>
     </div>));
 };

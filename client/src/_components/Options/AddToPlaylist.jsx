@@ -51,7 +51,7 @@ const AddToPlaylist = ({ clickEvent }) => {
         const calculatePosition = () => {
             if (addMenuRef.current && clickEvent) {
                 const rect = addMenuRef.current.getBoundingClientRect();
-                const clickY = clickEvent.clientY  ;
+                const clickY = clickEvent?.clientY  ;
                 const spaceAbove = clickY;
                 const spaceBelow = window.innerHeight - clickY;
                 if (spaceBelow < rect.height && spaceAbove > spaceBelow) {

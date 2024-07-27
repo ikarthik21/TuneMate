@@ -5,12 +5,16 @@ import {throttle} from 'lodash';
 import {fetchPlaylistData, getAllArtists} from '@/utils/MusicUtils.js';
 import {createRef} from 'react';
 import {mutate} from "swr";
+import useWebSocketStore from '@/store/use-websocket.js';
+import useAuthStore from "@/store/use-auth.js";
 
 const getRandomIndex = (arrayLength) => {
     return Math.floor(Math.random() * arrayLength);
 };
 
+
 const usePlayerStore = create((set, get) => ({
+
     isLoading: false,
     song: null,
     error: null,
@@ -35,6 +39,10 @@ const usePlayerStore = create((set, get) => ({
         set({isPlaying: value});
     },
     playSong: async (id) => {
+        const {send, targetUserId} = useWebSocketStore.getState();
+        const {userId} = useAuthStore.getState();
+
+        send({action: "MUSIC_UPDATE", payload: {userId: userId, fromUserId: targetUserId, songId: id}});
         set({isLoading: true, error: null, songId: id});
         try {
             const response = await MusicServiceInstance.getSingleSong(id);
@@ -128,7 +136,7 @@ const usePlayerStore = create((set, get) => ({
     loadPlayerState: async () => {
         try {
             const {playerState} = await tuneMateInstance.getPlayerState();
-            const {songId, currentSongIndex, playListId, Volume, playListType,onLoop,isShuffling} = playerState;
+            const {songId, currentSongIndex, playListId, Volume, playListType, onLoop, isShuffling} = playerState;
             set({currentSongIndex});
             set({volume: Volume});
             set({onLoop: onLoop});
