@@ -2,9 +2,15 @@ import Redis from "ioredis";
 
 class SocketHelper {
     constructor() {
-        const redisUrl = process.env.REDIS_URL || 'http://localhost:6379';
+        // const redisUrl = process.env.REDIS_URL || 'http://localhost:6379';
 
-        this.redisClient = new Redis(redisUrl);
+        this.redisClient = new Redis({
+            port: process.env.REDIS_PORT,
+            host: process.env.REDIS_HOST,
+            username: process.env.REDIS_USERNAME,
+            password: process.env.REDIS_PASSWORD,
+        });
+
         this.wsConnections = new Map();
         this.redisClient.on('connect', () => {
             console.log('Successfully connected to Redis');
