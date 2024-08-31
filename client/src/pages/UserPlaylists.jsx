@@ -177,10 +177,10 @@ const UserPlaylists = () => {
     </div>);
 
     return (<Wrapper>
-        {isLoading ? <UserPlayListSkeleton count={10}/> : <>
+        {isLoading ? <UserPlayListSkeleton count={10}/> : <div className={"mr-24"}>
             {renderPlaylistDetails()}
             {renderSongsList()}
-        </>}
+        </div>}
     </Wrapper>);
 };
 

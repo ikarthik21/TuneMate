@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import MusicServiceInstance from '@/service/api/music_apis.js';
 import tuneMateInstance from '@/service/api/api.js';
-import {throttle} from 'lodash';
+import {debounce, throttle} from 'lodash';
 import {fetchPlaylistData, getAllArtists} from '@/utils/MusicUtils.js';
 import {createRef} from 'react';
 import {mutate} from "swr";
@@ -128,7 +128,7 @@ const usePlayerStore = create((set, get) => ({
     loadPlayerState: async () => {
         try {
             const {playerState} = await tuneMateInstance.getPlayerState();
-            const {songId, currentSongIndex, playListId, Volume, playListType,onLoop,isShuffling} = playerState;
+            const {songId, currentSongIndex, playListId, Volume, playListType, onLoop, isShuffling} = playerState;
             set({currentSongIndex});
             set({volume: Volume});
             set({onLoop: onLoop});
@@ -144,29 +144,31 @@ const usePlayerStore = create((set, get) => ({
         const Favorites = data.map(item => item.id);
         set({Favorites: Favorites});
     },
-    handleAudioPlay: () => {
+    handleAudioPlay: debounce(async () => {
         const audio = get().AudioRef.current;
-        if (audio && audio.paused) {
-            audio.play();
-            set({isPlaying: true});
-        } else if (audio) {
-            audio.pause();
-            set({isPlaying: false});
+        if (!audio) return;
+        try {
+            if (audio.paused) {
+                await audio.play();
+                set({isPlaying: true});
+            } else {
+                await audio.pause();
+                set({isPlaying: false});
+            }
+        } catch (error) {
+            console.error("Error in handleAudioPlay:", error);
         }
-
         if (audio) {
-            audio.onended = () => {
+            audio.onended = async () => {
                 if (get().onLoop) {
                     audio.currentTime = 0;
-                    audio.play();
+                    await audio.play();
                 } else {
-                    get().playNext();
+                    await get().playNext();
                 }
             };
         }
-
-
-    },
+    }, 300),
     handleSongLoop: async () => {
         let currentStatus = get().onLoop;
         set({onLoop: !currentStatus});

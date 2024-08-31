@@ -65,10 +65,10 @@ const Home = () => {
 
 
                         <div className="flex flex-col mt-1">
-                            <h3 className="mt-1 mb-1 nunito-sans-bold">{truncateString(decodeHtmlEntities(playlist.name), 20)}</h3>
-                            <p>
+                            <h3 className="mt-1 mb-1 nunito-sans-bold">{truncateString(decodeHtmlEntities(playlist.name), 15)}</h3>
+                            <div>
                                 <p className={"text-xs text-[#6a6a6a] nunito-sans-bold"}>{playlist.songs.length} songs</p>
-                            </p>
+                            </div>
                         </div>
                     </Link>))}
                 </div>}
@@ -83,7 +83,7 @@ const Home = () => {
                 <div className={"flex items-center justify-between"}>
                     <h1 className="text-2xl ubuntu-bold">Recently Played</h1>
                     <Link to={'/recent'}>
-                        <h1 className={"hover:underline nunito-sans-bold"}>Show all</h1>
+                        <h1 className={"hover:underline nunito-sans-bold text-sm underline underline-offset-2"}>Show all</h1>
                     </Link>
                 </div>
 
