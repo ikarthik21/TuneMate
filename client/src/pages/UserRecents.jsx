@@ -51,11 +51,11 @@ const UserRecents = () => {
                         </div>
 
                         <div className="flex flex-col mt-1">
-                            <h3 className="mt-1 mb-1 nunito-sans-bold">
+                            <h2 className="mt-1 nunito-sans-bold">
                                 {truncateString(decodeHtmlEntities(song.name), 15)}
-                            </h3>
+                            </h2>
                             <div className="flex items-center text-xs">
-                                <p className="mr-2 text-xs text-[#6a6a6a] nunito-sans-bold">
+                                <p className="text-[11px] text-[#6a6a6a] nunito-sans-bold">
                                     {truncateString(decodeHtmlEntities(song.album), 25)}
                                 </p>
                             </div>
