@@ -3,7 +3,7 @@ import {ENDPOINTS} from "@/service/endpoints/MUSIC_ENDPOINTS.js";
 
 
 const apiClient = axios.create({
-    baseURL: 'https://saavn.dev/api', timeout: 10000, headers: {'Content-Type': 'application/json'}
+    baseURL:import.meta.env.VITE_TUNEMATE_SERVICES_URL, timeout: 10000, headers: {'Content-Type': 'application/json'}
 });
 
 

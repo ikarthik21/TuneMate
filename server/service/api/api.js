@@ -2,7 +2,7 @@ import axios from 'axios';
 import ENDPOINTS from "./endpoints.js";
 
 const apiClient = axios.create({
-    baseURL: 'https://saavn.dev/api', timeout: 10000, headers: {'Content-Type': 'application/json'}
+    baseURL: process.env.TUNEMATE_SERVICES_URL, timeout: 10000, headers: {'Content-Type': 'application/json'}
 });
 
 
