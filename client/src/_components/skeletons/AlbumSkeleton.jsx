@@ -1,14 +1,15 @@
+/* eslint-disable react/prop-types */
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 
 const AlbumSkeleton = ({count}) => {
 
-    return (<div className="flex flex-wrap items-center mr-[160px]">
+    return (<div className="flex flex-wrap items-center">
         {[...Array(count)].map((_, i) => (
             <div key={i} className={"flex items-center m-4 "}>
                 <div className={"flex flex-col"}>
                     <div>
-                        <Skeleton height={190} width={200}/>
+                        <Skeleton height={180} width={190}/>
                     </div>
                     <div>
                         <Skeleton height={20} width={120}/>

@@ -10,17 +10,17 @@ const UserPlayListSkeleton = ({count}) => {
                 </div>
                 <div className={"ml-4 "}>
                     <div>
-                        <Skeleton height={35} width={500}/>
+                        <Skeleton height={50} width={600}/>
                         <Skeleton height={35} width={200}/>
                     </div>
                 </div>
             </div>
 
-            <div className={"mt-12"}>
-                <Skeleton circle={true} height={60} width={60}/>
+            <div className={"mt-8"}>
+                <Skeleton circle={true} height={50} width={50}/>
             </div>
 
-            <div className={"flex flex-col mt-12"}>
+            <div className={"flex flex-col mt-12 ml-24"}>
                 {[...Array(count)].map((_, i) => (<div key={i} className={"m-1"}>
                         <div className={"flex items-end "}>
                             <div className={"mr-2"}>

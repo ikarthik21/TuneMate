@@ -18,7 +18,7 @@ const Home = () => {
     } = useSWR('tunemate-recommend', () => tuneMateInstance.getTuneMateRecommended());
 
     const {
-        data: songHistory, _, isLoading: RecentsLoading
+        data: songHistory, err, isLoading: RecentsLoading
     } = useSWR('user-song-history', () => tuneMateInstance.getUserSongHistory());
 
     const handlePlayWholeList = async (e, id) => {
@@ -28,7 +28,7 @@ const Home = () => {
         });
     };
 
-    if (error) return <div><h1>Error.....</h1></div>;
+    if (error || err) return <div><h1>Error.....</h1></div>;
 
     return (<Wrapper>
 
