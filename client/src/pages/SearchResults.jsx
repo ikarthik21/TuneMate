@@ -1,15 +1,15 @@
 import useSearchStore from "@/store/use-search.js";
-import {useDebounce} from '@/hooks/useDebounce.js';
+import { useDebounce } from '@/hooks/useDebounce.js';
 import MusicServiceInstance from '@/service/api/music_apis.js';
 import useSWR from "swr";
 import usePlayerStore from '@/store/use-player.js';
-import {decodeHtmlEntities, truncateString} from '@/utils/MusicUtils.js';
-import {Link} from 'react-router-dom';
+import { decodeHtmlEntities, truncateString } from '@/utils/MusicUtils.js';
+import { Link } from 'react-router-dom';
 import Wrapper from "@/pages/Wrapper.jsx";
 
 const SearchResults = () => {
-    const {search} = useSearchStore();
-    const {playSong} = usePlayerStore();
+    const { search } = useSearchStore();
+    const { playSong } = usePlayerStore();
     const debouncedSearch = useDebounce(search, 400);
 
     const {
@@ -30,7 +30,7 @@ const SearchResults = () => {
                 </div>);
             }
 
-            return (<Link key={id} to={`/${type}s/${id}`} className="flex m-2" onClick={() => playSong(id)}>
+            return (<Link key={id} to={`/${type}s/${id}`} className="flex m-2" >
                 {children}
             </Link>);
         };
@@ -39,7 +39,7 @@ const SearchResults = () => {
             <h1 className="mukta-medium text-2xl">Top Result</h1>
             {renderItem(topResult.type, topResult.id, (
                 <div className="flex items-center w-96 hover:bg-[#18181b] p-4 rounded-xl cursor-pointer">
-                    <img src={topResult.image[1].url} alt="" className="h-36 w-36 rounded-xl"/>
+                    <img src={topResult.image[1].url} alt="" className="h-36 w-36 rounded-xl" />
                     <div className="flex flex-col ml-5">
                         <h1 className="text-2xl mukta-medium">{truncateString(decodeHtmlEntities(topResult.title), 20)}</h1>
                         {topResult.type === "song" && (
@@ -56,7 +56,7 @@ const SearchResults = () => {
                 className="flex items-center w-[25rem] hover:bg-[#18181b] cursor-pointer p-3 rounded-xl"
                 onClick={() => playSong(song.id)}
             >
-                <img src={song.image[1].url} alt="" className="h-12 w-12 rounded-xl"/>
+                <img src={song.image[1].url} alt="" className="h-12 w-12 rounded-xl" />
                 <div className="flex flex-col ml-2">
                     <h3 className="nunito-sans-bold">{truncateString(decodeHtmlEntities(song.title), 35)}</h3>
                     <p className="text-xs text-[#6a6a6a] nunito-sans-bold">{truncateString(decodeHtmlEntities(song.singers))}</p>
@@ -69,8 +69,8 @@ const SearchResults = () => {
         <h1 className="mukta-medium text-2xl">Albums</h1>
         <div className="flex items-center">
             {data.albums.results.map(album => (<Link key={album.id} to={`/albums/${album.id}`}
-                                                     className="flex cursor-pointer flex-col m-2 hover:bg-[#18181b] p-3 rounded-xl w-52 h-64 justify-center">
-                <img src={album.image[1].url} alt="" className="rounded-xl"/>
+                className="flex cursor-pointer flex-col m-2 hover:bg-[#18181b] p-3 rounded-xl w-52 h-64 justify-center">
+                <img src={album.image[1].url} alt="" className="rounded-xl" />
                 <div className="flex flex-col mt-1">
                     <h3 className="mt-1 mb-1 nunito-sans-bold">{truncateString(decodeHtmlEntities(album.title), 15)}</h3>
                     <p className="text-xs text-[#6a6a6a] nunito-sans-bold">
@@ -86,8 +86,8 @@ const SearchResults = () => {
         <h1 className="mukta-medium text-2xl">Artists</h1>
         <div className="flex items-center">
             {data.artists.results.map(artist => (<Link key={artist.id} to={`/artists/${artist.id}`}
-                                                       className="flex cursor-pointer flex-col m-2 hover:bg-[#18181b] p-3 rounded-xl w-52 h-64 justify-center">
-                <img src={artist.image[1].url} alt="" className="rounded-xl"/>
+                className="flex cursor-pointer flex-col m-2 hover:bg-[#18181b] p-3 rounded-xl w-52 h-64 justify-center">
+                <img src={artist.image[1].url} alt="" className="rounded-xl" />
                 <div className="flex flex-col mt-1">
                     <h3 className="mt-1 mb-1 nunito-sans-bold">{truncateString(decodeHtmlEntities(artist.title), 20)}</h3>
                     <p className="text-xs text-[#6a6a6a] nunito-sans-bold">{truncateString(decodeHtmlEntities(artist.description))}</p>
@@ -100,13 +100,13 @@ const SearchResults = () => {
         <h1 className="mukta-medium text-2xl">Playlists</h1>
         <div className="flex items-center">
             {data.playlists.results.map(playlist => (<Link key={playlist.id} to={`/playlists/${playlist.id}`}
-                                                           className="flex cursor-pointer flex-col m-2 hover:bg-[#18181b] p-3 rounded-xl w-52 h-64 justify-center">
-                <img src={playlist.image[1].url} alt="" className="rounded-xl"/>
+                className="flex cursor-pointer flex-col m-2 hover:bg-[#18181b] p-3 rounded-xl w-52 h-64 justify-center">
+                <img src={playlist.image[1].url} alt="" className="rounded-xl" />
                 <div className="flex flex-col mt-1">
                     <h3 className="mt-1 mb-1 nunito-sans-bold">{truncateString(decodeHtmlEntities(playlist.title), 20)}</h3>
                     <p className="text-xs">
-                                    <span
-                                        className="mr-1">{truncateString(decodeHtmlEntities(playlist.language))} •</span>
+                        <span
+                            className="mr-1">{truncateString(decodeHtmlEntities(playlist.language))} •</span>
                         {truncateString(decodeHtmlEntities(playlist.description))}
                     </p>
                 </div>
