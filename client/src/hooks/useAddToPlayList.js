@@ -106,6 +106,7 @@ const useAddToPlaylist = () => {
         togglePlaylistSelection,
         handleCreatePlaylist,
         handleSaveChanges,
+        setShowCreatePlaylist,
     };
 };
 

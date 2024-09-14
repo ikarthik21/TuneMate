@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { FiSearch } from "react-icons/fi";
 import { IoMdAdd, IoMdAddCircle } from "react-icons/io";
 import { BiSolidPlaylist } from "react-icons/bi";
@@ -14,12 +15,12 @@ import usePlayerStore from "@/store/use-player.js";
 import { MdFavorite } from "react-icons/md";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 
-// eslint-disable-next-line react/prop-types
 const AddToPlaylist = ({ clickEvent }) => {
     const { Favorites, getFavorites } = usePlayerStore();
     const { hideAddToPlaylist, songId } = useAddListStore();
     const addMenuRef = useRef(null);
     const [position, setPosition] = useState("bottom-4");
+    const [searchPlaylist, setSearchPlaylist] = useState("");
 
     const {
         playlists,
@@ -32,6 +33,7 @@ const AddToPlaylist = ({ clickEvent }) => {
         selectedPlaylists,
         togglePlaylistSelection,
         handleCreatePlaylist,
+        setShowCreatePlaylist,
         handleSaveChanges
     } = useAddToPlaylist();
 
@@ -51,7 +53,7 @@ const AddToPlaylist = ({ clickEvent }) => {
         const calculatePosition = () => {
             if (addMenuRef.current && clickEvent) {
                 const rect = addMenuRef.current.getBoundingClientRect();
-                const clickY = clickEvent.clientY  ;
+                const clickY = clickEvent.clientY;
                 const spaceAbove = clickY;
                 const spaceBelow = window.innerHeight - clickY;
                 if (spaceBelow < rect.height && spaceAbove > spaceBelow) {
@@ -89,7 +91,7 @@ const AddToPlaylist = ({ clickEvent }) => {
                     </div>
                     <Input
                         className="rounded bg-[#222328] h-[35px] text-[15px] border-none focus:outline-none focus-visible:ring-0 pr-10"
-                        placeholder="Find a playlist"
+                        placeholder="Find a playlist" onChange={(e) => setSearchPlaylist(e.target.value)}
                     />
                 </div>
 
@@ -103,7 +105,7 @@ const AddToPlaylist = ({ clickEvent }) => {
                             />
                         </div>
                         <div className="flex items-center justify-end mt-2">
-                            <Button variant="ghost" className="h-8" onClick={hideAddToPlaylist}>
+                            <Button variant="ghost" className="h-8" onClick={(prev) => setShowCreatePlaylist(!prev)}>
                                 Cancel
                             </Button>
                             {playlistName.length > 0 && (
@@ -136,23 +138,27 @@ const AddToPlaylist = ({ clickEvent }) => {
                         )}
                     </div>
 
-                    {playlists?.map((playlist) => (
-                        <div key={playlist.id} className="flex items-center p-3 rounded hover:bg-[#222328] cursor-pointer justify-between">
-                            <div className="flex items-center">
-                                {playlist.image ? (
-                                    <img src={playlist.image} alt="" className={"h-8 w-8 rounded"} />
+                    {playlists
+                        ?.filter(playlist =>
+                            playlist.name.toLowerCase().includes(searchPlaylist.toLowerCase())
+                        )
+                        .map(playlist => (
+                            <div key={playlist.id} className="flex items-center p-3 rounded hover:bg-[#222328] cursor-pointer justify-between">
+                                <div className="flex items-center">
+                                    {playlist.image ? (
+                                        <img src={playlist.image} alt="" className={"h-8 w-8 rounded"} />
+                                    ) : (
+                                        <BiSolidPlaylist size={20} color={"#59c2ef"} />
+                                    )}
+                                    <h2 className="ml-4">{playlist.name}</h2>
+                                </div>
+                                {selectedPlaylists.includes(playlist.id) ? (
+                                    <FaCheckCircle size={18} cursor="pointer" color="#59c2ef" onClick={() => togglePlaylistSelection(playlist.id)} />
                                 ) : (
-                                    <BiSolidPlaylist size={20} color={"#59c2ef"} />
+                                    <IoMdAddCircle size={20} cursor="pointer" color="#59c2ef" onClick={() => togglePlaylistSelection(playlist.id)} />
                                 )}
-                                <h2 className="ml-4">{playlist.name}</h2>
                             </div>
-                            {selectedPlaylists.includes(playlist.id) ? (
-                                <FaCheckCircle size={18} cursor="pointer" color="#59c2ef" onClick={() => togglePlaylistSelection(playlist.id)} />
-                            ) : (
-                                <IoMdAddCircle size={20} cursor="pointer" color="#59c2ef" onClick={() => togglePlaylistSelection(playlist.id)} />
-                            )}
-                        </div>
-                    ))}
+                        ))}
                 </div>
 
                 <div className="flex items-center justify-end mt-4">

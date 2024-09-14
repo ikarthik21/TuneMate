@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {decodeHtmlEntities, getAllArtists, truncateString} from "@/utils/MusicUtils.js";
 import {MdFavorite} from "react-icons/md";
 import {IoMdAddCircle} from "react-icons/io";
@@ -6,7 +7,7 @@ import usePlayerStore from "@/store/use-player.js";
 import AddToPlaylist from "@/_components/Options/AddToPlaylist.jsx";
 import useAddListStore from "@/store/use-addList.js";
 import AdminAddToPlaylist from "@/_components/admin/AdminAddToPlaylist.jsx";
-// eslint-disable-next-line react/prop-types
+ 
 const MusicInfo = ({song}) => {
     const {isAuthenticated, role} = useAuthStore();
     const {Favorites} = usePlayerStore();
