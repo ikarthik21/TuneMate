@@ -41,7 +41,7 @@ const SideOptions = () => {
                     <div
                         className={"flex items-center cursor-pointer hover:bg-[#222328] px-2 py-2  rounded overflow-hidden  mt-1 mb-1"}>
                         <div>
-                            <FaHistory size={30} color={"#59c2ef"} className={"m-[2px] "} />
+                            <FaHistory size={30} color={"#59c2ef"} className={"m-[4px] "} />
                         </div>
 
                         <div className={"flex flex-col justify-center ml-3"}>

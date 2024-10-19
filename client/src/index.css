@@ -123,7 +123,7 @@ body,
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
-  font-variation-settings: "wdth" 100, "YTLC" 500;
+  font-variation-settings: "wdth"100, "YTLC"500;
   letter-spacing: 0.5px;
 }
 
@@ -154,7 +154,8 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .remove-icon {
-  transition: opacity 0.3s ease; /* Add transition effect */
+  transition: opacity 0.3s ease;
+  /* Add transition effect */
 }
 
 /* Show remove icon when hovered over parent div */
@@ -174,4 +175,9 @@ body::-webkit-scrollbar-thumb:hover {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
   background-color: #9c9c9c;
+}
+
+.player-background{
+  background: rgb(187, 43, 89);
+  background: radial-gradient(circle, rgba(187, 43, 89,1) 0%, rgba(29, 29, 29, 1) 91%);
 }

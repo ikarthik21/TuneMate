@@ -35,7 +35,7 @@ const Home = () => {
 
     return (<Wrapper>
 
-        <div className={"mb-8"}>
+        <div className={"mb-8 "}>
             <h1 className={"text-2xl ubuntu-bold"}>Tunemate Recommended</h1>
             <div className="flex flex-col">
 
