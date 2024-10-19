@@ -5,10 +5,10 @@ import { formatTime } from "@/utils/MusicUtils.js";
 import useWebSocketStore from "@/store/use-socket";
 import useAuthStore from "@/store/use-auth";
 
-const MusicSeek = ({ AudioRef, seekData }) => {
+const MusicSeek = ({ AudioRef }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const { socket, connectionStatus } = useWebSocketStore();
+  const { socket, connectionStatus, musicSeekTime } = useWebSocketStore();
   const { userId } = useAuthStore();
 
   useEffect(() => {
@@ -25,11 +25,11 @@ const MusicSeek = ({ AudioRef, seekData }) => {
   }, [AudioRef]);
 
   useEffect(() => {
-    if (seekData) {
-      AudioRef.current.currentTime = seekData.time;
-      setCurrentTime(seekData.time);
+    if (musicSeekTime) {
+      AudioRef.current.currentTime = musicSeekTime;
+      setCurrentTime(musicSeekTime);
     }
-  }, [AudioRef, seekData]);
+  }, [AudioRef, musicSeekTime]);
 
   const handleSeek = (e) => {
     if (AudioRef.current) {

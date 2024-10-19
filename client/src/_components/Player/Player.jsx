@@ -1,5 +1,5 @@
 import { FaPause, FaPlay } from "react-icons/fa";
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 import { IoPlaySkipBack, IoPlaySkipForward } from "react-icons/io5";
 import { MdOutlineLoop } from "react-icons/md";
 import { FaShuffle } from "react-icons/fa6";
@@ -32,16 +32,17 @@ const Player = () => {
     handleShuffle,
     playSong
   } = usePlayerStore();
-  const { connectWebSocket, closeWebSocket, socket, setConnectionStatus } =
-    useWebSocketStore();
+  const {
+    connectWebSocket,
+    closeWebSocket,
+    socket,
+    setConnectionStatus,
+    setMusicSeekTime,
+    setUserDetails
+  } = useWebSocketStore();
   const { isAuthenticated, userId } = useAuthStore();
   const { isUserSyncVisible, showUserSync } = useUserSyncStore();
   const { isNotifierVisible, showNotifier } = useNotifierStore();
-
-  // Use a state to store WebSocket message data and an error state
-  const [wsData, setWsData] = useState(null);
-  const [seekData, setWsSeekData] = useState(null);
-  const [wsError, setWsError] = useState(null);
 
   // Memoized fetch functions
   const initializePlayerState = useCallback(async () => {
@@ -75,11 +76,9 @@ const Player = () => {
       socket.onmessage = async (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log(data);
-
           switch (data.type) {
             case "CONNECTION_REQUEST":
-              setWsData(data.payload);
+              setUserDetails(data.payload);
               showNotifier();
               break;
             case "CONNECTION_DECLINED":
@@ -102,21 +101,28 @@ const Player = () => {
               await handleAudioPlay();
               break;
             case "SEEK":
-              setWsSeekData(data.payload);
+              setMusicSeekTime(data.payload.time);
               break;
             default:
               console.warn("Unknown message type:", data.type);
           }
         } catch (error) {
           console.error("Failed to parse WebSocket message:", error);
-          setWsError("Error processing the server message.");
         }
       };
 
-      socket.onerror = () => setWsError("WebSocket connection error.");
-      socket.onclose = () => setWsError("WebSocket connection closed.");
+      socket.onerror = () => console.log("WebSocket connection error.");
+      socket.onclose = () => console.log("WebSocket connection closed.");
     }
-  }, [handleAudioPlay, playSong, setConnectionStatus, showNotifier, socket]);
+  }, [
+    handleAudioPlay,
+    playSong,
+    setConnectionStatus,
+    setMusicSeekTime,
+    setUserDetails,
+    showNotifier,
+    socket
+  ]);
 
   // Memoized AudioRef for better performance
   const memoizedAudioRef = useMemo(() => AudioRef, [AudioRef]);
@@ -173,7 +179,7 @@ const Player = () => {
             />
           </div>
           <div className="m-2">
-            <MusicSeek AudioRef={memoizedAudioRef} seekData={seekData} />
+            <MusicSeek AudioRef={memoizedAudioRef} />
           </div>
         </div>
 
@@ -182,7 +188,7 @@ const Player = () => {
             <HiUsers size={22} cursor={"pointer"} onClick={showUserSync} />
             {isUserSyncVisible && <UserSync />}
           </div>
-          {isNotifierVisible && <UserNotifier data={wsData} error={wsError} />}
+          {isNotifierVisible && <UserNotifier />}
           <Volume AudioRef={memoizedAudioRef} />
         </div>
       </div>
