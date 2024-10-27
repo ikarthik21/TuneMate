@@ -52,36 +52,40 @@ const Home = () => {
     <Wrapper>
       <BlockWrapper>
         {/* Song of the Week */}
-        <div className="rounded-xl mb-2 p-2 song-of-week-background">
-          <div className="flex items-center  ml-4 p-2">
-            <div>
-              <img
-                src={recommended?.tuneMateUpdates[0].Content.image}
-                alt=""
-                className="h-48 w-48 rounded-lg"
-              />
-            </div>
-            <div className="ml-4 flex flex-col">
-              <h1 className="ubuntu-bold text-3xl ">
-                {recommended?.tuneMateUpdates[0].title}
-              </h1>
-              <h3 className="mt-4 nunito-sans-bold">
-                {recommended?.tuneMateUpdates[0].Content.name}
-              </h3>
-              <h3 className="nunito-sans-bold text-sm">
-                {formatTime(recommended?.tuneMateUpdates[0]?.Content?.duration)}
-              </h3>
-              <button
-                className="p-2 custom-btn rounded-lg mt-4 px-12 py-2"
-                onClick={() =>
-                  playSong(recommended?.tuneMateUpdates[0].Content.songId)
-                }
-              >
-                Play
-              </button>
+        {recommended.playlists.tuneMateUpdates.length > 0 && (
+          <div className="rounded-xl mb-2 p-2 song-of-week-background">
+            <div className="flex items-center  ml-4 p-2">
+              <div>
+                <img
+                  src={recommended?.tuneMateUpdates[0].Content.image}
+                  alt=""
+                  className="h-48 w-48 rounded-lg"
+                />
+              </div>
+              <div className="ml-4 flex flex-col">
+                <h1 className="ubuntu-bold text-3xl ">
+                  {recommended?.tuneMateUpdates[0].title}
+                </h1>
+                <h3 className="mt-4 nunito-sans-bold">
+                  {recommended?.tuneMateUpdates[0].Content.name}
+                </h3>
+                <h3 className="nunito-sans-bold text-sm">
+                  {formatTime(
+                    recommended?.tuneMateUpdates[0]?.Content?.duration
+                  )}
+                </h3>
+                <button
+                  className="p-2 custom-btn rounded-lg mt-4 px-12 py-2"
+                  onClick={() =>
+                    playSong(recommended?.tuneMateUpdates[0].Content.songId)
+                  }
+                >
+                  Play
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="p-2">
           <h1 className={"text-2xl ubuntu-bold"}>Tunemate Recommended</h1>
