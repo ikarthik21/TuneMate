@@ -52,7 +52,7 @@ const Home = () => {
     <Wrapper>
       <BlockWrapper>
         {/* Song of the Week */}
-        {recommended?.playlists?.tuneMateUpdates.length > 0 && (
+        {recommended?.playlists?.tuneMateUpdates?.length > 0 && (
           <div className="rounded-xl mb-2 p-2 song-of-week-background">
             <div className="flex items-center  ml-4 p-2">
               <div>
