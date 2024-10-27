@@ -99,7 +99,7 @@ export const UserMetaController = () => {
                         }
                     }
                 });
-                res.json(updatedUser);
+                res.json(updatedUser.playerState);
             } catch (error) {
                 console.error('Error updating player state:', error);
                 res.status(500).json({error: 'Internal server error'});
