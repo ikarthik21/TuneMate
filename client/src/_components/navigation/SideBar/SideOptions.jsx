@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import useSWR from "swr";
 import tuneMateInstance from "@/service/api/api.js";
 import useAuthStore from "@/store/use-auth.js";
-import usePlayerStore from "@/store/use-player.js";
 import SideListSkeleton from "@/_components/skeletons/SideListSkeleton.jsx";
 import { FaHistory } from "react-icons/fa";
 import ApiError from "@/_components/Error/ApiError";
@@ -14,8 +13,7 @@ import { useSidebar } from "@/store/use-sidebar";
 const SideOptions = () => {
   const { collapse } = useSidebar((state) => state);
   const { isAuthenticated } = useAuthStore();
-  const { Favorites } = usePlayerStore();
- 
+
   const {
     data: playlists,
     error,
@@ -53,9 +51,6 @@ const SideOptions = () => {
               {!collapse && (
                 <div className="ml-3">
                   <h1 className={"text-sm nunito-sans-bold"}>Favorites</h1>
-                  <p className={"text-xs text-[#6a6a6a] mt-1 nunito-sans-bold"}>
-                    {Favorites.length} songs
-                  </p>
                 </div>
               )}
             </div>
@@ -63,112 +58,23 @@ const SideOptions = () => {
         </Link>
 
         {/* Scrollable Content */}
-        <div className={"flex flex-col overflow-scroll h-[calc(100vh-300px)] custom-scrollbar"}>
+        <div
+          className={
+            "flex flex-col overflow-scroll h-[calc(100vh-300px)] custom-scrollbar"
+          }
+        >
           {isLoading ? (
             <SideListSkeleton count={5} />
           ) : (
             <>
               {playlists?.map((playlist) => {
-                return PlayListItem({ playlist ,collapse });
+                return PlayListItem({ playlist, collapse });
               })}
             </>
           )}
         </div>
       </div>
     </BlockWrapper>
-
-    // <BlockWrapper backgrounnd={"#222328"}>
-    //   <div className={"flex flex-col justify-center p-2 "}>
-    //     <div className={"flex items-center bg-[#121212] p-2 rounded-md"}>
-    //       <MdLibraryMusic size={24} />
-    //       <h1 className={"text-xl nunito-sans-bold ml-3"}>Library</h1>
-    //     </div>
-
-    //     <Link to={"/recent"}>
-    //       <div
-    //         className={
-    //           "flex items-center cursor-pointer hover:bg-[#222328]   rounded overflow-hidden"
-    //         }
-    //       >
-    //         <div>
-    //           <FaHistory size={30} color={"#59c2ef"} className={"m-[4px] "} />
-    //         </div>
-
-    //         <div className={"flex flex-col justify-center ml-3"}>
-    //           <h1 className={"text-sm nunito-sans-bold"}>Recents</h1>
-    //         </div>
-    //       </div>
-    //     </Link>
-
-    //     {isLoading ? (
-    //       <SideListSkeleton count={5} />
-    //     ) : (
-    //       <>
-    //         <Link to={"/favorites"}>
-    //           <div
-    //             className={
-    //               "flex items-center cursor-pointer hover:bg-[#222328]   rounded overflow-hidden"
-    //             }
-    //           >
-    //             <img src={FavImg} alt="" className={"h-10 w-10 rounded"} />
-
-    //             {!collapse && (
-    //               <div className={"flex flex-col justify-center ml-3"}>
-    //                 <h1 className={" text-sm nunito-sans-bold"}>Favorites</h1>
-    //                 <p className={"text-xs text-[#6a6a6a] nunito-sans-bold"}>
-    //                   {Favorites.length} songs
-    //                 </p>
-    //               </div>
-    //             )}
-    //           </div>
-    //         </Link>
-
-    //         <div className={"flex flex-col mt-1"}>
-    //           {playlists?.map((playlist) => {
-    //             return (
-    //               <Link to={`/u/playlists/${playlist.id}`} key={playlist.id}>
-    //                 <div
-    //                   className={
-    //                     "flex items-center cursor-pointer hover:bg-[#222328]   rounded overflow-hidden  mt-1 mb-1"
-    //                   }
-    //                 >
-    //                   {playlist.image ? (
-    //                     <img
-    //                       src={playlist.image}
-    //                       alt=""
-    //                       className={"h-11 w-11 rounded"}
-    //                     />
-    //                   ) : (
-    //                     <BiSolidPlaylist
-    //                       size={35}
-    //                       color={"#59c2ef"}
-    //                       className={"m-[2px] "}
-    //                     />
-    //                   )}
-
-    //                   {!collapse && (
-    //                     <div className={"flex flex-col justify-center ml-3"}>
-    //                       <h1 className={"text-sm nunito-sans-bold"}>
-    //                         {playlist.name}
-    //                       </h1>
-    //                       <p
-    //                         className={
-    //                           "text-xs text-[#6a6a6a] nunito-sans-bold"
-    //                         }
-    //                       >
-    //                         {playlist.songs.length} songs
-    //                       </p>
-    //                     </div>
-    //                   )}
-    //                 </div>
-    //               </Link>
-    //             );
-    //           })}
-    //         </div>
-    //       </>
-    //     )}
-    //   </div>
-    // </BlockWrapper>
   );
 };
 

@@ -147,7 +147,7 @@ class TuneMateService {
     getTuneMateRecommended = async () => {
         try {
             const response = await tuneMateClient.get(ENDPOINTS.recommended);
-            return response.data.playlists;
+            return response.data;
         } catch (err) {
             return err;
         }

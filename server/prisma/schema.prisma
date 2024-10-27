@@ -35,7 +35,6 @@ model Playlist {
   type   String @default("public")
   songs  Json[] @default([])
   user   User   @relation(fields: [userId], references: [id])
-
   @@index([userId], name: "userId_index")
 }
 
@@ -45,4 +44,10 @@ model Recommended {
   image String @default("")
   type  String @default("public")
   songs Json[] @default([])
+}
+
+model TuneMateUpdates {
+  id      String @id @default(uuid()) @map("_id")
+  title   String @default("")
+  Content Json 
 }

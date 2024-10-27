@@ -3,18 +3,19 @@ import useSWR from "swr";
 import tuneMateInstance from "@/service/api/api.js";
 import { Link } from "react-router-dom";
 import { decodeHtmlEntities, truncateString } from "@/utils/MusicUtils.js";
-import { BiSolidPlaylist } from "react-icons/bi";
 import { FaPlay } from "react-icons/fa";
 import usePlayerStore from "@/store/use-player.js";
 import useHover from "@/hooks/useHover.js";
 import AlbumSkeleton from "@/_components/skeletons/AlbumSkeleton.jsx";
 import useAuthStore from "@/store/use-auth.js";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
+import { formatTime } from "@/utils/MusicUtils.js";
+import PlaylistTile from "@/_components/PlaylistComponents/PlaylistTile";
+
 const Home = () => {
   const { playSong, loadPlaylist } = usePlayerStore();
   const { hoveredItemId, handleMouseEnter, handleMouseLeave } = useHover();
   const { isAuthenticated } = useAuthStore();
-
   const {
     data: recommended,
     error,
@@ -50,14 +51,46 @@ const Home = () => {
   return (
     <Wrapper>
       <BlockWrapper>
-        <div>
-          <h1 className={"text-xl ubuntu-bold"}>Tunemate Recommended</h1>
+        {/* Song of the Week */}
+        <div className="rounded-xl mb-2 p-2 song-of-week-background">
+          <div className="flex items-center  ml-4 p-2">
+            <div>
+              <img
+                src={recommended?.tuneMateUpdates[0].Content.image}
+                alt=""
+                className="h-48 w-48 rounded-lg"
+              />
+            </div>
+            <div className="ml-4 flex flex-col">
+              <h1 className="ubuntu-bold text-3xl ">
+                {recommended?.tuneMateUpdates[0].title}
+              </h1>
+              <h3 className="mt-4 nunito-sans-bold">
+                {recommended?.tuneMateUpdates[0].Content.name}
+              </h3>
+              <h3 className="nunito-sans-bold text-sm">
+                {formatTime(recommended?.tuneMateUpdates[0]?.Content?.duration)}
+              </h3>
+              <button
+                className="p-2 custom-btn rounded-lg mt-4 px-12 py-2"
+                onClick={() =>
+                  playSong(recommended?.tuneMateUpdates[0].Content.songId)
+                }
+              >
+                Play
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-2">
+          <h1 className={"text-2xl ubuntu-bold"}>Tunemate Recommended</h1>
           <div className="flex flex-col">
             {isLoading ? (
               <AlbumSkeleton count={8} />
             ) : (
               <div className="flex items-center flex-wrap">
-                {recommended?.map((playlist) => (
+                {recommended?.playlists.map((playlist) => (
                   <Link
                     to={`/recommended/${playlist.id}`}
                     key={playlist.id}
@@ -65,36 +98,11 @@ const Home = () => {
                     onMouseEnter={() => handleMouseEnter(playlist.id)}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <div className={"relative"}>
-                      {playlist.image ? (
-                        <img
-                          src={playlist.image}
-                          alt=""
-                          className="rounded-xl"
-                        />
-                      ) : (
-                        <BiSolidPlaylist
-                          size={170}
-                          color={"#59c2ef"}
-                          className={"m-[2px] "}
-                        />
-                      )}
-                      {hoveredItemId === playlist.id && (
-                        <div
-                          className="absolute bottom-0 right-1 mb-2 mr-2 h-12 w-12 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer transition-opacity duration-300 ease-in-out transform opacity-100 scale-100 hover:scale-110 hover:shadow-lg"
-                          onClick={(e) => handlePlayWholeList(e, playlist.id)}
-                          style={{
-                            opacity: hoveredItemId === playlist.id ? 1 : 0
-                          }}
-                        >
-                          <FaPlay
-                            size={15}
-                            color={"black"}
-                            className={"relative left-[1px] top-[1px]"}
-                          />
-                        </div>
-                      )}
-                    </div>
+                    <PlaylistTile
+                      playlist={playlist}
+                      hoveredItemId={hoveredItemId}
+                      handlePlayWholeList={handlePlayWholeList}
+                    />
 
                     <div className="flex flex-col mt-1">
                       <h3 className="mt-1  nunito-sans-bold">
@@ -106,7 +114,7 @@ const Home = () => {
                             "text-[11px] text-[#6a6a6a] nunito-sans-bold"
                           }
                         >
-                          {playlist.songs.length} songs
+                          {/* {playlist.songs.length} songs */}
                         </p>
                       </div>
                     </div>
@@ -116,7 +124,7 @@ const Home = () => {
             )}
           </div>
         </div>
-  
+
         {isAuthenticated && (
           <>
             {RecentsLoading ? (
@@ -124,7 +132,7 @@ const Home = () => {
             ) : (
               <>
                 {songHistory?.length > 0 && (
-                  <div className="mb-8">
+                  <div className="mb-8 p-2">
                     <div className={"flex items-center justify-between"}>
                       <h1 className="text-2xl ubuntu-bold">Recently Played</h1>
                       <Link to={"/recent"}>
