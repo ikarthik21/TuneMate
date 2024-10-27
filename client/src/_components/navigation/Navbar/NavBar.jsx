@@ -23,17 +23,19 @@ const NavBar = ({ openModal }) => {
 
   return (
     <nav className="flex h-[70px] text-white bg-[#0e0e10] fixed top-0 left-0 p-2 lg:px-4 items-center w-full justify-between z-50">
+
       <Link to={"/"}>
         <h1 className="black-han-sans-regular text-2xl md:text-3xl ml-2 font-semibold tracking-wide text-amber-50">
           TuneMate
         </h1>
       </Link>
-      <div className="flex items-center justify-center bg-[#1e1e1e]  rounded-full  *: relative">
+
+      <div className="flex items-center justify-center bg-[#1e1e1e] rounded-lg relative w-full ml-12">
         <div className="p-3">
           <FiSearch size={20} />
         </div>
         <Input
-          className="rounded-full bg-[#1e1e1e] lg:w-[400px] h-[38px] text-[15px] border-none focus:outline-none focus-visible:ring-0 pr-10"
+          className="rounded-full bg-[#1e1e1e]  h-[38px] text-[15px] border-none focus:outline-none focus-visible:ring-0 pr-10"
           placeholder="Search for a Song, Album, or Artist...."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -48,10 +50,11 @@ const NavBar = ({ openModal }) => {
           </div>
         )}
       </div>
+
       {isAuthenticated ? (
-        <div className="cursor-pointer flex items-center justify-center   p-2 rounded-2xl">
-          <img src={UserLogo} alt="user" className="h-10 w-10 mr-2" />
-          <h2 className="mr-2 text-[14px]">{username}</h2>
+        <div className="cursor-pointer flex items-center justify-center p-2 rounded-2xl">
+          {/* <img src={UserLogo} alt="user" className="h-10 w-10 mr-2" />
+          <h2 className="mr-2 text-[14px]">{username}</h2> */}
           <LogOut size={24} onClick={removeAccessToken} />
         </div>
       ) : (

@@ -178,6 +178,6 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .player-background{
-  background: rgb(187, 43, 89);
-  background: radial-gradient(circle, rgba(187, 43, 89,1) 0%, rgba(29, 29, 29, 1) 91%);
+  background: #353c8f;
+  background: radial-gradient(circle, #353c8f 0%, rgba(29, 29, 29, 1) 95%);
 }
