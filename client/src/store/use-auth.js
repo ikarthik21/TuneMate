@@ -1,59 +1,68 @@
-import {create} from 'zustand';
-import {jwtDecode} from "jwt-decode";
-import {tuneMateClient} from '@/service/api/api.js';
+import { create } from 'zustand';
+import { jwtDecode } from "jwt-decode";
+import Cookies from 'js-cookie'
+import { tuneMateClient } from '@/service/api/api.js';
+import useWebSocketStore from './use-socket.js';
 
-const useAuthStore = create((set) => ({
-    accessToken: getAccessToken(),
-    isAuthenticated: !!getAccessToken(),
-    username: getUsernameFromToken(getAccessToken()),
-    role: getUserRole(),
-    setAccessToken: (token) => {
-        const decodedToken = jwtDecode(token);
-        document.cookie = `role=${decodedToken.role}; path=/;`;
-        document.cookie = `accessToken=${token}; path=/;`;
-        set({
-            accessToken: token, isAuthenticated: true, username: decodedToken.username, role: decodedToken.role
-        });
-    },
-    removeAccessToken: () => {
-        document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-        document.cookie = 'role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-        delete tuneMateClient.defaults.headers['Authorization'];
-        set({accessToken: null, isAuthenticated: false, username: null});
-    },
-}));
-
-function getAccessToken() {
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-        const [name, value] = cookie.trim().split('=');
-        if (name === 'accessToken') {
-            return value;
-        }
-    }
-    return null;
-}
-
-function getUserRole() {
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-        const [name, value] = cookie.trim().split('=');
-        if (name === 'role') {
-            return value;
-        }
-    }
-    return null;
-}
-
-function getUsernameFromToken(token) {
-    if (!token) return null;
+const parseToken = (token) => {
     try {
-        const decodedToken = jwtDecode(token);
-        return decodedToken.username || null;
+        return jwtDecode(token);
     } catch (error) {
         console.error('Invalid token:', error);
         return null;
     }
-}
+};
+
+
+const getCookie = (cookieName) => Cookies.get(cookieName) || null;
+
+
+const initializeAuthState = () => {
+    const token = getCookie('accessToken');
+    const role = getCookie('role');
+    const decodedToken = token ? parseToken(token) : null;
+    return {
+        accessToken: token,
+        isAuthenticated: !!token,
+        role: role,
+        userId: decodedToken?.userid || null,
+        username: decodedToken?.username || null,
+        userSyncKey: decodedToken ? `${decodedToken.username}_${decodedToken.userid}` : null,
+    };
+};
+
+const useAuthStore = create((set) => ({
+    ...initializeAuthState(),
+    setAccessToken: (token) => {
+        const decodedToken = parseToken(token);
+        if (!decodedToken) return;
+        Cookies.set('role', decodedToken.role, { path: '/' });
+        Cookies.set('accessToken', token, { path: '/' });
+        tuneMateClient.defaults.headers['Authorization'] = `Bearer ${token}`;
+        set({
+            accessToken: token,
+            isAuthenticated: true,
+            username: decodedToken.username,
+            role: decodedToken.role,
+            userId: decodedToken.userid,
+            userSyncKey: `${decodedToken.username}_${decodedToken.userid}`,
+        });
+    },
+    
+    removeAccessToken: async () => {
+        Cookies.remove('accessToken', { path: '/' });
+        Cookies.remove('role', { path: '/' });
+        delete tuneMateClient.defaults.headers['Authorization'];
+        set({
+            accessToken: null,
+            isAuthenticated: false,
+            username: null,
+            role: null,
+            userId: null,
+            userSyncKey: null,
+        });
+        await useWebSocketStore.getState().closeWebSocket();
+    },
+}));
 
 export default useAuthStore;
