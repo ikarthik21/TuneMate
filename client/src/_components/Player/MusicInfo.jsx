@@ -17,7 +17,7 @@ const MusicInfo = ({song}) => {
         {!!song && (<div className="flex items-center ">
 
             <div>
-                <img src={song?.image[1].url} alt={`song img`} className="h-14 w-14 rounded-md"/>
+                <img src={song?.image[1].url} alt={`song img`} className="h-12 w-12 rounded-md"/>
             </div>
 
             <div className="flex flex-col ml-4 justify-center">

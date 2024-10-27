@@ -128,7 +128,7 @@ const Player = () => {
   const memoizedAudioRef = useMemo(() => AudioRef, [AudioRef]);
 
   return (
-    <div className="fixed bottom-0 bg-[#18181b] border-t border-[#2D2E35] left-0 w-full pr-4 pl-4 rounded text-amber-50 z-30">
+    <div className="fixed bottom-0 left-0 w-full p-[0.6rem] rounded text-amber-50 z-30 player-background">
       <div className="flex justify-between items-center">
         <div className="flex-1">
           <MusicInfo song={song} />
@@ -140,46 +140,49 @@ const Player = () => {
             autoPlay
             ref={memoizedAudioRef}
           ></audio>
-          <div className="mt-4 flex items-center justify-center">
-            <FaShuffle
-              size={18}
-              className="mr-8 cursor-pointer"
-              onClick={handleShuffle}
-              color={isShuffling ? "#59c2ef" : ""}
-            />
-            <IoPlaySkipBack
-              size={20}
-              className="mr-8 cursor-pointer"
-              onClick={playPrevious}
-            />
-            <div
-              className="bg-white mr-8 p-2 rounded-full flex items-center justify-center cursor-pointer"
-              onClick={handleAudioPlay}
-            >
-              {isPlaying ? (
-                <FaPause size={16} color="black" />
-              ) : (
-                <FaPlay
-                  size={15}
-                  color="black"
-                  className="relative left-[2px]"
-                />
-              )}
+
+          <div className="flex items-center justify-center">
+            <div className="mr-2 flex items-center justify-center">
+              <FaShuffle
+                size={18}
+                className="mr-8 cursor-pointer"
+                onClick={handleShuffle}
+                color={isShuffling ? "#59c2ef" : ""}
+              />
+              <IoPlaySkipBack
+                size={20}
+                className="mr-8 cursor-pointer"
+                onClick={playPrevious}
+              />
+              <div
+                className="bg-white mr-8 p-2 rounded-full flex items-center justify-center cursor-pointer"
+                onClick={handleAudioPlay}
+              >
+                {isPlaying ? (
+                  <FaPause size={16} color="black" />
+                ) : (
+                  <FaPlay
+                    size={15}
+                    color="black"
+                    className="relative left-[2px]"
+                  />
+                )}
+              </div>
+              <IoPlaySkipForward
+                size={20}
+                className="cursor-pointer"
+                onClick={playNext}
+              />
+              <MdOutlineLoop
+                size={20}
+                className="cursor-pointer ml-8"
+                color={onLoop ? "#59c2ef" : ""}
+                onClick={handleSongLoop}
+              />
             </div>
-            <IoPlaySkipForward
-              size={20}
-              className="cursor-pointer"
-              onClick={playNext}
-            />
-            <MdOutlineLoop
-              size={20}
-              className="cursor-pointer ml-8"
-              color={onLoop ? "#59c2ef" : ""}
-              onClick={handleSongLoop}
-            />
-          </div>
-          <div className="m-2">
-            <MusicSeek AudioRef={memoizedAudioRef} />
+            <div className="ml-12">
+              <MusicSeek AudioRef={memoizedAudioRef} />
+            </div>
           </div>
         </div>
 
