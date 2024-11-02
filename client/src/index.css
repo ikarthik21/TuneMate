@@ -183,14 +183,18 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .song-of-week-background {
-  background-image: linear-gradient(to right top, #9d536e, #006960, #006567, #005f6c, #005a6d, #005568, #005062, #004b5d, #004652, #004046, #003a3b, #9d536e);
-  /* background-image: linear-gradient(to right top, #066d56, #006960, #006567, #005f6c, #005a6d, #005568, #005062, #004b5d, #004652, #004046, #003a3b, #003430); */
+  background-image: linear-gradient(to right top, #660000, #5f0708, #580e0e, #511213, #491616, #411617, #381517, #301517, #261214, #1d0d10, #120709, #000000);
+
 }
 
 .custom-btn {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: black;
+  font-weight: 700;
   width: 100px;
-  background-image: linear-gradient(to right top, #232121, #a12529, #a12529, #a12529, #232121);
+  background: #59c2ef;
+  border-radius: 5px;
+  letter-spacing: 1px;
 }

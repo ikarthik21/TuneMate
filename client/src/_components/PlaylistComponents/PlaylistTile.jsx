@@ -6,7 +6,7 @@ const PlaylistTile = ({ playlist, hoveredItemId, handlePlayWholeList }) => {
   return (
     <div className={"relative"}>
       {playlist.image ? (
-        <img src={playlist.image} alt="" className="rounded-xl" />
+        <img src={playlist.image} alt="" className="rounded-md" />
       ) : (
         <BiSolidPlaylist size={170} color={"#59c2ef"} className={"m-[2px]"} />
       )}
