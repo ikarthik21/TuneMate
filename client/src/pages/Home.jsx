@@ -6,12 +6,11 @@ import usePlayerStore from "@/store/use-player.js";
 import AlbumSkeleton from "@/_components/skeletons/AlbumSkeleton.jsx";
 import useAuthStore from "@/store/use-auth.js";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
-import { formatTime } from "@/utils/MusicUtils.js";
 import MusicSlider from "@/_components/navigation/Slider/Slider";
 import { decodeHtmlEntities, truncateString } from "@/utils/MusicUtils.js";
 import { FaPlay } from "react-icons/fa";
 import useHover from "@/hooks/useHover.js";
- 
+
 const Home = () => {
   const { playSong } = usePlayerStore();
   const { hoveredItemId, handleMouseEnter, handleMouseLeave } = useHover();
@@ -62,9 +61,7 @@ const Home = () => {
                   {recommended?.tuneMateUpdates[0].Content.name}
                 </h2>
                 <h3 className="nunito-sans-bold text-sm">
-                  {formatTime(
-                    recommended?.tuneMateUpdates[0]?.Content?.duration
-                  )}
+                  {recommended?.tuneMateUpdates[0]?.Content?.album}
                 </h3>
                 <button
                   className="p-2 custom-btn rounded-lg mt-4 px-12 py-2"
@@ -113,7 +110,7 @@ const Home = () => {
 
                     <div className="flex flex-col h-[280px]">
                       <div className="flex flex-wrap overflow-y-hidden ">
-                      {songHistory?.map((song) => (
+                        {songHistory?.map((song) => (
                           <div
                             key={song.id}
                             className="flex cursor-pointer flex-col m-2 hover:bg-[#303033] p-3 rounded-xl w-52 h-64 justify-center"
@@ -161,7 +158,6 @@ const Home = () => {
                             </div>
                           </div>
                         ))}
-
                       </div>
                     </div>
                   </div>

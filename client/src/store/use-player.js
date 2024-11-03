@@ -221,6 +221,15 @@ const usePlayerStore = create(
         const audio = get().AudioRef.current;
         if (!audio) return;
 
+        audio.onended = async () => {
+          if (get().onLoop) {
+            audio.currentTime = 0;
+            await audio.play();
+          } else {
+            await get().playNext();
+          }
+        };
+
         try {
           if (audio.paused) {
             await audio.play();
@@ -248,17 +257,6 @@ const usePlayerStore = create(
           }
         } catch (error) {
           console.error("Error in handleAudioPlay:", error);
-        }
-
-        if (audio) {
-          audio.onended = async () => {
-            if (get().onLoop) {
-              audio.currentTime = 0;
-              await audio.play();
-            } else {
-              await get().playNext();
-            }
-          };
         }
       }, 300),
 

@@ -1,15 +1,16 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { formatTime } from "@/utils/MusicUtils.js";
 import useWebSocketStore from "@/store/use-socket";
 import useAuthStore from "@/store/use-auth";
+import usePlayerStore from "@/store/use-player.js";
 
-const MusicSeek = ({ AudioRef }) => {
+const MusicSeek = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const { socket, connectionStatus, musicSeekTime } = useWebSocketStore();
   const { userId } = useAuthStore();
+  const AudioRef = usePlayerStore((state) => state.AudioRef);
 
   useEffect(() => {
     if (AudioRef.current) {
@@ -65,12 +66,6 @@ const MusicSeek = ({ AudioRef }) => {
       <span className="text-sm ml-2">{formatTime(duration)}</span>
     </div>
   );
-};
-
-MusicSeek.propTypes = {
-  AudioRef: PropTypes.shape({
-    current: PropTypes.instanceOf(Element)
-  }).isRequired
 };
 
 export default MusicSeek;

@@ -1,5 +1,5 @@
 import { FaPause, FaPlay } from "react-icons/fa";
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { IoPlaySkipBack, IoPlaySkipForward } from "react-icons/io5";
 import { MdOutlineLoop } from "react-icons/md";
 import { FaShuffle } from "react-icons/fa6";
@@ -124,8 +124,9 @@ const Player = () => {
     socket
   ]);
 
-  // Memoized AudioRef for better performance
-  const memoizedAudioRef = useMemo(() => AudioRef, [AudioRef]);
+  useEffect(() => {
+    handleAudioPlay();
+  }, [handleAudioPlay]);
 
   return (
     <div className="fixed bottom-0 left-0 w-full p-[0.6rem] rounded text-amber-50 z-30 player-background">
@@ -138,7 +139,7 @@ const Player = () => {
           <audio
             src={song?.downloadUrl[4]?.url}
             autoPlay
-            ref={memoizedAudioRef}
+            ref={AudioRef}
           ></audio>
 
           <div className="flex items-center justify-center">
@@ -181,7 +182,7 @@ const Player = () => {
               />
             </div>
             <div className="ml-12">
-              <MusicSeek AudioRef={memoizedAudioRef} />
+              <MusicSeek />
             </div>
           </div>
         </div>
@@ -192,7 +193,7 @@ const Player = () => {
             {isUserSyncVisible && <UserSync />}
           </div>
           {isNotifierVisible && <UserNotifier />}
-          <Volume AudioRef={memoizedAudioRef} />
+          <Volume />
         </div>
       </div>
     </div>
