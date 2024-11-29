@@ -54,30 +54,35 @@ const Home = () => {
                 />
               </div>
               <div className="ml-4 flex flex-col">
-                <h1 className="ubuntu-bold text-3xl ">
+                <h1 className="jaro-head text-4xl">
                   {recommended?.tuneMateUpdates[0].title}
                 </h1>
-                <h2 className="mt-4 text-xl nunito-sans-bold">
+                <h2 className="mt-4 text-xl ubuntu-bold">
                   {recommended?.tuneMateUpdates[0].Content.name}
                 </h2>
                 <h3 className="nunito-sans-bold text-sm">
                   {recommended?.tuneMateUpdates[0]?.Content?.album}
                 </h3>
-                <button
-                  className="p-2 custom-btn rounded-lg mt-4 px-12 py-2"
+
+                <div
+                  className="mt-3 h-12 w-12 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer transition-opacity duration-300 ease-in-out transform opacity-100 scale-100 hover:scale-110 hover:shadow-lg"
                   onClick={() =>
-                    playSong(recommended?.tuneMateUpdates[0].Content.songId)
+                    playSong(recommended?.tuneMateUpdates[0]?.Content.songId)
                   }
                 >
-                  Play
-                </button>
+                  <FaPlay
+                    size={15}
+                    color={"black"}
+                    className={"relative left-[1px] top-[1px]"}
+                  />
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        <div className="p-2">
-          <h1 className={"text-2xl ubuntu-bold"}>Tunemate Recommended</h1>
+        <div className="p-4">
+          <h1 className={"text-3xl jaro-head"}>Tunemate Recommended</h1>
           <div className="flex flex-col">
             {isLoading ? (
               <AlbumSkeleton count={8} />
@@ -95,8 +100,10 @@ const Home = () => {
               <>
                 {songHistory?.length > 0 && (
                   <div className="mb-8 p-2">
-                    <div className={"flex items-center justify-between"}>
-                      <h1 className="text-2xl ubuntu-bold">Recently Played</h1>
+                    <div
+                      className={"flex items-center  pr-2 pl-2 justify-between"}
+                    >
+                      <h1 className="text-3xl jaro-head">Recently Played</h1>
                       <Link to={"/recent"}>
                         <h1
                           className={
@@ -108,16 +115,16 @@ const Home = () => {
                       </Link>
                     </div>
 
-                    <div className="flex flex-col h-[280px]">
-                      <div className="flex flex-wrap overflow-y-hidden ">
+                    <div className="flex flex-col h-[260px]">
+                      <div className="flex flex-wrap overflow-hidden ">
                         {songHistory?.map((song) => (
                           <div
                             key={song.id}
-                            className="flex cursor-pointer flex-col m-2 hover:bg-[#303033] p-3 rounded-xl w-52 h-64 justify-center"
+                            className="flex cursor-pointer flex-col m-1 hover:bg-[#303033] p-3  rounded-xl justify-center  items-start transform transition-transform duration-300  hover:scale-110"
                             onMouseEnter={() => handleMouseEnter(song.id)}
                             onMouseLeave={handleMouseLeave}
                           >
-                            <div className="relative h-44 w-44">
+                            <div className="relative">
                               <img
                                 src={song.image}
                                 alt=""
@@ -141,14 +148,14 @@ const Home = () => {
                             </div>
 
                             <div className="flex flex-col mt-1">
-                              <h3 className="mt-1 nunito-sans-bold">
+                              <h3 className="mt-1 text-md nunito-sans-bold">
                                 {truncateString(
                                   decodeHtmlEntities(song.name),
                                   15
                                 )}
                               </h3>
-                              <div className="flex items-center text-xs">
-                                <p className="text-[11px] text-[#6a6a6a] nunito-sans-bold">
+                              <div className="flex items-center">
+                                <p className="text-[13px] text-[#6a6a6a] nunito-sans-bold">
                                   {truncateString(
                                     decodeHtmlEntities(song.album),
                                     25

@@ -4,6 +4,7 @@ import useHover from "@/hooks/useHover.js";
 import usePlayerStore from "@/store/use-player.js";
 import PlaylistTile from "@/_components/PlaylistComponents/PlaylistTile";
 import { decodeHtmlEntities, truncateString } from "@/utils/MusicUtils.js";
+
 const SliderItem = ({ playlist }) => {
   const { hoveredItemId, handleMouseEnter, handleMouseLeave } = useHover();
   const { loadPlaylist } = usePlayerStore();
@@ -20,7 +21,7 @@ const SliderItem = ({ playlist }) => {
     <Link
       to={`/recommended/${playlist.id}`}
       key={playlist.id}
-      className="flex cursor-pointer flex-col m-2 p-1 rounded-xl justify-center items-start transform transition-transform duration-300  hover:scale-110 "
+      className="flex cursor-pointer flex-col rounded-xl justify-center  items-start transform transition-transform duration-300  hover:scale-110  hover:bg-[#303033]  pt-4 pb-4 pl-3 pr-3"
       onMouseEnter={() => handleMouseEnter(playlist.id)}
       onMouseLeave={handleMouseLeave}
     >
@@ -31,19 +32,9 @@ const SliderItem = ({ playlist }) => {
       />
 
       <div className="flex flex-col mt-1 ">
-        <h3 className="mt-1 text-sm nunito-sans-bold">
+        <h3 className="mt-1 text-md nunito-sans-bold">
           {truncateString(decodeHtmlEntities(playlist.name), 15)}
         </h3>
-        <div className="flex items-center text-xs">
-          <p className="text-[11px] text-[#6a6a6a] nunito-sans-bold">
-            {truncateString(decodeHtmlEntities(playlist.album), 15)}
-          </p>
-        </div>
-        <div>
-          <p className={"text-[11px] text-[#6a6a6a] nunito-sans-bold"}>
-            {/* {playlist.songs.length} songs */}
-          </p>
-        </div>
       </div>
     </Link>
   );

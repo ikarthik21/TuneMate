@@ -2,7 +2,7 @@
 const BlockWrapper = ({ children, rounded, background }) => {
   return (
     <div
-      className={`rounded-xl  mb-4 ${rounded}`}
+      className={`rounded-xl min-h-screen  ${rounded}`}
       style={{ backgroundColor: background || "#1a1a1a" }}
     >
       {children}

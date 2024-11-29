@@ -46,7 +46,7 @@ const VolumeSlider = () => {
         max="100"
         value={volume}
         onChange={handleVolumeChange}
-        className="slider ml-4"
+        className="volume-slider ml-4"
         style={{
           background: `linear-gradient(to right, #0066C7 ${volume}%, #ccc ${volume}%)`
         }}

@@ -25,7 +25,7 @@ const NavBar = ({ openModal }) => {
     <nav className="flex h-[70px] text-white bg-[#0e0e10] fixed top-0 left-0 p-2 lg:px-4 items-center w-full justify-between z-50">
 
       <Link to={"/"}>
-        <h1 className="black-han-sans-regular text-2xl md:text-3xl ml-2 font-semibold tracking-wide text-amber-50">
+        <h1 className="black-han-sans-regular text-2xl md:text-3xl ml-2 font-semibold tracking-wide text-[#afaeae]">
           TuneMate
         </h1>
       </Link>
