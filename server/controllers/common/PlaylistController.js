@@ -11,8 +11,7 @@ export const PlaylistController = () => {
             id: true,
             name: true,
             image: true,
-            type: true,
-            songs: true
+            type: true
           }
         });
 
@@ -23,13 +22,10 @@ export const PlaylistController = () => {
           }
         });
 
-        return res
-          .status(200)
-          .json({
-            playlists,
-            tuneMateUpdates,
-            
-          });
+        return res.status(200).json({
+          playlists,
+          tuneMateUpdates
+        });
       } catch (err) {
         console.log(err);
       }
