@@ -5,14 +5,12 @@ const useWebSocketStore = create((set, get) => ({
   connected: false,
   connectionStatus: false,
   connectId: null,
-  musicSeekTime: null,
   userDetails: null,
   setUserDetails: (userDetails) => set({ userDetails }),
-  setMusicSeekTime: (time) => set({ musicSeekTime: time }),
   setConnectId: (connectId) => set({ connectId }),
   setConnectionStatus: (status) => set({ connectionStatus: status }),
   setSocket: (socket) => set({ socket }),
-  
+
   connectWebSocket: (userId) => {
     const baseURL = import.meta.env.VITE_SOCKET_SERVER_URL;
     const socket = new WebSocket(`${baseURL}?userId=${userId}`);

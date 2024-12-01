@@ -1,6 +1,7 @@
 import MESSAGE_TYPES from "../utils/messageTypes.js";
 import { getWebSocketByUserId } from "../services/userConnections.js";
 import redisClient from "../config/redisClient.js";
+import { encryptUserId, decryptUserId } from "../utils/socketUtils.js";
 
 class SyncController {
   // Helper function to validate WebSocket instance
@@ -17,31 +18,33 @@ class SyncController {
     const targetWs = await this.getValidWebSocket(targetUserId);
     if (!targetWs) return;
 
+    if (targetUserId === senderId) {
+      targetWs.send(
+        JSON.stringify({
+          type: MESSAGE_TYPES.INVALID_ACTION,
+          payload: { message: "You can't self connect" }
+        })
+      );
+      return;
+    }
     // Send the connection request message
     targetWs.send(
       JSON.stringify({
         type: MESSAGE_TYPES.CONNECTION_REQUEST,
-        payload: { username, senderId }
+        payload: { username, senderId: encryptUserId(senderId) }
       })
     );
   }
 
   async acceptConnectionRequest(payload) {
     const { acceptedBy, sentBy } = payload;
-
+    const senderId = decryptUserId(sentBy.userId);
+    const acceptorId = decryptUserId(acceptedBy.userId);
     // Store the active connection in Redis
-    await redisClient.hset(
-      "activeConnections",
-      sentBy.userId,
-      acceptedBy.userId
-    );
-    await redisClient.hset(
-      "activeConnections",
-      acceptedBy.userId,
-      sentBy.userId
-    );
+    await redisClient.hset("activeConnections", senderId, acceptorId);
+    await redisClient.hset("activeConnections", acceptorId, senderId);
 
-    const targetWs = await this.getValidWebSocket(sentBy.userId);
+    const targetWs = await this.getValidWebSocket(senderId);
     if (!targetWs) return;
 
     // Send the connection accepted message
@@ -54,34 +57,66 @@ class SyncController {
   }
 
   async declineConnectionRequest(payload) {
-    const { declinedBy } = payload;
-    const targetWs = await this.getValidWebSocket(declinedBy.userId);
+    const { sentBy } = payload;
+    const targetWs = await this.getValidWebSocket(decryptUserId(sentBy.userId));
     if (!targetWs) return;
-
     // Send the connection declined message
     targetWs.send(
       JSON.stringify({
         type: MESSAGE_TYPES.CONNECTION_DECLINED,
-        payload: { declinedBy: declinedBy.username }
+        payload: { declinedBy: sentBy.username }
       })
     );
   }
 
   async syncAction(payload) {
-    console.log(payload);
+    const { senderId, action } = payload;
 
-    const { senderId, action, songId, time } = payload;
+    const targetUserId = await redisClient.hget(
+      "activeConnections",
+      decryptUserId(senderId)
+    );
 
-    const targetUserId = await redisClient.hget("activeConnections", senderId);
     if (!targetUserId) {
-      console.warn(`No active connection found for userId: ${senderId}`);
+      console.warn(
+        `No active connection found for userId: ${decryptUserId(senderId)}`
+      );
       return;
     }
     const targetWs = await getWebSocketByUserId(targetUserId);
     if (targetWs) {
-      targetWs.send(
-        JSON.stringify({ type: action, payload: { songId, time } })
-      );
+      switch (action) {
+        case "HANDLE_SONG_PLAY":
+          targetWs.send(
+            JSON.stringify({
+              type: MESSAGE_TYPES.HANDLE_SONG_PLAY
+            })
+          );
+          break;
+        case "PLAY_SONG":
+          targetWs.send(
+            JSON.stringify({
+              type: MESSAGE_TYPES.PLAY_SONG,
+              payload: {
+                songId: payload.songId
+              }
+            })
+          );
+          break;
+
+        case "SEEK":
+          targetWs.send(
+            JSON.stringify({
+              type: MESSAGE_TYPES.SEEK,
+              payload: {
+                musicSeekTime: payload.musicSeekTime
+              }
+            })
+          );
+          break;
+        default:
+          console.warn(`Unknown action type: ${action}`);
+      }
     }
   }
 }
