@@ -15,6 +15,7 @@ import useWebSocketStore from "@/store/use-socket";
 import useUserSyncStore from "@/store/use-userSync";
 import useNotifierStore from "@/store/use-Notifier";
 import Toast from "@/utils/Toasts/Toast";
+import { encryptUserId } from "@/utils/MusicUtils.js";
 
 const Player = () => {
   const {
@@ -30,14 +31,14 @@ const Player = () => {
     handleSongLoop,
     isShuffling,
     handleShuffle,
-    playSong
+    playSong,
+    setMusicSeekTime
   } = usePlayerStore();
   const {
     connectWebSocket,
     closeWebSocket,
     socket,
     setConnectionStatus,
-    setMusicSeekTime,
     setUserDetails
   } = useWebSocketStore();
   const { isAuthenticated, userId } = useAuthStore();
@@ -63,7 +64,7 @@ const Player = () => {
   // Setup WebSocket Connection
   useEffect(() => {
     if (userId) {
-      connectWebSocket(userId);
+      connectWebSocket(encryptUserId(userId));
     }
     return () => {
       closeWebSocket();
@@ -84,7 +85,13 @@ const Player = () => {
             case "CONNECTION_DECLINED":
               Toast({
                 type: "error",
-                message: `${data.payload.declinedBy} declined`
+                message: `${data.payload.declinedBy} declined to connect`
+              });
+              break;
+            case "INVALID_ACTION":
+              Toast({
+                type: "error",
+                message: `${data.payload.message} `
               });
               break;
             case "CONNECTION_ACCEPTED":
@@ -95,13 +102,14 @@ const Player = () => {
               });
               break;
             case "PLAY_SONG":
-              await playSong(data.payload.songId);
+              await playSong(data.payload.songId, false);
               break;
             case "HANDLE_SONG_PLAY":
-              await handleAudioPlay();
+              await handleAudioPlay(false);
               break;
+
             case "SEEK":
-              setMusicSeekTime(data.payload.time);
+              setMusicSeekTime(data.payload.musicSeekTime, false);
               break;
             default:
               console.warn("Unknown message type:", data.type);
@@ -110,7 +118,6 @@ const Player = () => {
           console.error("Failed to parse WebSocket message:", error);
         }
       };
-
       socket.onerror = () => console.log("WebSocket connection error.");
       socket.onclose = () => console.log("WebSocket connection closed.");
     }

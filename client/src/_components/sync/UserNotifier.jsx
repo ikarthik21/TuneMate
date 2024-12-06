@@ -1,9 +1,10 @@
 import useAuthStore from "@/store/use-auth";
 import useWebSocketStore from "@/store/use-socket";
 import useNotifierStore from "@/store/use-Notifier";
+import { encryptUserId } from "@/utils/MusicUtils";
 
 const UserNotifier = () => {
-  const { socket, userDetails } = useWebSocketStore();
+  const { socket, userDetails, setConnectionStatus } = useWebSocketStore();
   const { userId, username } = useAuthStore();
   const { hideNotifier } = useNotifierStore();
 
@@ -12,7 +13,7 @@ const UserNotifier = () => {
       JSON.stringify({
         type: "CONNECTION_ACCEPTED",
         payload: {
-          acceptedBy: { username, userId },
+          acceptedBy: { username, userId: encryptUserId(userId) },
           sentBy: {
             userId: userDetails.senderId,
             useranme: userDetails.username
@@ -20,6 +21,7 @@ const UserNotifier = () => {
         }
       })
     );
+    setConnectionStatus(true);
     hideNotifier();
   };
 
@@ -27,7 +29,12 @@ const UserNotifier = () => {
     socket.send(
       JSON.stringify({
         type: "CONNECTION_DECLINED",
-        payload: { declinedBy: { username, userId } }
+        payload: {
+          sentBy: {
+            userId: userDetails.senderId,
+            username: userDetails.username
+          }
+        }
       })
     );
     hideNotifier();

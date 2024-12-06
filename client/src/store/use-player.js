@@ -5,9 +5,8 @@ import { debounce, throttle } from "lodash";
 import { fetchPlaylistData, getAllArtists } from "@/utils/MusicUtils.js";
 import { createRef } from "react";
 import { mutate } from "swr";
-import useWebSocketStore from "./use-socket";
-import useAuthStore from "./use-auth";
 import { persist } from "zustand/middleware";
+import { broadcastAction } from "@/utils/SyncUtils.js";
 
 const getRandomIndex = (arrayLength) => Math.floor(Math.random() * arrayLength);
 
@@ -24,6 +23,7 @@ const usePlayerStore = create(
       isLoading: false,
       song: null,
       error: null,
+      currentTime: 0,
       playlist: {},
       isPlaying: false,
       songId: "",
@@ -33,6 +33,7 @@ const usePlayerStore = create(
       AudioRef: createRef(),
       onLoop: false,
       isShuffling: false,
+      duration: 0,
 
       setVolume: async (value) => {
         try {
@@ -46,28 +47,36 @@ const usePlayerStore = create(
         set({ isPlaying: value });
       },
 
-      playSong: async (id) => {
+      setDuration: (value) => {
+        set({ duration: value });
+      },
+
+      setCurrentTime: (value) => {
+        set({ currentTime: value });
+      },
+
+      setMusicSeekTime: (time, shouldBroadcast = true) => {
+        const { AudioRef, duration } = get();
+
+        if (AudioRef.current && duration > 0) {
+          const newTime = (time / 100) * duration;
+          AudioRef.current.currentTime = newTime;
+          set({ currentTime: newTime });
+        }
+        // Broadcast action if needed
+        if (shouldBroadcast) {
+          broadcastAction("SEEK", { musicSeekTime: time });
+        }
+      },
+      playSong: async (id, shouldBroadcast = true) => {
         const actionQueue = [];
         actionQueue.push(async () => {
           set({ isLoading: true, error: null, songId: id });
           try {
-            const socketConnection = useWebSocketStore.getState().socket;
-            const connectionStatus =
-              useWebSocketStore.getState().connectionStatus;
-
-            if (socketConnection && connectionStatus) {
-              socketConnection.send(
-                JSON.stringify({
-                  type: "SYNC_ACTION",
-                  payload: {
-                    action: "PLAY_SONG",
-                    senderId: useAuthStore.getState().userId,
-                    songId: id
-                  }
-                })
-              );
+            // Broadcast to WebSocket only if explicitly allowed
+            if (shouldBroadcast) {
+              broadcastAction("PLAY_SONG", { songId: id });
             }
-
             const response = await MusicServiceInstance.getSingleSong(id);
             if (!response || !response[0])
               throw new PlayerError("Song not found", 404);
@@ -217,10 +226,11 @@ const usePlayerStore = create(
         }
       },
 
-      handleAudioPlay: debounce(async () => {
+      handleAudioPlay: debounce(async (shouldBroadcast = true) => {
         const audio = get().AudioRef.current;
         if (!audio) return;
 
+        // Handle audio end behavior
         audio.onended = async () => {
           if (get().onLoop) {
             audio.currentTime = 0;
@@ -231,6 +241,7 @@ const usePlayerStore = create(
         };
 
         try {
+          // Play/pause toggle
           if (audio.paused) {
             await audio.play();
             set({ isPlaying: true });
@@ -239,21 +250,9 @@ const usePlayerStore = create(
             set({ isPlaying: false });
           }
 
-          const socketConnection = useWebSocketStore.getState().socket;
-          const connectionStatus =
-            useWebSocketStore.getState().connectionStatus;
-
-          if (socketConnection && connectionStatus) {
-            socketConnection.send(
-              JSON.stringify({
-                type: "SYNC_ACTION",
-                payload: {
-                  action: "HANDLE_SONG_PLAY",
-                  senderId: useAuthStore.getState().userId,
-                  songId: "id"
-                }
-              })
-            );
+          // Broadcast to WebSocket only if explicitly allowed
+          if (shouldBroadcast) {
+            broadcastAction("HANDLE_SONG_PLAY");
           }
         } catch (error) {
           console.error("Error in handleAudioPlay:", error);

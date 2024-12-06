@@ -6,11 +6,14 @@ import useAuthStore from "@/store/use-auth";
 import usePlayerStore from "@/store/use-player.js";
 
 const MusicSeek = () => {
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const { socket, connectionStatus, musicSeekTime } = useWebSocketStore();
-  const { userId } = useAuthStore();
-  const AudioRef = usePlayerStore((state) => state.AudioRef);
+  const {
+    AudioRef,
+    setMusicSeekTime,
+    currentTime,
+    setCurrentTime,
+    duration,
+    setDuration
+  } = usePlayerStore();
 
   useEffect(() => {
     if (AudioRef.current) {
@@ -25,31 +28,8 @@ const MusicSeek = () => {
     }
   }, [AudioRef]);
 
-  useEffect(() => {
-    if (musicSeekTime) {
-      AudioRef.current.currentTime = musicSeekTime;
-      setCurrentTime(musicSeekTime);
-    }
-  }, [AudioRef, musicSeekTime]);
-
   const handleSeek = (e) => {
-    if (AudioRef.current) {
-      const newTime = (e.target.value / 100) * duration;
-      AudioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-      if (socket && connectionStatus) {
-        socket.send(
-          JSON.stringify({
-            type: "SYNC_ACTION",
-            payload: {
-              action: "SEEK",
-              senderId: userId,
-              time: newTime
-            }
-          })
-        );
-      }
-    }
+    setMusicSeekTime(e.target.value);
   };
 
   return (
