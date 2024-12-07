@@ -14,17 +14,17 @@ datasource db {
 }
 
 model User {
-  id            String     @id @default(uuid()) @map("_id")
-  email         String     @unique
-  username      String     @unique @default("")
-  password      String     @default("")
-  profileImg    String     @default("")
-  role          String     @default("user")
-  verified      Boolean    @default(false)
-  favoriteSongs String[]   @default([])
-  playerState   Json
-  playlists     Playlist[]
-  history       Json[]     @default([])
+  id          String      @id @default(uuid()) @map("_id")
+  email       String      @unique
+  username    String      @unique @default("")
+  password    String      @default("")
+  profileImg  String      @default("")
+  role        String      @default("user")
+  verified    Boolean     @default(false)
+  playerState Json
+  playlists   Playlist[]
+  favorites   Favorites[]
+  history     History[]
 }
 
 model Playlist {
@@ -35,6 +35,7 @@ model Playlist {
   type   String @default("public")
   songs  Json[] @default([])
   user   User   @relation(fields: [userId], references: [id])
+
   @@index([userId], name: "userId_index")
 }
 
@@ -49,5 +50,23 @@ model Recommended {
 model TuneMateUpdates {
   id      String @id @default(uuid()) @map("_id")
   title   String @default("")
-  Content Json 
+  Content Json
+}
+
+model History {
+  id      String @id @default(uuid()) @map("_id")
+  userId  String
+  history Json[]
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@index([userId], name: "userId_index")
+}
+
+model Favorites {
+  id        String @id @default(uuid()) @map("_id")
+  userId    String
+  favorites Json[]
+  User      User   @relation(fields: [userId], references: [id])
+
+  @@index([userId], name: "userId_index")
 }
