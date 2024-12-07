@@ -6,11 +6,13 @@ import useWebSocketStore from "@/store/use-socket";
 import useUserSyncStore from "@/store/use-userSync";
 import { truncateString } from "@/utils/MusicUtils.js";
 import { encryptUserId } from "@/utils/MusicUtils.js";
+import { Button } from "@/components/ui/button";
 
 const UserSync = () => {
   const { userSyncKey, username, userId } = useAuthStore();
   const [copied, setCopied] = useState(false);
-  const { connectId, setConnectId, socket } = useWebSocketStore();
+  const { connectId, setConnectId, socket, userDetails, connectionStatus } =
+    useWebSocketStore();
   const userSyncRef = useRef(null);
   const { hideUserSync } = useUserSyncStore();
 
@@ -47,6 +49,41 @@ const UserSync = () => {
       })
     );
   };
+
+  const closeConnection = () => {
+    if (connectionStatus) {
+      console.log({
+        acceptedBy: { userId: encryptUserId(userId) },
+        sentBy: { userId: userDetails.userId }
+      });
+
+      socket.send(
+        JSON.stringify({
+          type: "CLOSE_CONNECTION",
+          payload: {
+            acceptedBy: { userId: encryptUserId(userId) },
+            sentBy: { userId: userDetails.userId }
+          }
+        })
+      );
+    }
+  };
+
+  if (connectionStatus && userDetails) {
+    return (
+      <div className="bg-[#18181b] border-[#3b3b3f] px-4 py-2 rounded border absolute  right-2 bottom-12">
+        <div className="flex items-center justify-center">
+          <h1>Connected with {userDetails.username}</h1>
+          <Button
+            className="ml-3 mt-1 mb-1 bg-red-500"
+            onClick={closeConnection}
+          >
+            Disonnect
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

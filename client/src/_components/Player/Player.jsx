@@ -39,10 +39,11 @@ const Player = () => {
     closeWebSocket,
     socket,
     setConnectionStatus,
-    setUserDetails
+    setUserDetails,
+    connectionStatus
   } = useWebSocketStore();
   const { isAuthenticated, userId } = useAuthStore();
-  const { isUserSyncVisible, showUserSync } = useUserSyncStore();
+  const { isUserSyncVisible, showUserSync, hideUserSync } = useUserSyncStore();
   const { isNotifierVisible, showNotifier } = useNotifierStore();
 
   // Memoized fetch functions
@@ -80,6 +81,7 @@ const Player = () => {
           switch (data.type) {
             case "CONNECTION_REQUEST":
               setUserDetails(data.payload);
+              hideUserSync();
               showNotifier();
               break;
             case "CONNECTION_DECLINED":
@@ -95,10 +97,11 @@ const Player = () => {
               });
               break;
             case "CONNECTION_ACCEPTED":
+              setUserDetails(data.payload);
               setConnectionStatus(true);
               Toast({
                 type: "success",
-                message: `${data.payload.acceptedBy} accepted`
+                message: `${data.payload.username} accepted`
               });
               break;
             case "PLAY_SONG":
@@ -107,9 +110,12 @@ const Player = () => {
             case "HANDLE_SONG_PLAY":
               await handleAudioPlay(false);
               break;
-
             case "SEEK":
               setMusicSeekTime(data.payload.musicSeekTime, false);
+              break;
+            case "CLOSE_CONNECTION":
+              setUserDetails(null);
+              hideUserSync();
               break;
             default:
               console.warn("Unknown message type:", data.type);
@@ -194,8 +200,8 @@ const Player = () => {
           </div>
         </div>
 
-        <div className="flex-1 flex justify-end items-center">
-          <div className="mr-5 relative">
+        <div className="flex-1 flex justify-end items-center relative">
+          <div className="mr-5 ">
             <HiUsers size={22} cursor={"pointer"} onClick={showUserSync} />
             {isUserSyncVisible && <UserSync />}
           </div>
