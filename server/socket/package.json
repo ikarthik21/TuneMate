@@ -12,6 +12,7 @@
   "author": "Karthikeya Kallapu",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "express": "^4.21.2",
     "ioredis": "^5.4.1",
