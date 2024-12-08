@@ -70,3 +70,13 @@ model Favorites {
 
   @@index([userId], name: "userId_index")
 }
+
+model SyncState {
+  id                String   @id @default(uuid()) @map("_id")
+  userId            String
+  connectedUserId   String   @default("")
+  connectedUserName String   @default("")
+  lastUpdated       DateTime @updatedAt
+
+  @@index([userId], name: "userId_index")
+}

@@ -27,11 +27,12 @@ class SyncController {
       );
       return;
     }
+
     // Send the connection request message
     targetWs.send(
       JSON.stringify({
         type: MESSAGE_TYPES.CONNECTION_REQUEST,
-        payload: { username, senderId: encryptUserId(senderId) }
+        payload: { username, userId: encryptUserId(senderId) }
       })
     );
   }
@@ -40,6 +41,7 @@ class SyncController {
     const { acceptedBy, sentBy } = payload;
     const senderId = decryptUserId(sentBy.userId);
     const acceptorId = decryptUserId(acceptedBy.userId);
+
     // Store the active connection in Redis
     await redisClient.hset("activeConnections", senderId, acceptorId);
     await redisClient.hset("activeConnections", acceptorId, senderId);
@@ -51,7 +53,10 @@ class SyncController {
     targetWs.send(
       JSON.stringify({
         type: MESSAGE_TYPES.CONNECTION_ACCEPTED,
-        payload: { acceptedBy: acceptedBy.username }
+        payload: {
+          username: acceptedBy.username,
+          userId: acceptedBy.userId
+        }
       })
     );
   }
@@ -117,6 +122,39 @@ class SyncController {
         default:
           console.warn(`Unknown action type: ${action}`);
       }
+    }
+  }
+
+  async closeConnection(payload) {
+    try {
+      const { acceptedBy, sentBy } = payload;
+
+      const senderId = decryptUserId(sentBy.userId);
+      const acceptorId = decryptUserId(acceptedBy.userId);
+      // Remove the active connection in Redis
+      await redisClient.hdel("activeConnections", senderId);
+      await redisClient.hdel("activeConnections", acceptorId);
+
+      const senderWs = await this.getValidWebSocket(senderId);
+      const acceptorWs = await this.getValidWebSocket(acceptorId);
+
+      if (senderWs) {
+        senderWs.send(
+          JSON.stringify({
+            type: MESSAGE_TYPES.CLOSE_CONNECTION
+          })
+        );
+      }
+
+      if (acceptorWs) {
+        acceptorWs.send(
+          JSON.stringify({
+            type: MESSAGE_TYPES.CLOSE_CONNECTION
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Failed to close connection:", error);
     }
   }
 }

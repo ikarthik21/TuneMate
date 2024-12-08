@@ -8,6 +8,7 @@ export const UserMetaController = () => {
       try {
         const { id: songId } = req.body;
         const { userid } = req.authUser;
+
         const prisma = await getPrismaInstance();
 
         // Fetch the user's favorites
@@ -69,9 +70,10 @@ export const UserMetaController = () => {
               }
             }
           });
-          return res
-            .status(200)
-            .json({ message: "Added to Favorites successfully", type: "success" });
+          return res.status(200).json({
+            message: "Added to Favorites successfully",
+            type: "success"
+          });
         }
       } catch (error) {
         const status = error.message.includes("token") ? 401 : 500;
@@ -143,19 +145,40 @@ export const UserMetaController = () => {
       }
     },
     async getPlayerState(req, res) {
-      const authUser = req.authUser;
+      const { userid } = req.authUser;
       const prisma = await getPrismaInstance();
 
-      const { playerState } = await prisma.User.findFirst({
-        where: {
-          id: authUser.userid
-        },
-        select: {
-          playerState: true
-        }
+      // Fetch playerState and connectedUserId in parallel
+      const [userData, connectionState] = await Promise.all([
+        prisma.User.findFirst({
+          where: { id: userid },
+          select: { playerState: true }
+        }),
+        prisma.SyncState.findFirst({
+          where: { userId: userid },
+          select: { connectedUserId: true, connectedUserName: true }
+        })
+      ]);
+
+      // Send playerState and connectedUserId immediately to the client
+      res.status(200).json({
+        playerState: userData ? userData.playerState : null,
+        connectionState: connectionState
       });
 
-      return res.status(200).json({ playerState: playerState });
+      // Background task to update Redis
+      setTimeout(async () => {
+        try {
+          if (connectionState) {
+            await MusicServiceInstance.addConnectioninRedis({
+              ...connectionState,
+              userId: userid
+            });
+          }
+        } catch (error) {
+          console.error("Error during background task:", error);
+        }
+      }, 0);
     },
     async getUserSongHistory(req, res) {
       try {
@@ -217,6 +240,54 @@ export const UserMetaController = () => {
       } catch (e) {
         console.error("Error adding song to history:", e);
         res.status(500).json({ error: "Internal Server Error" });
+      }
+    },
+    async updateSyncState(req, res) {
+      try {
+        const { userid: sourceUserId } = req.authUser;
+        const { userId: targetId, username: targetName } = req.body;
+        const prisma = await getPrismaInstance();
+
+        // Check if the user has a SyncState entry
+        const userSyncState = await prisma.SyncState.findFirst({
+          where: { userId: sourceUserId },
+          select: { id: true }
+        });
+
+        // If user has no SyncState, create a new entry
+        if (!userSyncState) {
+          await prisma.SyncState.create({
+            data: {
+              userId: sourceUserId,
+              connectedUserId: targetId,
+              connectedUserName: targetName
+            }
+          });
+          return res.status(200).json({
+            message: "User sync state created successfully",
+            type: "success"
+          });
+        }
+
+        // If SyncState exists, update the entry
+        await prisma.SyncState.update({
+          where: { id: userSyncState.id }, // Use the unique ID of the SyncState
+          data: {
+            connectedUserId: targetId,
+            connectedUserName: targetName
+          }
+        });
+
+        return res.status(200).json({
+          message: "User sync state updated successfully",
+          type: "success"
+        });
+      } catch (error) {
+        console.error("Error updating sync state:", error);
+        return res.status(500).json({
+          message: "An error occurred while updating sync state",
+          type: "error"
+        });
       }
     }
   };

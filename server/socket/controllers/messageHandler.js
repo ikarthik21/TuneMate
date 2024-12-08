@@ -26,6 +26,10 @@ export const handleMessage = async (ws, data) => {
       SyncControllerInstance.syncAction(payload);
       break;
 
+    case MESSAGE_TYPES.CLOSE_CONNECTION:
+      SyncControllerInstance.closeConnection(payload);
+      break;
+
     default:
       console.error("Unknown message type:", type);
   }

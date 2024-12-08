@@ -7,6 +7,8 @@ import { createRef } from "react";
 import { mutate } from "swr";
 import { persist } from "zustand/middleware";
 import { broadcastAction } from "@/utils/SyncUtils.js";
+import useWebSocketStore from "./use-socket.js";
+import useUserSyncStore from "./use-userSync.js";
 
 const getRandomIndex = (arrayLength) => Math.floor(Math.random() * arrayLength);
 
@@ -194,7 +196,8 @@ const usePlayerStore = create(
 
       loadPlayerState: async () => {
         try {
-          const { playerState } = await tuneMateInstance.getPlayerState();
+          const { playerState, connectionState } =
+            await tuneMateInstance.getPlayerState();
           const {
             songId,
             currentSongIndex,
@@ -207,6 +210,17 @@ const usePlayerStore = create(
           set({ currentSongIndex, onLoop, isShuffling });
           await get().loadPlaylist({ id: playListId, type: playListType });
           await get().playSong(songId);
+          if (
+            connectionState.connectedUserName &&
+            connectionState.connectedUserId
+          ) {
+            useWebSocketStore.getState().setConnectionStatus(true);
+            useWebSocketStore.getState().setUserDetails({
+              userId: connectionState.connectedUserId,
+              username: connectionState.connectedUserName
+            });
+            useUserSyncStore.getState().showUserSync();
+          }
         } catch (error) {
           console.error(
             "Error loading player state",
