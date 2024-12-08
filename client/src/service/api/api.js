@@ -185,6 +185,18 @@ class TuneMateService {
       return err;
     }
   };
+
+  updateSyncState = async (state) => {
+    try {
+      const response = await tuneMateClient.post(
+        ENDPOINTS.updateSyncState,
+        state
+      );
+      return response.data;
+    } catch (err) {
+      return err;
+    }
+  };
 }
 
 const tuneMateInstance = new TuneMateService();

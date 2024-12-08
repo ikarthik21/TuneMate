@@ -1,5 +1,5 @@
 import { FaPause, FaPlay } from "react-icons/fa";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { IoPlaySkipBack, IoPlaySkipForward } from "react-icons/io5";
 import { MdOutlineLoop } from "react-icons/md";
 import { FaShuffle } from "react-icons/fa6";
@@ -16,6 +16,7 @@ import useUserSyncStore from "@/store/use-userSync";
 import useNotifierStore from "@/store/use-Notifier";
 import Toast from "@/utils/Toasts/Toast";
 import { encryptUserId } from "@/utils/MusicUtils.js";
+import tuneMateInstance from "@/service/api/api";
 
 const Player = () => {
   const {
@@ -34,19 +35,20 @@ const Player = () => {
     playSong,
     setMusicSeekTime
   } = usePlayerStore();
+
   const {
     connectWebSocket,
     closeWebSocket,
     socket,
     setConnectionStatus,
-    setUserDetails,
-    connectionStatus
+    setUserDetails
   } = useWebSocketStore();
+
   const { isAuthenticated, userId } = useAuthStore();
+
   const { isUserSyncVisible, showUserSync, hideUserSync } = useUserSyncStore();
   const { isNotifierVisible, showNotifier } = useNotifierStore();
 
-  // Memoized fetch functions
   const initializePlayerState = useCallback(async () => {
     try {
       await loadPlayerState();
@@ -62,7 +64,6 @@ const Player = () => {
     }
   }, [initializePlayerState, isAuthenticated]);
 
-  // Setup WebSocket Connection
   useEffect(() => {
     if (userId) {
       connectWebSocket(encryptUserId(userId));
@@ -72,74 +73,97 @@ const Player = () => {
     };
   }, [userId, connectWebSocket, closeWebSocket]);
 
-  // Handle incoming WebSocket messages
-  useEffect(() => {
-    if (socket) {
-      socket.onmessage = async (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          switch (data.type) {
-            case "CONNECTION_REQUEST":
+  const handleSocketMessage = useCallback(
+    async (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        switch (data.type) {
+          case "CONNECTION_REQUEST":
+            setUserDetails(data.payload);
+            hideUserSync();
+            showNotifier();
+            break;
+          case "CONNECTION_DECLINED":
+            Toast({
+              type: "error",
+              message: `${data.payload.declinedBy} declined to connect`
+            });
+            break;
+          case "INVALID_ACTION":
+            Toast({
+              type: "error",
+              message: `${data.payload.message} `
+            });
+            break;
+          case "CONNECTION_ACCEPTED":
+            try {
               setUserDetails(data.payload);
-              hideUserSync();
-              showNotifier();
-              break;
-            case "CONNECTION_DECLINED":
-              Toast({
-                type: "error",
-                message: `${data.payload.declinedBy} declined to connect`
-              });
-              break;
-            case "INVALID_ACTION":
-              Toast({
-                type: "error",
-                message: `${data.payload.message} `
-              });
-              break;
-            case "CONNECTION_ACCEPTED":
-              setUserDetails(data.payload);
+              await tuneMateInstance.updateSyncState(data.payload);
               setConnectionStatus(true);
               Toast({
                 type: "success",
                 message: `${data.payload.username} accepted`
               });
-              break;
-            case "PLAY_SONG":
-              await playSong(data.payload.songId, false);
-              break;
-            case "HANDLE_SONG_PLAY":
-              await handleAudioPlay(false);
-              break;
-            case "SEEK":
-              setMusicSeekTime(data.payload.musicSeekTime, false);
-              break;
-            case "CLOSE_CONNECTION":
-              setUserDetails(null);
-              hideUserSync();
-              break;
-            default:
-              console.warn("Unknown message type:", data.type);
-          }
-        } catch (error) {
-          console.error("Failed to parse WebSocket message:", error);
+            } catch (error) {
+              console.error("Error handling connection acceptance:", error);
+              Toast({
+                type: "error",
+                message:
+                  "Failed to process connection acceptance. Please try again."
+              });
+            }
+            break;
+          case "PLAY_SONG":
+            await playSong(data.payload.songId, false);
+            break;
+          case "HANDLE_SONG_PLAY":
+            await handleAudioPlay(false);
+            break;
+          case "SEEK":
+            setMusicSeekTime(data.payload.musicSeekTime, false);
+            break;
+          case "CLOSE_CONNECTION":
+            setUserDetails(null);
+            await tuneMateInstance.updateSyncState({
+              userId: "",
+              username: ""
+            });
+            hideUserSync();
+            break;
+          default:
+            console.warn("Unknown message type:", data.type);
         }
-      };
+      } catch (error) {
+        console.error("Failed to parse WebSocket message:", error);
+      }
+    },
+    [
+      handleAudioPlay,
+      playSong,
+      setConnectionStatus,
+      setMusicSeekTime,
+      setUserDetails,
+      showNotifier
+    ]
+  );
+
+  useEffect(() => {
+    if (socket) {
+      socket.onmessage = handleSocketMessage;
       socket.onerror = () => console.log("WebSocket connection error.");
       socket.onclose = () => console.log("WebSocket connection closed.");
     }
-  }, [
-    handleAudioPlay,
-    playSong,
-    setConnectionStatus,
-    setMusicSeekTime,
-    setUserDetails,
-    showNotifier,
-    socket
-  ]);
+  }, [socket, handleSocketMessage]);
 
   useEffect(() => {
     handleAudioPlay();
   }, [handleAudioPlay]);
+
+  const UserSyncMemoized = useMemo(() => <UserSync />, [isUserSyncVisible]);
+  const UserNotifierMemoized = useMemo(
+    () => <UserNotifier />,
+    [isNotifierVisible]
+  );
 
   return (
     <div className="fixed bottom-0 left-0 w-full p-[0.6rem] rounded text-amber-50 z-30 player-background">
@@ -203,9 +227,9 @@ const Player = () => {
         <div className="flex-1 flex justify-end items-center relative">
           <div className="mr-5 ">
             <HiUsers size={22} cursor={"pointer"} onClick={showUserSync} />
-            {isUserSyncVisible && <UserSync />}
+            {isUserSyncVisible && UserSyncMemoized}
           </div>
-          {isNotifierVisible && <UserNotifier />}
+          {isNotifierVisible && UserNotifierMemoized}
           <Volume />
         </div>
       </div>

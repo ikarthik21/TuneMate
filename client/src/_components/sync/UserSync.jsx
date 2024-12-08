@@ -7,6 +7,7 @@ import useUserSyncStore from "@/store/use-userSync";
 import { truncateString } from "@/utils/MusicUtils.js";
 import { encryptUserId } from "@/utils/MusicUtils.js";
 import { Button } from "@/components/ui/button";
+import tuneMateInstance from "@/service/api/api";
 
 const UserSync = () => {
   const { userSyncKey, username, userId } = useAuthStore();
@@ -50,22 +51,26 @@ const UserSync = () => {
     );
   };
 
-  const closeConnection = () => {
-    if (connectionStatus) {
-      console.log({
-        acceptedBy: { userId: encryptUserId(userId) },
-        sentBy: { userId: userDetails.userId }
-      });
+  const closeConnection = async () => {
+    try {
+      if (connectionStatus) {
+        socket.send(
+          JSON.stringify({
+            type: "CLOSE_CONNECTION",
+            payload: {
+              acceptedBy: { userId: encryptUserId(userId) },
+              sentBy: { userId: userDetails.userId }
+            }
+          })
+        );
 
-      socket.send(
-        JSON.stringify({
-          type: "CLOSE_CONNECTION",
-          payload: {
-            acceptedBy: { userId: encryptUserId(userId) },
-            sentBy: { userId: userDetails.userId }
-          }
-        })
-      );
+        hideUserSync();
+        // Update sync state after closing the connection
+        await tuneMateInstance.updateSyncState({ userId: "", username: "" });
+      }
+    } catch (error) {
+      console.error("Error while closing connection:", error);
+      // Handle the error (e.g., notify the user or log the error)
     }
   };
 

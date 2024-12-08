@@ -5,7 +5,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Montserrat:ital,wght@0,500;1,500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Montserrat:ital,wght@0,500;1,500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -129,14 +129,12 @@ body,
   font-style: normal;
 }
 
-
-
 .nunito-sans-bold {
   font-family: "Nunito Sans", sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
-  font-variation-settings: "wdth"100, "YTLC"500;
+  font-variation-settings: "wdth" 100, "YTLC" 500;
   letter-spacing: 0.5px;
 }
 
@@ -196,19 +194,21 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .song-of-week-background {
-  background-image: linear-gradient(to right top,
-      #660000,
-      #5f0708,
-      #580e0e,
-      #511213,
-      #491616,
-      #411617,
-      #381517,
-      #301517,
-      #261214,
-      #1d0d10,
-      #120709,
-      #000000);
+  background-image: linear-gradient(
+    to right top,
+    #660000,
+    #5f0708,
+    #580e0e,
+    #511213,
+    #491616,
+    #411617,
+    #381517,
+    #301517,
+    #261214,
+    #1d0d10,
+    #120709,
+    #000000
+  );
 }
 
 .custom-btn {
@@ -231,10 +231,8 @@ body::-webkit-scrollbar-thumb:hover {
   top: 0;
 }
 
-
-
 .slick-next {
-  height: 29.5vh;
+  height: 30rem;
   width: 75px;
   display: flex;
   align-items: center;
@@ -254,7 +252,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .slick-prev {
-  height: 30vh;
+  height: 30rem;
   width: 75px;
   display: flex;
   align-items: center;

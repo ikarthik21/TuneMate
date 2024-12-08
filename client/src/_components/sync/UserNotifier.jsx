@@ -3,7 +3,7 @@ import useWebSocketStore from "@/store/use-socket";
 import useNotifierStore from "@/store/use-Notifier";
 import { encryptUserId } from "@/utils/MusicUtils";
 import useUserSyncStore from "@/store/use-userSync";
-
+import tuneMateInstance from "@/service/api/api";
 const UserNotifier = () => {
   const { socket, userDetails, setConnectionStatus, connectionStatus } =
     useWebSocketStore();
@@ -11,22 +11,39 @@ const UserNotifier = () => {
   const { hideNotifier } = useNotifierStore();
   const { showUserSync } = useUserSyncStore();
 
-  const acceptRequest = () => {
-    setConnectionStatus(true);
-    socket.send(
-      JSON.stringify({
-        type: "CONNECTION_ACCEPTED",
-        payload: {
-          acceptedBy: { username, userId: encryptUserId(userId) },
-          sentBy: {
-            userId: userDetails.userId,
-            username: userDetails.username
-          }
+  const acceptRequest = async () => {
+    try {
+      setConnectionStatus(true);
+      const payload = {
+        acceptedBy: { username, userId: encryptUserId(userId) },
+        sentBy: {
+          userId: userDetails.userId,
+          username: userDetails.username
         }
-      })
-    );
-    hideNotifier();
-    showUserSync();
+      };
+
+      socket.send(
+        JSON.stringify({
+          type: "CONNECTION_ACCEPTED",
+          payload: payload
+        })
+      );
+
+      // Update sync state in the backend
+      await tuneMateInstance.updateSyncState({
+        userId: userDetails.userId,
+        username: userDetails.username
+      });
+
+      hideNotifier();
+      showUserSync();
+    } catch (error) {
+      console.error("Error accepting request:", error);
+      Toast({
+        type: "error",
+        message: "Failed to accept connection. Please try again."
+      });
+    }
   };
 
   const declineRequest = () => {

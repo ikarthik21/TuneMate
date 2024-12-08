@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { tuneMateClient } from "@/service/api/api.js";
 import useWebSocketStore from "./use-socket.js";
 import { encryptUserId } from "@/utils/MusicUtils.js";
+import useUserSyncStore from "./use-userSync.js";
 
 const parseToken = (token) => {
   try {
@@ -61,6 +62,8 @@ const useAuthStore = create((set) => ({
       userSyncKey: null
     });
     await useWebSocketStore.getState().closeWebSocket();
+    await useWebSocketStore.getState().setUserDetails(null);
+    await useUserSyncStore.getState().hideUserSync();
   }
 }));
 
