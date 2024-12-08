@@ -18,13 +18,12 @@ export const decryptUserId = (encryptedUserId) => {
     const decryptedUserId = bytes.toString(CryptoJS.enc.Utf8);
 
     if (!decryptedUserId) {
-      throw new Error("Decryption failed. Decrypted data is empty or invalid.");
+      console.log("Decryption failed. Decrypted data is empty or invalid.");
     }
 
     return decryptedUserId;
   } catch (error) {
     console.error("Error during decryption:", error);
-    throw new Error("Decryption failed");
   }
 };
 
