@@ -10,6 +10,7 @@ import MusicSlider from "@/_components/navigation/Slider/Slider";
 import { decodeHtmlEntities, truncateString } from "@/utils/MusicUtils.js";
 import { FaPlay } from "react-icons/fa";
 import useHover from "@/hooks/useHover.js";
+import HomeSkeleton from "@/_components/skeletons/HomeSkeleton";
 
 const Home = () => {
   const { playSong } = usePlayerStore();
@@ -82,10 +83,10 @@ const Home = () => {
         )}
 
         <div className="p-4">
-          <h1 className={"text-3xl jaro-head"}>Tunemate Recommended</h1>
           <div className="flex flex-col">
+            <h1 className={"text-3xl jaro-head"}>Tunemate Recommended</h1>
             {isLoading ? (
-              <AlbumSkeleton count={8} />
+              <HomeSkeleton count={6} />
             ) : (
               <MusicSlider musicList={recommended?.playlists} />
             )}
@@ -94,27 +95,24 @@ const Home = () => {
 
         {isAuthenticated && (
           <>
+            <div className="ml-4 flex items-center  pr-2 pl-2 justify-between">
+              <h1 className="text-3xl jaro-head">Recently Played</h1>
+              <Link to={"/recent"}>
+                <h1
+                  className={
+                    "hover:underline nunito-sans-bold text-sm underline underline-offset-2"
+                  }
+                >
+                  Show all
+                </h1>
+              </Link>
+            </div>
             {RecentsLoading ? (
-              <AlbumSkeleton count={4} />
+              <AlbumSkeleton count={6} />
             ) : (
               <>
                 {songHistory?.length > 0 && (
                   <div className="mb-8 p-2">
-                    <div
-                      className={"flex items-center  pr-2 pl-2 justify-between"}
-                    >
-                      <h1 className="text-3xl jaro-head">Recently Played</h1>
-                      <Link to={"/recent"}>
-                        <h1
-                          className={
-                            "hover:underline nunito-sans-bold text-sm underline underline-offset-2"
-                          }
-                        >
-                          Show all
-                        </h1>
-                      </Link>
-                    </div>
-
                     <div className="flex flex-col h-[260px]">
                       <div className="flex flex-wrap overflow-hidden ">
                         {songHistory?.map((song) => (

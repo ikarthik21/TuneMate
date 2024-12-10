@@ -167,12 +167,13 @@ const Player = () => {
 
   return (
     <div className="fixed bottom-0 left-0 w-full p-[0.6rem] rounded text-amber-50 z-30 player-background">
-      <div className="flex justify-between items-center">
-        <div className="flex-1">
+      <div className="flex  justify-between  items-center">
+        {/* MUSIC INFO */}
+        <div className=" ">
           <MusicInfo song={song} />
         </div>
 
-        <div className="flex flex-col justify-center items-center flex-1">
+        <div className="flex flex-col justify-center items-center">
           <audio
             src={song?.downloadUrl[4]?.url}
             autoPlay
@@ -180,6 +181,7 @@ const Player = () => {
           ></audio>
 
           <div className="flex items-center justify-center">
+            {/* MUSIC CONTROLS  */}
             <div className="mr-2 flex items-center justify-center">
               <FaShuffle
                 size={18}
@@ -218,19 +220,25 @@ const Player = () => {
                 onClick={handleSongLoop}
               />
             </div>
-            <div className="ml-12">
+
+            {/* MUSIC SEEK BAR  */}
+            <div className="">
               <MusicSeek />
             </div>
           </div>
         </div>
 
-        <div className="flex-1 flex justify-end items-center relative">
+        {/* USER SYNC */}
+        <div className="flex justify-end items-center relative">
           <div className="mr-5 ">
             <HiUsers size={22} cursor={"pointer"} onClick={showUserSync} />
             {isUserSyncVisible && UserSyncMemoized}
           </div>
           {isNotifierVisible && UserNotifierMemoized}
-          <Volume />
+          {/* VOLUME */}
+          <div>
+            <Volume />
+          </div>
         </div>
       </div>
     </div>

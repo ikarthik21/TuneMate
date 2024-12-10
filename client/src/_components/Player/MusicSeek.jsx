@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { formatTime } from "@/utils/MusicUtils.js";
-import useWebSocketStore from "@/store/use-socket";
-import useAuthStore from "@/store/use-auth";
 import usePlayerStore from "@/store/use-player.js";
 
 const MusicSeek = () => {

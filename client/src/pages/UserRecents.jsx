@@ -17,12 +17,6 @@ const UserRecents = () => {
     isLoading
   } = useSWR("user-recents", () => tuneMateInstance.getUserSongHistory());
 
-  if (isLoading)
-    return (
-      <div>
-        <h1>Loading.....</h1>
-      </div>
-    );
   if (error)
     return (
       <div>
@@ -33,7 +27,7 @@ const UserRecents = () => {
   return (
     <Wrapper>
       <BlockWrapper>
-        {songHistory.length > 0 && (
+        {
           <div className="mb-8">
             <div className={"flex items-center justify-between p-4"}>
               <h1 className="text-3xl jaro-head">Recently Played</h1>
@@ -89,7 +83,7 @@ const UserRecents = () => {
               </div>
             )}
           </div>
-        )}
+        }
       </BlockWrapper>
     </Wrapper>
   );
