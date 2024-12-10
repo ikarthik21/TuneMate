@@ -222,7 +222,7 @@ const Player = () => {
             </div>
 
             {/* MUSIC SEEK BAR  */}
-            <div className="">
+            <div className="ml-4">
               <MusicSeek />
             </div>
           </div>
