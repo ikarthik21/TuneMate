@@ -6,5 +6,6 @@ const authRouter = Router();
 
 authRouter.post(ENDPOINTS.register, UserController().register);
 authRouter.post(ENDPOINTS.login, UserController().login);
+authRouter.get(ENDPOINTS.verify, UserController().verifyToken);
 
 export default authRouter;

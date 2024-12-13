@@ -14,17 +14,19 @@ datasource db {
 }
 
 model User {
-  id          String      @id @default(uuid()) @map("_id")
-  email       String      @unique
-  username    String      @unique @default("")
-  password    String      @default("")
-  profileImg  String      @default("")
-  role        String      @default("user")
-  verified    Boolean     @default(false)
-  playerState Json
-  playlists   Playlist[]
-  favorites   Favorites[]
-  history     History[]
+  id                      String      @id @default(uuid()) @map("_id")
+  email                   String      @unique
+  username                String      @unique @default("")
+  password                String      @default("")
+  profileImg              String      @default("")
+  role                    String      @default("user")
+  verified                Boolean     @default(false)
+  playerState             Json
+  verificationToken       String?
+  verificationTokenExpiry DateTime?
+  playlists               Playlist[]
+  favorites               Favorites[]
+  history                 History[]
 }
 
 model Playlist {
