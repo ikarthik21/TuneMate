@@ -37,107 +37,62 @@ export function generateToken() {
   return token;
 }
 
-export const TOKEN_EXPIRY_MESSAGE = `<!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-            h1 { color: red; }
-            p { font-size: 16px; }
-          </style>
-        </head>
-        <body>
-          <h1>Invalid or Expired Token</h1>
-          <p>The token provided is invalid or has expired. Please request a new verification email.</p>
-        </body>
-        </html>`;
-
-export const TOKEN_VERIFY_SUCCESS = `<!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-          h1 { color: green; }
-          p { font-size: 16px; }
-        </style>
-      </head>
-      <body>
-        <h1>Email Verified Successfully</h1>
-        <p>Thank you for verifying your email. You can now use all features of our service.</p>
-      </body>
-      </html>`;
-
-export const TOKEN_VERIFY_FAILURE = `<!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-          h1 { color: red; }
-          p { font-size: 16px; }
-        </style>
-      </head>
-      <body>
-        <h1>Error Verifying Email</h1>
-        <p>There was an error verifying your email. Please try again later.</p>
-      </body>
-      </html>`;
-
 export const generateVerificationMail = (verificationLink) => {
   return `<!DOCTYPE html>
-      <html>
-        <head>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              background-color: #f9f9f9;
-              margin: 0;
-              padding: 20px;
-              text-align: center;
-            }
-            .email-container {
-              background-color: #ffffff;
-              padding: 20px;
-              border-radius: 8px;
-              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-              max-width: 600px;
-              margin: 20px auto;
-            }
-            .header {
-              color: #333333;
-              font-size: 24px;
-              margin-bottom: 20px;
-            }
-            .content {
-              color: #555555;
-              font-size: 16px;
-              line-height: 1.5;
-              margin-bottom: 20px;
-            }
-            .button {
-              background-color: #4CAF50;
-              color: white;
-              padding: 10px 20px;
-              text-decoration: none;
-              border-radius: 5px;
-              font-size: 16px;
-            }
-            .footer {
-              margin-top: 20px;
-              font-size: 12px;
-              color: #888888;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="email-container">
-            <div class="header">Verify Your Email</div>
-            <div class="content">
-              <p>Thank you for signing up! Please verify your email by clicking the button below:</p>
-              <a href="${verificationLink}" class="button">Verify Email</a>
-              <p>If you did not sign up, please ignore this email.</p>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Verify Your Email</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jaro:opsz@6..72&family=Montserrat:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+      <style>
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      </style>
+    </head>
+    <body style="background-color: #1a1a1a; margin: 0; padding: 0; font-family: 'Poppins', 'Roboto', sans-serif; text-align: center;">
+      <table role="presentation" style="width: 100%; background-color: #1a1a1a; padding: 30px 0; text-align: center;">
+        <tr>
+          <td>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 30px 50px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); max-width: 600px; margin: 0 auto; animation: fadeIn 1s ease-in-out;">
+              
+              <!-- Company Logo -->
+              <div style="text-align: center; font-family: 'Black Han Sans', sans-serif; font-weight: 600;  ">
+              <h1 style=" font-size: 2.2rem; color: #f1f1f1;">
+                Welcome to <span style="color: #59c2ef; font-size: 2.5rem; text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);">TuneMate</span>
+              </h1>
             </div>
-     
-          </div>
-        </body>
-      </html>`;
+              
+              <!-- Header -->
+              <div style="font-size: 1.5rem; margin-bottom: 15px; color:  #59c2ef; font-weight: 600; font-family: 'Poppins', sans-serif; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">
+                Verify Your Email
+              </div>
+              
+              <!-- Content -->
+              <div style="font-size: 0.8rem; line-height: 1.6; margin-bottom: 20px; color: #f1f1f1; font-family: 'Roboto', sans-serif;">
+                <p style="margin: 0;">Thank you for signing up! Please verify your email by clicking the button below:</p>
+                <a href="${verificationLink}" style="background-color:  #59c2ef; color: white; padding: 8px 16px; text-decoration: none; border-radius: 5px; font-size: 14px; display: inline-block; margin-top: 15px; transition: background-color 0.3s ease;">Verify Email</a>
+                <p style="margin: 10px 0 0;">If you did not sign up, please ignore this email.</p>
+              </div>
+
+              <!-- Footer -->
+              <div style="margin-top: 20px; font-size: 12px; color: #888888;">
+                <p>If you have any questions, feel free to contact us.</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </body>
+  </html>`;
 };

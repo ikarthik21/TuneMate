@@ -2,17 +2,18 @@ import { getPrismaInstance } from "../../utils/prisma/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { EmailHelper } from "./EmailHelper.js";
-import {
-  TOKEN_EXPIRY_MESSAGE,
-  TOKEN_VERIFY_FAILURE,
-  TOKEN_VERIFY_SUCCESS
-} from "../../utils/serverutils.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
 export const UserController = () => {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const __messagePath = path.join(__dirname, "../../public/messages");
+
   return {
     async verifyToken(req, res) {
       try {
         const { token } = req.query;
-
         const prisma = await getPrismaInstance();
         // Find the user with the provided token
         const user = await prisma.user.findFirst({
@@ -25,9 +26,8 @@ export const UserController = () => {
         });
 
         if (!user) {
-          return res.status(400).send(TOKEN_EXPIRY_MESSAGE);
+          res.sendFile("token_expiry.html", { root: __messagePath });
         }
-
         // Update the user's verified status
         await prisma.user.update({
           where: { id: user.id },
@@ -37,11 +37,10 @@ export const UserController = () => {
             verificationTokenExpiry: null
           }
         });
-
-        res.status(200).send(TOKEN_VERIFY_SUCCESS);
+        res.sendFile("token_success.html", { root: __messagePath });
       } catch (error) {
         console.error("Error in verifyToken:", error.message);
-        return res.status(500).send(TOKEN_VERIFY_FAILURE);
+        res.sendFile("token_failure.html", { root: __messagePath });
       }
     },
     async register(req, res) {
@@ -86,7 +85,6 @@ export const UserController = () => {
 
         // Send verification email
         const mailSent = await EmailHelper().sendVerificationMail(email, user);
-        console.log("Mail sent:", mailSent);
 
         if (!mailSent) {
           return res.status(500).json({
@@ -121,13 +119,13 @@ export const UserController = () => {
       const user = await prisma.User.findUnique({ where: { email } });
 
       if (!user) {
-        return res.status(400).json({
+        return res.status(200).json({
           data: { message: "User not found", type: "error" }
         });
       }
 
       if (user.verified !== true) {
-        return res.status(400).json({
+        return res.status(200).json({
           data: {
             message: "Please verify your mail and Try Again",
             type: "error"
@@ -139,7 +137,7 @@ export const UserController = () => {
         const userid = user.id;
         const result = await bcrypt.compare(password, user.password);
         if (!result) {
-          return res.status(400).json({
+          return res.status(200).json({
             data: { message: "Wrong Username or Password", type: "error" }
           });
         }
@@ -161,7 +159,7 @@ export const UserController = () => {
         });
       } catch (err) {
         console.log(err);
-        return res.status(500).json({
+        return res.status(200).json({
           data: { message: "Internal Server Error" }
         });
       }
