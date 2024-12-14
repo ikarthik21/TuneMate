@@ -1,6 +1,7 @@
 export const ENDPOINTS = {
     login: "/api/auth/login",
     register: "/api/auth/register",
+    resendVerificationMail: "/api/auth/resendVerificationMail",
     ManageSongInFavorites: 'api/meta/songs/favorites',
     favorites: 'api/meta/user/favorites',
     updatePlayerState: 'api/meta/user/updatePlayerState',
