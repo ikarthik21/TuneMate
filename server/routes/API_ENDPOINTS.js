@@ -1,5 +1,6 @@
 const ENDPOINTS = {
   login: "/login",
+  resendVerificationMail: "/resendVerificationMail",
   verify: "/verify",
   register: "/register",
   ManageSongInFavorites: "/songs/favorites",

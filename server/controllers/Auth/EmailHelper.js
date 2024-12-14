@@ -15,12 +15,8 @@ const transporter = nodemailer.createTransport({
 
 export const EmailHelper = () => {
   return {
-    async sendVerificationMail(email, user) {
+    async sendVerificationMail(email) {
       try {
-        if (!user) {
-          return false;
-        }
-
         // Generate a verification token
         const token = generateToken();
 

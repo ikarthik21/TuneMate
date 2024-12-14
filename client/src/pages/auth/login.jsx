@@ -4,13 +4,13 @@ import Toast from "@/utils/Toasts/Toast.js";
 import { useState } from "react";
 import Register from "@/pages/auth/register.jsx";
 import useAuthStore from "@/store/use-auth.js";
+import ResendMail from "./ResendMail";
 
 // eslint-disable-next-line react/prop-types
 const Login = ({ closeModal }) => {
-  const [showLogin, setShowLogin] = useState(true);
+  const [showDetails, setshowDetails] = useState("login");
   const { setAccessToken } = useAuthStore();
-
-  const { handleChange, handleSubmit, isLoading } = useFormData(
+  const { handleChange, handleSubmit, isLoading, resetData } = useFormData(
     {
       email: "",
       password: ""
@@ -31,11 +31,12 @@ const Login = ({ closeModal }) => {
       }
       Toast({ type: response.data.type, message: response.data.message });
     }
+    resetData();
   };
 
   return (
     <>
-      {showLogin ? (
+      {showDetails === "login" && (
         <div className={"flex items-center justify-center"}>
           <div className={"flex flex-col"}>
             <form onSubmit={handleLogin}>
@@ -76,15 +77,21 @@ const Login = ({ closeModal }) => {
             <div className={"flex items-center justify-center m-2"}>
               <button
                 className={"link_button"}
-                onClick={() => setShowLogin(false)}
+                onClick={() => setshowDetails("register")}
               >
                 Not a Member? Register
               </button>
             </div>
           </div>
         </div>
-      ) : (
-        <Register setShowLogin={setShowLogin} />
+      )}
+
+      {showDetails === "register" && (
+        <Register setshowDetails={setshowDetails} />
+      )}
+
+      {showDetails === "resendMail" && (
+        <ResendMail setshowDetails={setshowDetails} />
       )}
     </>
   );

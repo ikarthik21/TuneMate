@@ -52,6 +52,18 @@ class TuneMateService {
     }
   };
 
+  resendVerificationMail = async (data) => {
+    try {
+      const response = await tuneMateClient.post(
+        ENDPOINTS.resendVerificationMail,
+        data
+      );
+      return response.data;
+    } catch (err) {
+      return err;
+    }
+  };
+
   ManageSongInFavorites = async (id) => {
     try {
       const response = await tuneMateClient.post(

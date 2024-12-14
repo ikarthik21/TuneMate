@@ -3,15 +3,16 @@ import tuneMateInstance from "@/service/api/api.js";
 import Toast from "@/utils/Toasts/Toast.js";
 
 // eslint-disable-next-line react/prop-types
-const Register = ({ setShowLogin }) => {
-  const { data, handleChange, handleSubmit, isLoading } = useFormData(
-    {
-      email: "",
-      password: "",
-      confirmPassword: ""
-    },
-    tuneMateInstance.registerUser
-  );
+const Register = ({ setshowDetails }) => {
+  const { data, handleChange, handleSubmit, isLoading, resetData } =
+    useFormData(
+      {
+        email: "",
+        password: "",
+        confirmPassword: ""
+      },
+      tuneMateInstance.registerUser
+    );
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -23,6 +24,7 @@ const Register = ({ setShowLogin }) => {
     if (response.data) {
       Toast({ type: response.data.type, message: response.data.message });
     }
+    resetData();
   };
 
   return (
@@ -33,7 +35,7 @@ const Register = ({ setShowLogin }) => {
             <label>Email</label>
             <input
               type="email"
-              className={"input-box w-72"}
+              className={"input-box "}
               onChange={handleChange}
               name="email"
               required={true}
@@ -44,7 +46,7 @@ const Register = ({ setShowLogin }) => {
             <label>Username</label>
             <input
               type="text"
-              className={"input-box w-72"}
+              className={"input-box  "}
               onChange={handleChange}
               name="username"
               required={true}
@@ -55,7 +57,7 @@ const Register = ({ setShowLogin }) => {
             <label>Password</label>
             <input
               type="password"
-              className={"input-box w-72"}
+              className={"input-box  "}
               onChange={handleChange}
               name="password"
               required={true}
@@ -65,7 +67,7 @@ const Register = ({ setShowLogin }) => {
             <label>Confirm Password</label>
             <input
               type="password"
-              className={"input-box w-72"}
+              className={"input-box  "}
               onChange={handleChange}
               name="confirmPassword"
               required={true}
@@ -84,7 +86,16 @@ const Register = ({ setShowLogin }) => {
         </form>
 
         <div className={"flex items-center justify-center m-2"}>
-          <button className={"link_button"} onClick={() => setShowLogin(true)}>
+          <button
+            className={"link_button  mr-4"}
+            onClick={() => setshowDetails("resendMail")}
+          >
+            Resend Verification Mail
+          </button>
+          <button
+            className={"link_button"}
+            onClick={() => setshowDetails("login")}
+          >
             Already a member? Login
           </button>
         </div>

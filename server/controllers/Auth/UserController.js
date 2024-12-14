@@ -16,7 +16,7 @@ export const UserController = () => {
         const { token } = req.query;
         const prisma = await getPrismaInstance();
         // Find the user with the provided token
-        const user = await prisma.user.findFirst({
+        const user = await prisma.User.findFirst({
           where: {
             verificationToken: token,
             verificationTokenExpiry: {
@@ -27,9 +27,10 @@ export const UserController = () => {
 
         if (!user) {
           res.sendFile("token_expiry.html", { root: __messagePath });
+          return;
         }
         // Update the user's verified status
-        await prisma.user.update({
+        await prisma.User.update({
           where: { id: user.id },
           data: {
             verified: true,
@@ -68,7 +69,7 @@ export const UserController = () => {
 
         // Hash password and create the user
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await prisma.User.create({
+        await prisma.User.create({
           data: {
             email,
             username,
@@ -84,7 +85,7 @@ export const UserController = () => {
         });
 
         // Send verification email
-        const mailSent = await EmailHelper().sendVerificationMail(email, user);
+        const mailSent = await EmailHelper().sendVerificationMail(email);
 
         if (!mailSent) {
           return res.status(500).json({
@@ -113,6 +114,43 @@ export const UserController = () => {
       }
     },
 
+    async resendVerificationMail(req, res) {
+      try {
+        const { email } = req.body;
+
+        if (!email) {
+          return res.status(200).json({
+            data: { message: "Email is required", type: "error" }
+          });
+        }
+
+        const mailSent = await EmailHelper().sendVerificationMail(email);
+
+        if (!mailSent) {
+          return res.status(200).json({
+            data: {
+              message: "Error sending verification email.",
+              type: "error"
+            }
+          });
+        }
+
+        return res.status(201).json({
+          data: {
+            message: "Verification email sent successfully.",
+            type: "success"
+          }
+        });
+      } catch (error) {
+        console.error("Error in resendVerificationMail:", error.message);
+        return res.status(200).json({
+          data: {
+            message: "Error sending verification email.",
+            type: "error"
+          }
+        });
+      }
+    },
     async login(req, res) {
       const { email, password } = req.body;
       const prisma = await getPrismaInstance();
