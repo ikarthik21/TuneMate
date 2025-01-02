@@ -277,3 +277,11 @@ body::-webkit-scrollbar-thumb:hover {
 .slick-next:before {
   content: "" !important;
 }
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .slider,
+  .slick-slide {
+    height: 200px;
+  }
+}

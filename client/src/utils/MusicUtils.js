@@ -1,7 +1,7 @@
 import MusicServiceInstance from "@/service/api/music_apis.js";
 import tuneMateInstance from "@/service/api/api.js";
 import CryptoJS from "crypto-js";
-
+ 
 export const formatTime = (seconds) => {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = Math.floor(seconds % 60);
@@ -105,4 +105,5 @@ export const encryptUserId = (userId) => {
     throw new Error("Encryption failed");
   }
 };
+
 

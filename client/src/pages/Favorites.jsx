@@ -63,18 +63,23 @@ const Favorites = () => {
 
   const renderAlbumDetails = () => (
     <div className="flex items-center">
-      <div className="flex items-end pt-20 p-4 ">
-        <img src={FavImage} alt="Favorites" className="h-28 w-28" />
-        <div className="ml-8 flex items-start flex-col">
-          <h1 className="text-7xl ubuntu-bold">Your Favorites</h1>
-          <p className="mt-4 ml-4">{favorites ? favorites.length : 0} Songs</p>
+      <div className="flex md:flex-row flex-col  md:items-end pt-20 p-4 ">
+        <div>
+          <img src={FavImage} alt="Favorites" className="h-28 w-28" />
+        </div>
+
+        <div className="md:ml-8 mt-4 md:mt-0 flex  flex-col">
+          <h1 className="text-3xl md:text-7xl ubuntu-bold">Favorites</h1>
+          <p className="text-sm md:text-lg">
+            {favorites ? favorites.length : 0} Songs
+          </p>
         </div>
       </div>
     </div>
   );
 
   const renderSongsList = () => (
-    <div className={"flex flex-col"}>
+    <div className={"flex flex-col md:pb-0 pb-8"}>
       <div className={"items-center flex "}>
         <div
           className={
@@ -179,7 +184,7 @@ const Favorites = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center">
+                  <div className="hidden md:flex items-center justify-center">
                     <div>
                       {hoveredItemId === song.id && (
                         <IoMdRemoveCircle

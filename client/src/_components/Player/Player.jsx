@@ -1,40 +1,34 @@
-import { FaPause, FaPlay } from "react-icons/fa";
-import { useEffect, useCallback, useMemo } from "react";
-import { IoPlaySkipBack, IoPlaySkipForward } from "react-icons/io5";
-import { MdOutlineLoop } from "react-icons/md";
-import { FaShuffle } from "react-icons/fa6";
 import { HiUsers } from "react-icons/hi";
+import { useEffect, useCallback, useMemo } from "react";
 import MusicSeek from "@/_components/Player/MusicSeek.jsx";
 import Volume from "@/_components/Player/Volume.jsx";
 import MusicInfo from "@/_components/Player/MusicInfo.jsx";
 import UserSync from "../sync/UserSync";
 import UserNotifier from "../sync/UserNotifier";
+import { useMediaQuery } from "usehooks-ts";
 import usePlayerStore from "@/store/use-player.js";
 import useAuthStore from "@/store/use-auth.js";
 import useWebSocketStore from "@/store/use-socket";
 import useUserSyncStore from "@/store/use-userSync";
 import useNotifierStore from "@/store/use-Notifier";
+import MobileController from "./mobile/MobileController";
 import Toast from "@/utils/Toasts/Toast";
 import { encryptUserId } from "@/utils/MusicUtils.js";
 import tuneMateInstance from "@/service/api/api";
+import MusicControls from "./MusicControls";
 
 const Player = () => {
   const {
     song,
-    isPlaying,
     getFavorites,
     loadPlayerState,
-    playNext,
-    playPrevious,
     AudioRef,
     handleAudioPlay,
-    onLoop,
-    handleSongLoop,
-    isShuffling,
-    handleShuffle,
     playSong,
     setMusicSeekTime
   } = usePlayerStore();
+
+  const { isAuthenticated, userId } = useAuthStore();
 
   const {
     connectWebSocket,
@@ -44,11 +38,10 @@ const Player = () => {
     setUserDetails
   } = useWebSocketStore();
 
-  const { isAuthenticated, userId } = useAuthStore();
-
   const { isUserSyncVisible, showUserSync, hideUserSync } = useUserSyncStore();
   const { isNotifierVisible, showNotifier } = useNotifierStore();
 
+  // ----- Initialization -----
   const initializePlayerState = useCallback(async () => {
     try {
       await loadPlayerState();
@@ -58,43 +51,33 @@ const Player = () => {
     }
   }, [loadPlayerState, getFavorites]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      initializePlayerState();
-    }
-  }, [initializePlayerState, isAuthenticated]);
-
-  useEffect(() => {
-    if (userId) {
-      connectWebSocket(encryptUserId(userId));
-    }
-    return () => {
-      closeWebSocket();
-    };
-  }, [userId, connectWebSocket, closeWebSocket]);
-
+  // Memoize the WebSocket message handler to avoid unnecessary re-creations
   const handleSocketMessage = useCallback(
     async (event) => {
       try {
         const data = JSON.parse(event.data);
+
         switch (data.type) {
           case "CONNECTION_REQUEST":
             setUserDetails(data.payload);
             hideUserSync();
             showNotifier();
             break;
+
           case "CONNECTION_DECLINED":
             Toast({
               type: "error",
               message: `${data.payload.declinedBy} declined to connect`
             });
             break;
+
           case "INVALID_ACTION":
             Toast({
               type: "error",
-              message: `${data.payload.message} `
+              message: `${data.payload.message}`
             });
             break;
+
           case "CONNECTION_ACCEPTED":
             try {
               setUserDetails(data.payload);
@@ -113,15 +96,19 @@ const Player = () => {
               });
             }
             break;
+
           case "PLAY_SONG":
             await playSong(data.payload.songId, false);
             break;
+
           case "HANDLE_SONG_PLAY":
             await handleAudioPlay(false);
             break;
+
           case "SEEK":
             setMusicSeekTime(data.payload.musicSeekTime, false);
             break;
+
           case "CLOSE_CONNECTION":
             setUserDetails(null);
             await tuneMateInstance.updateSyncState({
@@ -130,6 +117,7 @@ const Player = () => {
             });
             hideUserSync();
             break;
+
           default:
             console.warn("Unknown message type:", data.type);
         }
@@ -138,23 +126,41 @@ const Player = () => {
       }
     },
     [
-      handleAudioPlay,
-      playSong,
+      setUserDetails,
+      hideUserSync,
+      showNotifier,
       setConnectionStatus,
       setMusicSeekTime,
-      setUserDetails,
-      showNotifier
+      playSong,
+      handleAudioPlay
     ]
   );
 
+  // Initialize player state if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      initializePlayerState();
+    }
+  }, [isAuthenticated, initializePlayerState]);
+
+  // Connect WebSocket if userId exists
+  useEffect(() => {
+    if (userId) {
+      connectWebSocket(encryptUserId(userId));
+    }
+    return () => closeWebSocket();
+  }, [userId, connectWebSocket, closeWebSocket]);
+
+  // Set up WebSocket message handler once the socket is available
   useEffect(() => {
     if (socket) {
       socket.onmessage = handleSocketMessage;
-      socket.onerror = () => console.log("WebSocket connection error.");
-      socket.onclose = () => console.log("WebSocket connection closed.");
+      socket.onerror = () => console.error("WebSocket connection error.");
+      socket.onclose = () => console.info("WebSocket connection closed.");
     }
   }, [socket, handleSocketMessage]);
 
+  // Handle audio play state change
   useEffect(() => {
     handleAudioPlay();
   }, [handleAudioPlay]);
@@ -165,77 +171,44 @@ const Player = () => {
     [isNotifierVisible]
   );
 
-  return (
+  const isMobile = useMediaQuery("(max-width: 767px)");
+
+  // ----- JSX -----
+  return isMobile ? (
+    <MobileController />
+  ) : (
     <div className="fixed bottom-0 left-0 w-full p-[0.6rem] rounded text-amber-50 z-30 player-background">
-      <div className="flex  justify-between  items-center">
+      <div className="flex justify-between items-center">
         {/* MUSIC INFO */}
-        <div className=" ">
+        <div>
           <MusicInfo song={song} />
         </div>
 
-        <div className="flex flex-col justify-center items-center">
+        {/* PLAYER CONTROLS */}
+        <div className="flex justify-center items-center">
           <audio
             src={song?.downloadUrl[4]?.url}
             autoPlay
             ref={AudioRef}
           ></audio>
 
-          <div className="flex items-center justify-center">
-            {/* MUSIC CONTROLS  */}
-            <div className="mr-2 flex items-center justify-center">
-              <FaShuffle
-                size={18}
-                className="mr-8 cursor-pointer"
-                onClick={handleShuffle}
-                color={isShuffling ? "#59c2ef" : ""}
-              />
-              <IoPlaySkipBack
-                size={20}
-                className="mr-8 cursor-pointer"
-                onClick={playPrevious}
-              />
-              <div
-                className="bg-white mr-8 p-2 rounded-full flex items-center justify-center cursor-pointer"
-                onClick={handleAudioPlay}
-              >
-                {isPlaying ? (
-                  <FaPause size={16} color="black" />
-                ) : (
-                  <FaPlay
-                    size={15}
-                    color="black"
-                    className="relative left-[2px]"
-                  />
-                )}
-              </div>
-              <IoPlaySkipForward
-                size={20}
-                className="cursor-pointer"
-                onClick={playNext}
-              />
-              <MdOutlineLoop
-                size={20}
-                className="cursor-pointer ml-8"
-                color={onLoop ? "#59c2ef" : ""}
-                onClick={handleSongLoop}
-              />
-            </div>
+          <div className="mr-4">
+            <MusicControls />
+          </div>
 
-            {/* MUSIC SEEK BAR  */}
-            <div className="ml-4">
-              <MusicSeek />
-            </div>
+          {/* MUSIC SEEK BAR */}
+          <div className="ml-4">
+            <MusicSeek />
           </div>
         </div>
 
-        {/* USER SYNC */}
+        {/* USER SYNC AND VOLUME */}
         <div className="flex justify-end items-center relative">
-          <div className="mr-5 ">
+          <div className="mr-5">
             <HiUsers size={22} cursor={"pointer"} onClick={showUserSync} />
             {isUserSyncVisible && UserSyncMemoized}
           </div>
           {isNotifierVisible && UserNotifierMemoized}
-          {/* VOLUME */}
           <div>
             <Volume />
           </div>

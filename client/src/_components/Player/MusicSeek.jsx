@@ -9,7 +9,7 @@ const MusicSeek = () => {
     setMusicSeekTime,
     currentTime,
     setCurrentTime,
-    duration,
+    duration,song,
     setDuration
   } = usePlayerStore();
 
@@ -24,7 +24,7 @@ const MusicSeek = () => {
       AudioRef.current.addEventListener("timeupdate", handleTimeUpdate);
       AudioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
     }
-  }, [AudioRef]);
+  }, [AudioRef, song?.downloadUrl]);
 
   const handleSeek = (e) => {
     setMusicSeekTime(e.target.value);

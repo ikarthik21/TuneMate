@@ -43,16 +43,16 @@ const MusicSlider = ({
       {
         breakpoint: 1200,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 5,
           slidesToScroll: 3,
           infinite: true
         }
       },
       {
-        breakpoint: 600,
+        breakpoint: 767,
         settings: {
-          slidesToShow: 1,
-          slidesToScroll: 3,
+          slidesToShow:3,
+          slidesToScroll: 2,
           infinite: true
         }
       }
