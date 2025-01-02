@@ -21,7 +21,7 @@ const SliderItem = ({ playlist }) => {
     <Link
       to={`/recommended/${playlist.id}`}
       key={playlist.id}
-      className="flex cursor-pointer flex-col rounded-xl justify-center  items-start transform transition-transform duration-300  hover:scale-110  hover:bg-[#303033]  pt-4 pb-4 pl-3 pr-3"
+      className="flex cursor-pointer flex-col rounded-xl justify-center  items-start transform transition-transform duration-300  md:hover:scale-110  md:hover:bg-[#303033] m-2 md:m-0 md:pt-4 md:pb-4 md:pl-3 md:pr-3"
       onMouseEnter={() => handleMouseEnter(playlist.id)}
       onMouseLeave={handleMouseLeave}
     >

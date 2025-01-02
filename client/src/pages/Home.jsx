@@ -10,11 +10,13 @@ import MusicSlider from "@/_components/navigation/Slider/Slider";
 import { decodeHtmlEntities, truncateString } from "@/utils/MusicUtils.js";
 import { FaPlay } from "react-icons/fa";
 import useHover from "@/hooks/useHover.js";
+import { useMediaQuery } from "usehooks-ts";
 import HomeSkeleton from "@/_components/skeletons/HomeSkeleton";
 
 const Home = () => {
   const { playSong } = usePlayerStore();
   const { hoveredItemId, handleMouseEnter, handleMouseLeave } = useHover();
+  const isMobile = useMediaQuery("(max-width: 767px)");
   const { isAuthenticated } = useAuthStore();
   const {
     data: recommended,
@@ -45,34 +47,34 @@ const Home = () => {
         {/* Song of the Week */}
 
         {recommended?.tuneMateUpdates?.length > 0 && (
-          <div className="rounded-xl rounded-b-none mb-2 p-2 pt-4 pb-4 song-of-week-background">
-            <div className="flex items-center ml-4 p-2">
+          <div className="rounded-xl rounded-b-none mt-2 song-of-week-background">
+            <div className="flex items-center ml-4 pt-2 pb-2">
               <div>
                 <img
                   src={recommended?.tuneMateUpdates[0].Content.image}
                   alt=""
-                  className="h-48 w-48 rounded-lg"
+                  className="h-36 w-36 md:h-48 md:w-48  rounded-lg"
                 />
               </div>
               <div className="ml-4 flex flex-col">
-                <h1 className="jaro-head text-4xl">
+                <h1 className="jaro-head text-xl md:text-4xl">
                   {recommended?.tuneMateUpdates[0].title}
                 </h1>
-                <h2 className="mt-4 text-xl ubuntu-bold">
+                <h2 className="md:mt-4 text-sm  md:text-lg ubuntu-bold">
                   {recommended?.tuneMateUpdates[0].Content.name}
                 </h2>
-                <h3 className="nunito-sans-bold text-sm">
+                <h3 className="nunito-sans-bold text-xs md:text-md">
                   {recommended?.tuneMateUpdates[0]?.Content?.album}
                 </h3>
 
                 <div
-                  className="mt-3 h-12 w-12 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer transition-opacity duration-300 ease-in-out transform opacity-100 scale-100 hover:scale-110 hover:shadow-lg"
+                  className="mt-3  h-8 w-8 md:h-12 md:w-12 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer transition-opacity duration-300 ease-in-out transform opacity-100 scale-100 hover:scale-110 hover:shadow-lg"
                   onClick={() =>
                     playSong(recommended?.tuneMateUpdates[0]?.Content.songId)
                   }
                 >
                   <FaPlay
-                    size={15}
+                    size={isMobile? 11 : 15}
                     color={"black"}
                     className={"relative left-[1px] top-[1px]"}
                   />
@@ -84,7 +86,7 @@ const Home = () => {
 
         <div className="p-4">
           <div className="flex flex-col">
-            <h1 className={"text-3xl jaro-head"}>Tunemate Recommended</h1>
+            <h1 className={"text-2xl md:text-3xl jaro-head"}>Tunemate Recommended</h1>
             {isLoading ? (
               <HomeSkeleton count={6} />
             ) : (
@@ -96,7 +98,7 @@ const Home = () => {
         {isAuthenticated && (
           <>
             <div className="ml-4 flex items-center  pr-2 pl-2 justify-between">
-              <h1 className="text-3xl jaro-head">Recently Played</h1>
+              <h1 className="text-2xl md:text-3xl jaro-head">Recently Played</h1>
               <Link to={"/recent"}>
                 <h1
                   className={
@@ -113,7 +115,7 @@ const Home = () => {
               <>
                 {songHistory?.length > 0 && (
                   <div className="mb-8 p-2">
-                    <div className="flex flex-col h-[260px]">
+                    <div className="flex flex-col  h-[240px] md:h-[260px]">
                       <div className="flex flex-wrap overflow-hidden ">
                         {songHistory?.map((song) => (
                           <div
@@ -126,7 +128,7 @@ const Home = () => {
                               <img
                                 src={song.image}
                                 alt=""
-                                className="rounded-xl h-44 w-44"
+                                className="rounded-xl h-32 w-32 md:h-44 md:w-44"
                               />
                               {hoveredItemId === song.id && (
                                 <div

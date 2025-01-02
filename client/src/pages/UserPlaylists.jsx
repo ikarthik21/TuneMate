@@ -20,6 +20,7 @@ import useSWR from "swr";
 import tuneMateInstance from "@/service/api/api.js";
 import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
+import { useMediaQuery } from "usehooks-ts";
 
 const UserPlaylists = () => {
   const { id } = useParams();
@@ -32,10 +33,10 @@ const UserPlaylists = () => {
   const { hoveredItemId, handleMouseEnter, handleMouseLeave } = useHover();
   const { clickedItemId, setClickedItemId } = useClick();
   const [isScrolled, setIsScrolled] = useState(false);
-
   const { isPlaying, songId } = usePlayerStore();
   const location = useLocation();
   const isRecommended = location.pathname.startsWith("/recommended");
+  const isMobile = useMediaQuery("(max-width: 767px)");
 
   const {
     data: single_playlist,
@@ -89,23 +90,29 @@ const UserPlaylists = () => {
 
   const renderPlaylistDetails = () => (
     <div className="flex flex-col">
-      <div className="flex items-end pt-12 p-4">
-        {single_playlist.image ? (
-          <img
-            src={single_playlist?.image}
-            alt="Image"
-            className="rounded transform transition-transform duration-500 hover:scale-105 h-40 w-40"
-          />
-        ) : (
-          <BiSolidPlaylist size={100} color={"#59c2ef"} />
-        )}
-        <div className="ml-8 flex items-start flex-col">
-          <h1 className="text-7xl ubuntu-bold ">{single_playlist.name}</h1>
-          <p className="mt-4 ml-4">
+      <div className="flex md:items-end md:flex-row flex-col pt-12 p-4">
+        <div className="flex items-center justify-center">
+          {single_playlist.image ? (
+            <img
+              src={single_playlist?.image}
+              alt="Image"
+              className="rounded transform transition-transform duration-500 hover:scale-105 h-40 w-40"
+            />
+          ) : (
+            <BiSolidPlaylist size={100} color={"#59c2ef"} />
+          )}
+        </div>
+
+        <div className="md:ml-8 mt-4 flex items-start flex-col ">
+          <h1 className="text-3xl md:text-7xl ubuntu-bold ">
+            {truncateString(single_playlist.name, 15)}
+          </h1>
+          <p className="text-sm md:text-lg">
             {single_playlist.songs ? single_playlist.songs.length : 0} Songs
           </p>
         </div>
       </div>
+
       <div className={"items-center flex "}>
         <div
           className={
@@ -120,12 +127,12 @@ const UserPlaylists = () => {
   );
 
   const renderSongsList = () => (
-    <div className={"flex flex-col"}>
+    <div className={"flex flex-col pb-10 md:pb-0"}>
       {/* On Scroll NAV */}
       {isScrolled && (
         <div
           className={
-            "items-center flex bg-[#0e0e10] z-30   sticky top-[70px] left-0 rounded"
+            "flex items-center player-background z-30 sticky top-[70px] left-0 rounded"
           }
         >
           <div
@@ -140,18 +147,20 @@ const UserPlaylists = () => {
               className={"relative left-[2px]"}
             />
           </div>
-          <div className={"flex items-center ml-4"}>
+          <div className={"flex items-center md:ml-4"}>
             {single_playlist.image ? (
               <img
                 src={single_playlist?.image}
                 alt="Image"
-                className="rounded transform transition-transform duration-500 hover:scale-105 h-11 w-11"
+                className="rounded hidden md:block transform transition-transform duration-500 hover:scale-105 h-8 w-8 md:h-11 md:w-11"
               />
             ) : (
               <BiSolidPlaylist size={100} color={"#59c2ef"} />
             )}
-            <h1 className="text-2xl ubuntu-bold ml-4">
-              {single_playlist.name}
+            <h1 className="text-xl md:text-2xl ubuntu-bold ml-4">
+              {isMobile
+                ? truncateString(single_playlist.name, 20)
+                : single_playlist.name}
             </h1>
           </div>
         </div>
@@ -166,14 +175,14 @@ const UserPlaylists = () => {
           <div className="col-span-3 flex items-center">
             <h1 className="nunito-sans-bold">Title</h1>
           </div>
-          <div className="col-span-2 flex items-center justify-center">
+          <div className="hidden col-span-2 md:flex items-center justify-center">
             <h1 className="nunito-sans-bold">Album</h1>
           </div>
-          <div className="col-span-2 flex justify-center items-center">
+          <div className="col-span-2 hidden md:flex justify-center items-center">
             {isRecommended ? <p>Plays</p> : <p>Date Added</p>}
           </div>
-          <div className="col-span-1 flex justify-center items-center"></div>
-          <div className="col-span-1 flex justify-center items-center">
+          <div className="col-span-1 hidden md:flex justify-center items-center"></div>
+          <div className="col-span-1 hidden md:flex justify-center items-center">
             <p>Duration</p>
           </div>
         </div>
@@ -229,13 +238,15 @@ const UserPlaylists = () => {
                   )
                 ) : (
                   <h3
-                    className={`${songId === song.id ? "text-[#59c2ef]" : ""}`}
+                    className={`${
+                      songId === song.id ? "text-[#59c2ef]" : "text-sm"
+                    }`}
                   >
                     {index + 1}
                   </h3>
                 )}
               </div>
-              <div className="col-span-3 flex items-center">
+              <div className="md:col-span-3 col-span-9 flex items-center">
                 <img
                   src={song.image}
                   alt={song.name}
@@ -254,7 +265,8 @@ const UserPlaylists = () => {
                   </p>
                 </div>
               </div>
-              <div className="col-span-2 flex justify-center items-center">
+
+              <div className="col-span-2 hidden md:flex justify-center items-center">
                 <p
                   className={`${
                     songId === song.id ? "text-[#59c2ef]" : "text-white"
@@ -263,7 +275,7 @@ const UserPlaylists = () => {
                   {truncateString(decodeHtmlEntities(song.album), 15)}
                 </p>
               </div>
-              <div className="col-span-2 flex justify-center items-center">
+              <div className="col-span-2  hidden md:flex  justify-center items-center">
                 <p
                   className={`${
                     songId === song.id ? "text-[#59c2ef]" : "text-white"
@@ -274,7 +286,7 @@ const UserPlaylists = () => {
                     : formatRelativeTime(song.addedAt)}
                 </p>
               </div>
-              <div className="flex justify-center items-center">
+              <div className="hidden md:flex justify-center items-center">
                 {hoveredItemId === song.id && (
                   <IoMdRemoveCircle
                     color="#59c2ef"
@@ -290,7 +302,7 @@ const UserPlaylists = () => {
                     )}
                 </div>
               </div>
-              <div className="col-span-1 flex justify-center items-center">
+              <div className="col-span-1  hidden md:flex   justify-center items-center">
                 <p
                   className={`${
                     songId === song.id ? "text-[#59c2ef]" : "text-white"

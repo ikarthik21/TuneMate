@@ -7,16 +7,18 @@ import SideBar from "@/_components/navigation/SideBar/SideBar.jsx";
 import Modal from "@/_components/Modals/Modal.jsx";
 import Login from "@/pages/auth/login.jsx";
 import { SkeletonTheme } from "react-loading-skeleton";
+import { useMediaQuery } from "usehooks-ts";
+import MobileNav from "@/_components/navigation/SideBar/MobileNav";
 
 function App() {
   const { closeModal, openModal, modalRef, isOpen } = useModal();
-
+  const isMobile = useMediaQuery("(max-width: 767px)");
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
       <Router>
         <div className="z-50">
           <NavBar openModal={openModal} />
-          <SideBar />
+          {isMobile ? <MobileNav /> : <SideBar />}
         </div>
         <Routes>
           {routesConfig.map((route) => (
