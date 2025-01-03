@@ -258,10 +258,16 @@ const UserPlaylists = () => {
                       songId === song.id ? "text-[#59c2ef]" : ""
                     }`}
                   >
-                    {truncateString(decodeHtmlEntities(song.name), 15)}
+                    {truncateString(
+                      decodeHtmlEntities(song.name),
+                      isMobile ? 25 : undefined
+                    )}
                   </h1>
                   <p className="text-xs text-[#6a6a6a] nunito-sans-bold">
-                    {truncateString(decodeHtmlEntities(song.artists), 15)}
+                    {truncateString(
+                      decodeHtmlEntities(song.artists),
+                      isMobile ? 30 : undefined
+                    )}
                   </p>
                 </div>
               </div>
@@ -324,7 +330,7 @@ const UserPlaylists = () => {
 
   return (
     <Wrapper>
-      <BlockWrapper>
+      <BlockWrapper margin={"mb-8"}>
         {isLoading ? (
           <UserPlayListSkeleton count={10} />
         ) : (

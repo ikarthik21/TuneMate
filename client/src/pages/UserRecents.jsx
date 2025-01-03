@@ -29,7 +29,7 @@ const UserRecents = () => {
 
   return (
     <Wrapper>
-      <BlockWrapper>
+      <BlockWrapper margin={"mb-20 md:mb-8"}>
         <div className="mb-8">
           <div className={"flex items-center justify-between p-4"}>
             <h1 className="text-3xl jaro-head">Recently Played</h1>
@@ -53,7 +53,7 @@ const UserRecents = () => {
                         className="rounded-xl h-16 w-16  md:h-44 md:w-44"
                       />
                       {hoveredItemId === song.id && (
-                        <div className="hidden md:block"> 
+                        <div className="hidden md:block">
                           <div
                             className="absolute bottom-0 right-1 mb-2 mr-2 h-12 w-12 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer transition-opacity duration-300 ease-in-out transform opacity-100 scale-100 hover:scale-110 hover:shadow-lg"
                             onClick={() => playSong(song.id)}

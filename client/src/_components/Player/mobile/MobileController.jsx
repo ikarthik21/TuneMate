@@ -47,7 +47,7 @@ const MobileController = () => {
 
       {/* Mobile Player Controller */}
       <div
-        className={`fixed bottom-14 left-0 w-full p-[0.6rem] z-30 player-background`}
+        className={`fixed bottom-16 right-1 left-0 w-full p-[0.6rem] z-30 player-background rounded-xl  `}
         onClick={(e) => {
           openFullScreen();
         }}
