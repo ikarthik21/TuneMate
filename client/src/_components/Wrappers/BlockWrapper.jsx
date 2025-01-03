@@ -1,8 +1,8 @@
 // eslint-disable-next-line react/prop-types
-const BlockWrapper = ({ children, rounded, background }) => {
+const BlockWrapper = ({ children, rounded, background, margin }) => {
   return (
     <div
-      className={`rounded-xl min-h-screen  ${rounded}`}
+      className={`rounded-xl min-h-screen ${margin} ${rounded}`}
       style={{ backgroundColor: background || "#1a1a1a" }}
     >
       {children}

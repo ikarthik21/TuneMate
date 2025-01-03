@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import useAuthStore from "@/store/use-auth.js";
 import { LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -8,6 +7,8 @@ import { IoClose } from "react-icons/io5";
 import UserLogo from "@/assets/images/user.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "usehooks-ts";
+import { MdLogin } from "react-icons/md";
+
 // eslint-disable-next-line react/prop-types
 const NavBar = ({ openModal }) => {
   const { isAuthenticated, removeAccessToken, username } = useAuthStore(
@@ -17,10 +18,6 @@ const NavBar = ({ openModal }) => {
   const isMobile = useMediaQuery("(max-width: 767px)");
 
   const navigate = useNavigate();
-
-  const handleInputFocus = () => {
-    navigate("/search");
-  };
 
   return (
     <nav className="flex h-[70px] justify-between text-white bg-[#0e0e10] fixed top-0 left-0 p-2 lg:px-4 items-center w-full space-x-4 z-40">
@@ -40,7 +37,7 @@ const NavBar = ({ openModal }) => {
             placeholder="Search for a Song, Album, or Artist...."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            onFocus={handleInputFocus}
+            onFocus={() => navigate("/search")}
           />
           {search && (
             <div
@@ -60,9 +57,7 @@ const NavBar = ({ openModal }) => {
           <LogOut size={24} onClick={removeAccessToken} />
         </div>
       ) : (
-        <Button variant="outline" onClick={openModal}>
-          Login
-        </Button>
+        <MdLogin size={30} cursor="pointer" onClick={openModal} />
       )}
     </nav>
   );

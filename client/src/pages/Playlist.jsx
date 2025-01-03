@@ -10,9 +10,12 @@ import {
 import Wrapper from "@/pages/Wrapper.jsx";
 import { FaPlay } from "react-icons/fa";
 import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
+import { useMediaQuery } from "usehooks-ts";
+import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
 
 const Playlist = () => {
   const { id } = useParams();
+  const isMobile = useMediaQuery("(max-width: 767px)");
   const { playSong, loadPlaylist, playlist, playSongByIndex } =
     usePlayerStore();
 
@@ -24,7 +27,7 @@ const Playlist = () => {
     MusicServiceInstance.getPlaylistById(id)
   );
 
-  const handlePlayWholeList = async (id) => {
+  const handlePlayWholeList = async () => {
     await loadPlaylist({ id, type: "PLAYLIST", index: 0 });
   };
 
@@ -42,19 +45,43 @@ const Playlist = () => {
     );
 
   const renderPlaylistDetails = () => (
-    <div className="flex items-center">
-      <div className="flex items-end pt-20 p-4">
-        <img
-          src={PlayList?.image[1].url}
-          alt={PlayList?.name}
-          className="rounded transform transition-transform duration-500 hover:scale-105 h-40 w-40"
-        />
-        <div className="ml-8">
-          <h1 className="text-7xl ubuntu-bold">
-            {truncateString(decodeHtmlEntities(PlayList?.name), 15)}
+    <div className="flex flex-col">
+      <div className="flex md:items-end md:flex-row flex-col pt-12 p-4">
+        <div className="flex items-center justify-center">
+          {PlayList.image ? (
+            <img
+              src={PlayList?.image[1].url}
+              alt={PlayList?.name}
+              className="rounded transform transition-transform duration-500 hover:scale-105 h-40 w-40"
+            />
+          ) : (
+            <BiSolidPlaylist size={100} color={"#59c2ef"} />
+          )}
+        </div>
+
+        <div className="mt-8 md:ml-8">
+          <h1 className="text-3xl md:text-7xl ubuntu-bold">
+            {truncateString(PlayList?.name, 20)}
           </h1>
-          <p className="mt-4">{decodeHtmlEntities(PlayList?.description)}</p>
-          <p>{PlayList?.songCount} Songs</p>
+
+          <p className="text-sm md:text-lg">
+            {truncateString(PlayList?.description, 35)}
+          </p>
+
+          <p className="text-sm">
+            {PlayList.songs ? PlayList.songs.length : 0} Songs
+          </p>
+        </div>
+      </div>
+
+      <div className={"items-center flex "}>
+        <div
+          className={
+            "p-4 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer ml-8 mt-4 mb-4"
+          }
+          onClick={handlePlayWholeList}
+        >
+          <FaPlay size={14} color={"black"} className={"relative left-[2px]"} />
         </div>
       </div>
     </div>
@@ -62,21 +89,6 @@ const Playlist = () => {
 
   const renderSongsList = () => (
     <div className="flex flex-col mt-4">
-      <div className={"items-center flex "}>
-        <div
-          className={
-            "p-4 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer ml-8 mt-4 mb-4"
-          }
-          onClick={() => handlePlayWholeList(PlayList.id)}
-        >
-          <FaPlay
-            size={14}
-            color={"black"}
-            className={"relative  left-[2px]"}
-          />
-        </div>
-      </div>
-
       {PlayList?.songs.map((song, index) => (
         <div
           key={song.id}
@@ -97,12 +109,23 @@ const Playlist = () => {
                 alt={song.name}
                 className="h-9 w-9 rounded"
               />
-              <h1 className="nunito-sans-bold ml-4">
-                {" "}
-                {truncateString(decodeHtmlEntities(song?.name))}
-              </h1>
+              <div className="flex flex-col ml-4">
+                <h1 className="nunito-sans-bold">
+                  {truncateString(
+                    decodeHtmlEntities(song?.name),
+                    isMobile ? 22 : undefined
+                  )}
+                </h1>
+                <p className="text-xs text-[#6a6a6a]">
+                  {" "}
+                  {truncateString(
+                    decodeHtmlEntities(song?.album.name),
+                    isMobile ? 22 : undefined
+                  )}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center">
+            <div className="hidden md:flex items-center">
               <p>{formatTime(song.duration)}</p>
             </div>
           </div>
@@ -113,14 +136,16 @@ const Playlist = () => {
 
   return (
     <Wrapper>
-      {isLoading ? (
-        <UserPlayListSkeleton count={10} />
-      ) : (
-        <>
-          {renderPlaylistDetails()}
-          {renderSongsList()}
-        </>
-      )}
+      <BlockWrapper margin={"mb-20 md:mb-8"}>
+        {isLoading ? (
+          <UserPlayListSkeleton count={10} />
+        ) : (
+          <>
+            {renderPlaylistDetails()}
+            {renderSongsList()}
+          </>
+        )}
+      </BlockWrapper>
     </Wrapper>
   );
 };
