@@ -32,7 +32,7 @@ const SliderItem = ({ playlist }) => {
       />
 
       <div className="flex flex-col mt-1 ">
-        <h3 className="mt-1 text-md nunito-sans-bold">
+        <h3 className="mt-1 md:text-md text-sm nunito-sans-bold">
           {truncateString(decodeHtmlEntities(playlist.name), 15)}
         </h3>
       </div>

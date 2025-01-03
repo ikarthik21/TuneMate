@@ -11,9 +11,9 @@ const Wrapper = ({ children }) => {
     <div
       className={`flex flex-col  ${
         !isMobile && (collapse ? "ml-24" : "ml-60")
-      } mr-3 rounded-lg`}
+      }  rounded-lg`}
     >
-      <div className={"mt-16 mb-16"}>{children}</div>
+      <div className={"mt-16 mb-10"}>{children}</div>
     </div>
   );
 };

@@ -14,7 +14,7 @@ const MobileNav = () => {
             <p className="text-xs mt-1">Home</p>
           </div>
         </Link>
-        <Link to={"/search"}>
+        <Link to={"/m/search"}>
           <div className="flex flex-col items-center justify-center">
             <FaSearch size={23} color="#adadad" />
             <p className="text-xs mt-1">Search</p>

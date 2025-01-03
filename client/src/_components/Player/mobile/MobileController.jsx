@@ -63,7 +63,7 @@ const MobileController = () => {
               />
               <div className="flex flex-col ml-4">
                 <h3 className="text-lg nunito-sans-bold">
-                  {truncateString(decodeHtmlEntities(song?.name), 25)}
+                  {truncateString(decodeHtmlEntities(song?.name), 20)}
                 </h3>
                 <p className="text-xs">
                   {truncateString(decodeHtmlEntities(getAllArtists(song)), 25)}

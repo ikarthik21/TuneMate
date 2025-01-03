@@ -43,11 +43,11 @@ const Home = () => {
 
   return (
     <Wrapper>
-      <BlockWrapper>
+      <div className="bg-[#1a1a1a] rounded-xl min-h-[calc(100vh-7rem)] mb-20 md:mb-0">
         {/* Song of the Week */}
 
         {recommended?.tuneMateUpdates?.length > 0 && (
-          <div className="rounded-xl rounded-b-none mt-2 song-of-week-background">
+          <div className="rounded-xl rounded-b-none mt-2 song-of-week-background pt-2 pb-2">
             <div className="flex items-center ml-4 pt-2 pb-2">
               <div>
                 <img
@@ -68,15 +68,15 @@ const Home = () => {
                 </h3>
 
                 <div
-                  className="mt-3  h-8 w-8 md:h-12 md:w-12 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer transition-opacity duration-300 ease-in-out transform opacity-100 scale-100 hover:scale-110 hover:shadow-lg"
+                  className="mt-3  h-8 w-8 md:h-11 md:w-11 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer transition-opacity duration-300 ease-in-out transform opacity-100 scale-100 hover:scale-110 hover:shadow-lg"
                   onClick={() =>
                     playSong(recommended?.tuneMateUpdates[0]?.Content.songId)
                   }
                 >
                   <FaPlay
-                    size={isMobile? 11 : 15}
+                    size={isMobile ? 11 : 14}
                     color={"black"}
-                    className={"relative left-[1px] top-[1px]"}
+                    className={"relative left-[1px]  top-[0.5px] md:top-[1px]"}
                   />
                 </div>
               </div>
@@ -84,9 +84,11 @@ const Home = () => {
           </div>
         )}
 
-        <div className="p-4">
+        <div className="pl-4 pr-4 mt-4">
           <div className="flex flex-col">
-            <h1 className={"text-2xl md:text-3xl jaro-head"}>Tunemate Recommended</h1>
+            <h1 className={"text-2xl md:text-3xl jaro-head"}>
+              Tunemate Recommended
+            </h1>
             {isLoading ? (
               <HomeSkeleton count={6} />
             ) : (
@@ -97,8 +99,10 @@ const Home = () => {
 
         {isAuthenticated && (
           <>
-            <div className="ml-4 flex items-center  pr-2 pl-2 justify-between">
-              <h1 className="text-2xl md:text-3xl jaro-head">Recently Played</h1>
+            <div className="ml-4 flex items-center pr-2 pl-2 justify-between">
+              <h1 className="text-2xl md:text-3xl jaro-head">
+                Recently Played
+              </h1>
               <Link to={"/recent"}>
                 <h1
                   className={
@@ -120,7 +124,7 @@ const Home = () => {
                         {songHistory?.map((song) => (
                           <div
                             key={song.id}
-                            className="flex cursor-pointer flex-col m-1 hover:bg-[#303033] p-3  rounded-xl justify-center  items-start transform transition-transform duration-300  hover:scale-110"
+                            className="flex cursor-pointer flex-col m-1 md:hover:bg-[#303033] p-3  rounded-xl justify-center  items-start md:transform md:transition-transform md:duration-300  md:hover:scale-110"
                             onMouseEnter={() => handleMouseEnter(song.id)}
                             onMouseLeave={handleMouseLeave}
                           >
@@ -148,17 +152,17 @@ const Home = () => {
                             </div>
 
                             <div className="flex flex-col mt-1">
-                              <h3 className="mt-1 text-md nunito-sans-bold">
+                              <h3 className="mt-1 text-sm md:text-md nunito-sans-bold">
                                 {truncateString(
                                   decodeHtmlEntities(song.name),
                                   15
                                 )}
                               </h3>
                               <div className="flex items-center">
-                                <p className="text-[13px] text-[#6a6a6a] nunito-sans-bold">
+                                <p className=" text-[11px] md:text-[13px] text-[#6a6a6a] nunito-sans-bold">
                                   {truncateString(
                                     decodeHtmlEntities(song.album),
-                                    25
+                                    15
                                   )}
                                 </p>
                               </div>
@@ -173,7 +177,7 @@ const Home = () => {
             )}
           </>
         )}
-      </BlockWrapper>
+      </div>
     </Wrapper>
   );
 };
