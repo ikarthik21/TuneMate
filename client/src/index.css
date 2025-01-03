@@ -284,4 +284,9 @@ body::-webkit-scrollbar-thumb:hover {
   .slick-slide {
     height: 200px;
   }
+
+  .slick-prev,
+  .slick-next {
+    display: none;
+  }
 }

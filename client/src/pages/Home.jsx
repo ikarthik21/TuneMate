@@ -57,7 +57,7 @@ const Home = () => {
                 />
               </div>
               <div className="ml-4 flex flex-col">
-                <h1 className="jaro-head text-xl md:text-4xl">
+                <h1 className="jaro-head text-2xl md:text-4xl">
                   {recommended?.tuneMateUpdates[0].title}
                 </h1>
                 <h2 className="md:mt-4 text-sm  md:text-lg ubuntu-bold">
@@ -115,7 +115,7 @@ const Home = () => {
               <>
                 {songHistory?.length > 0 && (
                   <div className="mb-8 p-2">
-                    <div className="flex flex-col  h-[240px] md:h-[260px]">
+                    <div className="flex flex-col h-[200px] md:h-[260px]">
                       <div className="flex flex-wrap overflow-hidden ">
                         {songHistory?.map((song) => (
                           <div
