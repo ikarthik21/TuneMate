@@ -6,7 +6,7 @@ import { FaSearch } from "react-icons/fa";
 
 const MobileNav = () => {
   return (
-    <nav className="h-14 w-full fixed bottom-0 left-0 z-50  bg-[#1a1a1a] p-2">
+    <nav className="h-16 w-full fixed bottom-0 left-0 z-50  bg-[#1a1a1a] p-2 ">
       <div className="flex items-center justify-between pl-4 pr-4">
         <Link to={"/"}>
           <div className="flex flex-col  items-center justify-center">
