@@ -8,6 +8,7 @@ import { truncateString } from "@/utils/MusicUtils.js";
 import { encryptUserId } from "@/utils/MusicUtils.js";
 import { Button } from "@/components/ui/button";
 import tuneMateInstance from "@/service/api/api";
+import { motion } from "framer-motion";
 
 const UserSync = () => {
   const { userSyncKey, username, userId } = useAuthStore();
@@ -17,7 +18,8 @@ const UserSync = () => {
   const userSyncRef = useRef(null);
   const { hideUserSync } = useUserSyncStore();
 
-  const handleCopy = async () => {
+  const handleCopy = async (e) => {
+    e.stopPropagation();
     setCopied(true);
     const textToCopy = userSyncKey;
     await navigator.clipboard.writeText(textToCopy);
@@ -38,7 +40,8 @@ const UserSync = () => {
     };
   }, [hideUserSync]);
 
-  const sendConnectionRequest = () => {
+  const sendConnectionRequest = (e) => {
+    e.stopPropagation();
     socket.send(
       JSON.stringify({
         type: "CONNECTION_REQUEST",
@@ -51,8 +54,9 @@ const UserSync = () => {
     );
   };
 
-  const closeConnection = async () => {
+  const closeConnection = async (e) => {
     try {
+      e.stopPropagation();
       if (connectionStatus) {
         socket.send(
           JSON.stringify({
@@ -76,7 +80,7 @@ const UserSync = () => {
 
   if (connectionStatus && userDetails) {
     return (
-      <div className="bg-[#18181b] border-[#3b3b3f] px-4 py-2 rounded border absolute  right-2 bottom-12">
+      <div className="bg-[#18181b] border-[#3b3b3f] px-4 py-2 rounded border absolute  md:left-[-100px] md:bottom-12 bottom-16 mb-1 w-full  md:w-64 left-0">
         <div className="flex items-center justify-center">
           <h1>Connected with {userDetails.username}</h1>
           <Button
@@ -91,8 +95,12 @@ const UserSync = () => {
   }
 
   return (
-    <div
-      className="bg-[#18181b] border-[#3b3b3f] rounded border absolute right-0 bottom-10"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.2 }}
+      className="bg-[#18181b] border-[#3b3b3f] z-50 rounded border absolute  md:bottom-10  bottom-0 w-full  md:w-64 left-0  md:left-[-100px]"
       ref={userSyncRef}
     >
       <div className="flex flex-col p-4">
@@ -121,7 +129,10 @@ const UserSync = () => {
             type="text"
             value={connectId || ""}
             className="bg-[#3b3b3f] p-[0.4rem] rounded outline-none border-none"
-            onChange={(e) => setConnectId(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => {
+              setConnectId(e.target.value);
+            }}
           />
           <button
             className={`mt-4 ${
@@ -134,7 +145,7 @@ const UserSync = () => {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
