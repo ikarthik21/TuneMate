@@ -198,8 +198,8 @@ const MobileSearch = () => {
 
   return (
     <Wrapper>
-      <div className="sticky top-20 left-0 ">
-        <div className="flex items-center flex-1 justify-center bg-[#1e1e1e] border-[#adadad] border rounded-lg relative m-2 ">
+      <div className="sticky top-20 left-0">
+        <div className="flex items-center flex-1 justify-center bg-[#1e1e1e] border-[#adadad] border rounded-lg relative m-3 ">
           <div className="p-3">
             <FiSearch size={20} />
           </div>

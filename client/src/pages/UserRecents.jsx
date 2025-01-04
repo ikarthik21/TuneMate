@@ -32,7 +32,7 @@ const UserRecents = () => {
       <BlockWrapper margin={"mb-20 md:mb-8"}>
         <div className="mb-8">
           <div className={"flex items-center justify-between p-4"}>
-            <h1 className="text-3xl jaro-head">Recently Played</h1>
+            <h1 className="text-2xl md:text-3xl jaro-head">Recently Played</h1>
           </div>
           {isLoading ? (
             <AlbumSkeleton count={20} />
@@ -42,7 +42,7 @@ const UserRecents = () => {
                 {songHistory?.map((song) => (
                   <div
                     key={song.id}
-                    className="flex cursor-pointer md:flex-col m-2 hover:bg-[#303033]  p-3 rounded-xl md:w-52 md:h-64 md:justify-center"
+                    className="flex cursor-pointer md:flex-col  justify-end  hover:bg-[#303033]  p-3 md:rounded-xl md:w-52 md:h-64 md:justify-center"
                     onMouseEnter={() => handleMouseEnter(song.id)}
                     onMouseLeave={handleMouseLeave}
                   >
@@ -50,7 +50,7 @@ const UserRecents = () => {
                       <img
                         src={song.image}
                         alt=""
-                        className="rounded-xl h-16 w-16  md:h-44 md:w-44"
+                        className="rounded-xl h-12 w-12  md:h-44 md:w-44"
                       />
                       {hoveredItemId === song.id && (
                         <div className="hidden md:block">
