@@ -99,14 +99,14 @@ const Home = () => {
 
         {isAuthenticated && (
           <>
-            <div className="ml-4 flex items-center pr-2 pl-2 justify-between">
+            <div className="ml-4 flex items-center pr-4 pl-2 justify-between">
               <h1 className="text-2xl md:text-3xl jaro-head">
                 Recently Played
               </h1>
               <Link to={"/recent"}>
                 <h1
                   className={
-                    "hover:underline nunito-sans-bold text-sm underline underline-offset-2"
+                    "hover:underline nunito-sans-bold text-sm  underline underline-offset-2"
                   }
                 >
                   Show all
@@ -118,13 +118,13 @@ const Home = () => {
             ) : (
               <>
                 {songHistory?.length > 0 && (
-                  <div className="mb-8 p-2">
-                    <div className="flex flex-col h-[200px] md:h-[260px]">
-                      <div className="flex flex-wrap overflow-hidden ">
+                  <div className="mb-8 p-3">
+                    <div className="flex flex-col h-[190px] md:h-[240px]">
+                      <div className="flex flex-wrap overflow-hidden">
                         {songHistory?.map((song) => (
                           <div
                             key={song.id}
-                            className="flex cursor-pointer flex-col m-1 md:hover:bg-[#303033] p-3  rounded-xl justify-center  items-start md:transform md:transition-transform md:duration-300  md:hover:scale-110"
+                            className="flex cursor-pointer flex-col md:hover:bg-[#303033] p-2  rounded-xl justify-center  items-start md:transform md:transition-transform md:duration-300  md:hover:scale-110"
                             onMouseEnter={() => handleMouseEnter(song.id)}
                             onMouseLeave={handleMouseLeave}
                           >

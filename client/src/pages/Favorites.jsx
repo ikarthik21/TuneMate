@@ -15,11 +15,14 @@ import { FaPause, FaPlay } from "react-icons/fa";
 import Toast from "@/utils/Toasts/Toast.js";
 import useClick from "@/hooks/useClick.js";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
+import { useMediaQuery } from "usehooks-ts";
 
 const Favorites = () => {
   const { playSong, loadPlaylist, playlist, playSongByIndex } =
     usePlayerStore();
   const { isAuthenticated } = useAuthStore();
+  const isMobile = useMediaQuery("(max-width: 767px)");
+
   const { getFavorites, songId, isPlaying, handleAudioPlay } = usePlayerStore();
   const {
     data: favorites,
@@ -175,11 +178,15 @@ const Favorites = () => {
                           songId === song.id ? "text-[#59c2ef]" : ""
                         }`}
                       >
-                        {truncateString(decodeHtmlEntities(song.name))}
+                        {truncateString(
+                          decodeHtmlEntities(song.name),
+                          isMobile ? 22 : undefined
+                        )}
                       </h1>
                       <p className="mr-2 text-xs text-[#6a6a6a] nunito-sans-bold">
                         {truncateString(
-                          decodeHtmlEntities(song.primaryArtists)
+                          decodeHtmlEntities(song.primaryArtists),
+                          isMobile ? 30 : undefined
                         )}
                       </p>
                     </div>
@@ -217,7 +224,7 @@ const Favorites = () => {
 
   return (
     <Wrapper>
-      <BlockWrapper>
+      <BlockWrapper margin={"mb-16 md:mb-8"}>
         {renderAlbumDetails()}
         {renderSongsList()}
       </BlockWrapper>
