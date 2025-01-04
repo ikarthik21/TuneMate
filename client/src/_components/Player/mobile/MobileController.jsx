@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import usePlayerStore from "@/store/use-player.js";
 import { FaPause, FaPlay } from "react-icons/fa";
 import useMobileScreen from "@/store/use-MobileScreen";
@@ -16,11 +16,18 @@ import MusicControls from "../MusicControls";
 import AddToPlaylist from "@/_components/Options/AddToPlaylist.jsx";
 import AdminAddToPlaylist from "@/_components/admin/AdminAddToPlaylist.jsx";
 import { motion, AnimatePresence } from "framer-motion";
+import { HiUsers } from "react-icons/hi";
+import useUserSyncStore from "@/store/use-userSync";
+import useNotifierStore from "@/store/use-Notifier";
+import UserSync from "@/_components/sync/UserSync";
+import UserNotifier from "@/_components/sync/UserNotifier";
 
 const MobileController = () => {
   const { song, isPlaying, handleAudioPlay, AudioRef, Favorites, setDuration } =
     usePlayerStore();
-  const { isAuthenticated, role } = useAuthStore();
+  const { showUserSync, isUserSyncVisible } = useUserSyncStore();
+  const { isNotifierVisible } = useNotifierStore();
+  const { role } = useAuthStore();
   const { isFullScreen, openFullScreen, closeFullScreen } = useMobileScreen();
   const { isAddToPlaylistVisible, showAddToPlaylist, component } =
     useAddListStore();
@@ -29,6 +36,12 @@ const MobileController = () => {
   useEffect(() => {
     handleAudioPlay();
   }, [handleAudioPlay]);
+
+  const UserSyncMemoized = useMemo(() => <UserSync />, [isUserSyncVisible]);
+  const UserNotifierMemoized = useMemo(
+    () => <UserNotifier />,
+    [isNotifierVisible]
+  );
 
   return (
     <>
@@ -64,7 +77,7 @@ const MobileController = () => {
               />
               <div className="flex flex-col ml-4">
                 <h3 className="text-lg nunito-sans-bold">
-                  {truncateString(decodeHtmlEntities(song?.name), 20)}
+                  {truncateString(decodeHtmlEntities(song?.name), 15)}
                 </h3>
                 <p className="text-xs">
                   {truncateString(decodeHtmlEntities(getAllArtists(song)), 25)}
@@ -72,19 +85,35 @@ const MobileController = () => {
               </div>
             </div>
 
-            {/* Play/Pause Button */}
-            <div
-              className="mr-2"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAudioPlay();
-              }}
-            >
-              {isPlaying ? (
-                <FaPause size={20} color="white" />
-              ) : (
-                <FaPlay size={20} color="white" />
-              )}
+            <div className="mr-2 flex items-center">
+              <div className="mr-5">
+                <HiUsers
+                  size={25}
+                  cursor={"pointer"}
+                  className="mr-4"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    showUserSync();
+                  }}
+                />
+                {isUserSyncVisible && UserSyncMemoized}
+                {isNotifierVisible && UserNotifierMemoized}
+              </div>
+
+              {/* Play/Pause Button */}
+              <div
+                className=""
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAudioPlay();
+                }}
+              >
+                {isPlaying ? (
+                  <FaPause size={20} color="white " />
+                ) : (
+                  <FaPlay size={20} color="white" />
+                )}
+              </div>
             </div>
           </div>
         )}
