@@ -3,7 +3,6 @@ import usePlayerStore from "@/store/use-player.js";
 import useAddListStore from "@/store/use-addList.js";
 import { useEffect, useState } from "react";
 import useHover from "@/hooks/useHover.js";
-import useClick from "@/hooks/useClick.js";
 import Wrapper from "@/pages/Wrapper.jsx";
 import {
   decodeHtmlEntities,
@@ -31,7 +30,7 @@ const UserPlaylists = () => {
   const [selectedSongId, setSelectedSongId] = useState(null);
   const [clickEvent, setClickEvent] = useState(null);
   const { hoveredItemId, handleMouseEnter, handleMouseLeave } = useHover();
-  const { clickedItemId, setClickedItemId } = useClick();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const { isPlaying, songId } = usePlayerStore();
   const location = useLocation();
@@ -192,22 +191,17 @@ const UserPlaylists = () => {
           single_playlist.songs.map((song, index) => (
             <div
               key={song.id}
-              className={`grid grid-cols-10 gap-4 m-1 p-3 rounded-xl ${
-                clickedItemId === song.id
-                  ? "bg-[#252525]"
-                  : "hover:bg-[#2e2e34]"
-              }`}
-              onDoubleClick={() =>
+              className={`grid grid-cols-10 gap-4 m-1 p-3 rounded-xl `}
+              onClick={() =>
                 playlist.songs.length > 0 && playlist.id === single_playlist.id
                   ? playSongByIndex(index)
                   : playSong(song.id)
               }
               onMouseEnter={() => handleMouseEnter(song.id)}
               onMouseLeave={handleMouseLeave}
-              onClick={() => setClickedItemId(song.id)}
             >
               <div className="col-span-1 flex justify-center items-center ">
-                {hoveredItemId === song.id || clickedItemId === song.id ? (
+                {hoveredItemId === song.id ? (
                   songId === song.id ? (
                     isPlaying ? (
                       <FaPause

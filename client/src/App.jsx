@@ -8,7 +8,7 @@ import Modal from "@/_components/Modals/Modal.jsx";
 import Login from "@/pages/auth/login.jsx";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { useMediaQuery } from "usehooks-ts";
-import MobileNav from "@/_components/navigation/SideBar/MobileNav";
+import MobileNav from "@/_components/navigation/MobileNav/MobileNav";
 
 function App() {
   const { closeModal, openModal, modalRef, isOpen } = useModal();
