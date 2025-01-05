@@ -103,7 +103,7 @@ const Home = () => {
               <h1 className="text-2xl md:text-3xl jaro-head">
                 Recently Played
               </h1>
-              <Link to={"/recent"}>
+              <Link to={"/recents"}>
                 <h1
                   className={
                     "hover:underline nunito-sans-bold text-sm  underline underline-offset-2"

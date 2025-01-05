@@ -13,7 +13,6 @@ import {
 import { IoMdRemoveCircle } from "react-icons/io";
 import { FaPause, FaPlay } from "react-icons/fa";
 import Toast from "@/utils/Toasts/Toast.js";
-import useClick from "@/hooks/useClick.js";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
 import { useMediaQuery } from "usehooks-ts";
 
@@ -33,7 +32,6 @@ const Favorites = () => {
   );
 
   const { hoveredItemId, handleMouseEnter, handleMouseLeave } = useHover();
-  const { clickedItemId, setClickedItemId } = useClick();
 
   const removeSongFromFavorites = async (e, songId) => {
     try {
@@ -54,7 +52,7 @@ const Favorites = () => {
   if (isLoading)
     return (
       <div>
-        <h1>Loading.....</h1>
+        <h1> </h1>
       </div>
     );
   if (error)
@@ -104,25 +102,18 @@ const Favorites = () => {
             favorites.map((song, index) => (
               <div
                 key={song.id}
-                className={`flex flex-col m-1 p-3 rounded-xl ${
-                  clickedItemId === song.id
-                    ? "bg-[#1B1B1B]"
-                    : "hover:bg-[#2e2e34] "
-                }`}
+                className={`flex flex-col m-1 p-3 rounded-xl  `}
                 onMouseEnter={() => handleMouseEnter(song.id)}
                 onMouseLeave={handleMouseLeave}
-                onDoubleClick={() =>
+                onClick={() =>
                   playlist.songs.length > 0 && playlist.id === "FAVORITES"
                     ? playSongByIndex(index)
                     : playSong(song.id)
                 }
-                onClick={() => {
-                  setClickedItemId(song.id);
-                }}
               >
                 <div className="flex items-center ">
                   <div className="mr-2 flex items-center justify-center w-4">
-                    {hoveredItemId === song.id || clickedItemId === song.id ? (
+                    {hoveredItemId === song.id ? (
                       songId === song.id ? (
                         isPlaying ? (
                           <FaPause

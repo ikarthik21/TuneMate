@@ -3,7 +3,7 @@ import { FaHistory } from "react-icons/fa";
 import { IoMdHeart } from "react-icons/io";
 import { AiFillHome } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
-
+import { MdLibraryMusic } from "react-icons/md";
 const MobileNav = () => {
   return (
     <nav className="h-16 w-full fixed bottom-0 left-0 z-50  bg-[#1a1a1a] p-2 ">
@@ -20,10 +20,13 @@ const MobileNav = () => {
             <p className="text-xs mt-1">Search</p>
           </div>
         </Link>
-        <Link to={"/recent"}>
+      
+        <Link to={"/your-library"}>
           <div className="flex flex-col items-center justify-center">
-            <FaHistory size={23} color="#adadad" />
-            <p className="text-xs  mt-1">Recents</p>
+            <MdLibraryMusic size={25} color="#adadad" />
+            <p className="text-xs mt-1">
+              Your Library
+            </p>
           </div>
         </Link>
         <Link to={"/favorites"}>
