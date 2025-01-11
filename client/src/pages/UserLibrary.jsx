@@ -25,13 +25,15 @@ const UserLibrary = () => {
   return (
     <Wrapper>
       <BlockWrapper margin={"mb-6"}>
-        {isLoading ? (
-          <SideListSkeleton count={5} />
-        ) : (
-          <>
-            <div className="flex flex-col p-3 pt-8">
-              <h1 className="text-2xl md:text-3xl jaro-head">Your Library</h1>
+        <>
+          <div className="flex flex-col p-3 pt-8">
+            <h1 className="text-2xl md:text-3xl jaro-head">Your Library</h1>
 
+            {isLoading ? (
+              <div className="pt-4">
+                <SideListSkeleton count={8} />
+              </div>
+            ) : (
               <div className="flex flex-col justify-center mt-4">
                 <Link to="/recents">
                   <div className="flex items-center  py-4 px-4 w-full rounded bg-[#1f1f1f]">
@@ -84,9 +86,9 @@ const UserLibrary = () => {
                   );
                 })}
               </div>
-            </div>
-          </>
-        )}
+            )}
+          </div>
+        </>
       </BlockWrapper>
     </Wrapper>
   );

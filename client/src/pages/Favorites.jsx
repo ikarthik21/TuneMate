@@ -15,6 +15,7 @@ import { FaPause, FaPlay } from "react-icons/fa";
 import Toast from "@/utils/Toasts/Toast.js";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
 import { useMediaQuery } from "usehooks-ts";
+import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton";
 
 const Favorites = () => {
   const { playSong, loadPlaylist, playlist, playSongByIndex } =
@@ -49,12 +50,6 @@ const Favorites = () => {
     await loadPlaylist({ id: "FAVORITES", type: "FAVORITES", index: 0 });
   };
 
-  if (isLoading)
-    return (
-      <div>
-        <h1> </h1>
-      </div>
-    );
   if (error)
     return (
       <div>
@@ -64,12 +59,12 @@ const Favorites = () => {
 
   const renderAlbumDetails = () => (
     <div className="flex items-center">
-      <div className="flex md:flex-row flex-col  md:items-end pt-20 p-4 ">
-        <div>
+      <div className="flex md:flex-row w-full flex-col md:items-end pt-20 p-4 ">
+        <div className="flex items-center justify-center">
           <img src={FavImage} alt="Favorites" className="h-28 w-28" />
         </div>
 
-        <div className="md:ml-8 mt-4 md:mt-0 flex  flex-col">
+        <div className="md:ml-8 mt-8 md:mt-0 flex flex-col">
           <h1 className="text-3xl md:text-7xl ubuntu-bold">Favorites</h1>
           <p className="text-sm md:text-lg">
             {favorites ? favorites.length : 0} Songs
@@ -122,6 +117,7 @@ const Favorites = () => {
                               songId === song.id ? "#59c2ef" : "white"
                             }`}
                             onClick={handleAudioPlay}
+                            cursor={"pointer"}
                           />
                         ) : (
                           <FaPlay
@@ -131,6 +127,7 @@ const Favorites = () => {
                             }`}
                             className="relative left-[2px]"
                             onClick={handleAudioPlay}
+                            cursor={"pointer"}
                           />
                         )
                       ) : (
@@ -216,8 +213,14 @@ const Favorites = () => {
   return (
     <Wrapper>
       <BlockWrapper margin={"mb-16 md:mb-8"}>
-        {renderAlbumDetails()}
-        {renderSongsList()}
+        {isLoading ? (
+          <UserPlayListSkeleton count={10} />
+        ) : (
+          <div>
+            {renderAlbumDetails()}
+            {renderSongsList()}
+          </div>
+        )}
       </BlockWrapper>
     </Wrapper>
   );

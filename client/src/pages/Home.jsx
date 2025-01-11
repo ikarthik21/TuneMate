@@ -5,13 +5,15 @@ import { Link } from "react-router-dom";
 import usePlayerStore from "@/store/use-player.js";
 import AlbumSkeleton from "@/_components/skeletons/AlbumSkeleton.jsx";
 import useAuthStore from "@/store/use-auth.js";
-import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
 import MusicSlider from "@/_components/navigation/Slider/Slider";
 import { decodeHtmlEntities, truncateString } from "@/utils/MusicUtils.js";
 import { FaPlay } from "react-icons/fa";
 import useHover from "@/hooks/useHover.js";
 import { useMediaQuery } from "usehooks-ts";
-import HomeSkeleton from "@/_components/skeletons/HomeSkeleton";
+import {
+  HomeSkeleton,
+  MobileAlbumSkeleton
+} from "@/_components/skeletons/HomeSkeleton";
 
 const Home = () => {
   const { playSong } = usePlayerStore();
@@ -114,7 +116,9 @@ const Home = () => {
               </Link>
             </div>
             {RecentsLoading ? (
-              <AlbumSkeleton count={6} />
+              <div className="pl-4 pr-4 pb-4">
+                <MobileAlbumSkeleton count={2} />
+              </div>
             ) : (
               <>
                 {songHistory?.length > 0 && (
