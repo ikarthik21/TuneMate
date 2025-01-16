@@ -123,12 +123,12 @@ const Home = () => {
               <>
                 {songHistory?.length > 0 && (
                   <div className="mb-8 p-3">
-                    <div className="flex flex-col h-[190px] md:h-[240px]">
+                    <div className="flex flex-col h-[190px] md:h-[250px]">
                       <div className="flex flex-wrap overflow-hidden">
                         {songHistory?.map((song) => (
                           <div
                             key={song.id}
-                            className="flex cursor-pointer flex-col md:hover:bg-[#303033] p-2  rounded-xl justify-center  items-start md:transform md:transition-transform md:duration-300  md:hover:scale-110"
+                            className="flex cursor-pointer flex-col md:hover:bg-[#303033] p-3 pt-4 rounded-xl justify-center  items-start md:transform md:transition-transform md:duration-300  md:hover:scale-110"
                             onMouseEnter={() => handleMouseEnter(song.id)}
                             onMouseLeave={handleMouseLeave}
                           >
