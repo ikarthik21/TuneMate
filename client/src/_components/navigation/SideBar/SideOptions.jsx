@@ -27,7 +27,7 @@ const SideOptions = () => {
   return (
     <BlockWrapper rounded={"rounded-none rounded-b h-full"}>
       <div className="flex flex-col">
-        <Link to={"/recent"}>
+        <Link to={"/recents"}>
           <div
             className={`flex items-center ${
               collapse ? "justify-center" : ""
