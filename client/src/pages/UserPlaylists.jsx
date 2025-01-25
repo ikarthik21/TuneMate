@@ -20,6 +20,7 @@ import tuneMateInstance from "@/service/api/api.js";
 import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
 import { useMediaQuery } from "usehooks-ts";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const UserPlaylists = () => {
   const { id } = useParams();
@@ -92,7 +93,12 @@ const UserPlaylists = () => {
       <div className="flex md:items-end md:flex-row flex-col pt-12 p-4">
         <div className="flex items-center justify-center">
           {single_playlist.image ? (
-            <img
+            <LazyLoadImage
+              effect="blur"
+              wrapperProps={{
+                style: { transitionDelay: "0.5s" }
+              }}
+              loading="lazy"
               src={single_playlist?.image}
               alt="Image"
               className="rounded transform transition-transform duration-500 hover:scale-105 h-40 w-40"
@@ -148,7 +154,12 @@ const UserPlaylists = () => {
           </div>
           <div className={"flex items-center md:ml-4"}>
             {single_playlist.image ? (
-              <img
+              <LazyLoadImage
+                effect="blur"
+                wrapperProps={{
+                  style: { transitionDelay: "0.5s" }
+                }}
+                loading="lazy"
                 src={single_playlist?.image}
                 alt="Image"
                 className="rounded hidden md:block transform transition-transform duration-500 hover:scale-105 h-8 w-8 md:h-11 md:w-11"
@@ -241,11 +252,17 @@ const UserPlaylists = () => {
                 )}
               </div>
               <div className="md:col-span-3 col-span-9 flex items-center">
-                <img
+                <LazyLoadImage
+                  effect="blur"
+                  wrapperProps={{
+                    style: { transitionDelay: "0.5s" }
+                  }}
+                  loading="lazy"
                   src={song.image}
                   alt={song.name}
                   className="h-9 w-9 rounded"
                 />
+
                 <div className="flex flex-col ml-4">
                   <h1
                     className={`nunito-sans-bold ${

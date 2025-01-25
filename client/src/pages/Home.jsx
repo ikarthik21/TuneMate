@@ -14,6 +14,7 @@ import {
   HomeSkeleton,
   MobileAlbumSkeleton
 } from "@/_components/skeletons/HomeSkeleton";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Home = () => {
   const { playSong } = usePlayerStore();
@@ -52,10 +53,14 @@ const Home = () => {
           <div className="rounded-xl rounded-b-none mt-2 song-of-week-background pt-2 pb-2">
             <div className="flex items-center ml-4 pt-2 pb-2">
               <div>
-                <img
-                  src={recommended?.tuneMateUpdates[0].Content.image}
-                  alt=""
+                <LazyLoadImage
+                  alt={""}
+                  effect="blur"
                   className="h-36 w-36 md:h-48 md:w-48  rounded-lg"
+                  wrapperProps={{
+                    style: { transitionDelay: "0.5s" }
+                  }}
+                  src={recommended?.tuneMateUpdates[0].Content.image}
                 />
               </div>
               <div className="ml-4 flex flex-col">
@@ -133,11 +138,17 @@ const Home = () => {
                             onMouseLeave={handleMouseLeave}
                           >
                             <div className="relative">
-                              <img
-                                src={song.image}
+                              <LazyLoadImage
                                 alt=""
+                                effect="blur"
+                                wrapperProps={{
+                                  style: { transitionDelay: "0.5s" }
+                                }}
+                                loading="lazy"
                                 className="rounded-xl h-32 w-32 md:h-44 md:w-44"
+                                src={song.image}
                               />
+
                               {hoveredItemId === song.id && (
                                 <div
                                   className="absolute bottom-0 right-1 mb-2 mr-2 h-12 w-12 rounded-full bg-[#59c2ef] flex items-center justify-center cursor-pointer transition-opacity duration-300 ease-in-out transform opacity-100 scale-100 hover:scale-110 hover:shadow-lg"
