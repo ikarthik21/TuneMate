@@ -12,6 +12,7 @@ import { FaPlay } from "react-icons/fa";
 import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
 import { useMediaQuery } from "usehooks-ts";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Album = () => {
   const { id } = useParams();
@@ -48,7 +49,12 @@ const Album = () => {
       <div className="flex md:items-end md:flex-row flex-col pt-12 p-4">
         <div className="flex items-center justify-center">
           {album.image ? (
-            <img
+            <LazyLoadImage
+              effect="blur"
+              wrapperProps={{
+                style: { transitionDelay: "0.5s" }
+              }}
+              loading="lazy"
               src={album?.image[1].url}
               alt="Image"
               className="rounded transform transition-transform duration-500 hover:scale-105 h-40 w-40"

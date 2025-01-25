@@ -12,6 +12,7 @@ import { FaPlay } from "react-icons/fa";
 import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
 import { useMediaQuery } from "usehooks-ts";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Playlist = () => {
   const { id } = useParams();
@@ -49,7 +50,12 @@ const Playlist = () => {
       <div className="flex md:items-end md:flex-row flex-col pt-12 p-4">
         <div className="flex items-center justify-center">
           {PlayList.image ? (
-            <img
+            <LazyLoadImage
+              effect="blur"
+              wrapperProps={{
+                style: { transitionDelay: "0.5s" }
+              }}
+              loading="lazy"
               src={PlayList?.image[1].url}
               alt={PlayList?.name}
               className="rounded transform transition-transform duration-500 hover:scale-105 h-40 w-40"
@@ -104,11 +110,17 @@ const Playlist = () => {
               <h3>{index + 1}</h3>
             </div>
             <div className="flex items-center flex-1 ml-2">
-              <img
+              <LazyLoadImage
+                effect="blur"
+                wrapperProps={{
+                  style: { transitionDelay: "0.5s" }
+                }}
+                loading="lazy"
                 src={song.image[1].url}
                 alt={song.name}
                 className="h-9 w-9 rounded"
               />
+
               <div className="flex flex-col ml-4">
                 <h1 className="nunito-sans-bold">
                   {truncateString(

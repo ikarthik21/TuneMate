@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { BiSolidPlaylist } from "react-icons/bi";
 import { FaHistory } from "react-icons/fa";
 import { IoMdHeart } from "react-icons/io";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const UserLibrary = () => {
   const { isAuthenticated } = useAuthStore();
@@ -56,7 +57,12 @@ const UserLibrary = () => {
                      cursor-pointer hover:bg-[#222328] rounded overflow-hidden p-2 mt-1 mb-1 bg-[#1f1f1f]`}
                       >
                         {playlist.image ? (
-                          <img
+                          <LazyLoadImage
+                            effect="blur"
+                            wrapperProps={{
+                              style: { transitionDelay: "0.5s" }
+                            }}
+                            loading="lazy"
                             src={playlist.image}
                             alt=""
                             className={"h-11 w-11 rounded"}

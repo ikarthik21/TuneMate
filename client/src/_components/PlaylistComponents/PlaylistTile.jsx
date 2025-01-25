@@ -1,12 +1,22 @@
 /* eslint-disable react/prop-types */
 import { BiSolidPlaylist } from "react-icons/bi";
 import { FaPlay } from "react-icons/fa";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const PlaylistTile = ({ playlist, hoveredItemId, handlePlayWholeList }) => {
   return (
     <div className={"relative"}>
       {playlist.image ? (
-        <img src={playlist.image} alt="" className="rounded-md h-32 w-32 md:h-44 md:w-44" />
+        <LazyLoadImage
+          alt=""
+          effect="blur"
+          wrapperProps={{
+            style: { transitionDelay: "0.5s" }
+          }}
+          loading="lazy"
+          className="rounded-md h-32 w-32 md:h-44 md:w-44"
+          src={playlist.image}
+        />
       ) : (
         <BiSolidPlaylist size={170} color={"#59c2ef"} className={"m-[2px]"} />
       )}

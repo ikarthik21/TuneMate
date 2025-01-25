@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
 import { BiSolidPlaylist } from "react-icons/bi";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const PlayListItem = ({ playlist, collapse }) => {
   return (
@@ -11,7 +12,16 @@ const PlayListItem = ({ playlist, collapse }) => {
         } cursor-pointer hover:bg-[#222328] rounded overflow-hidden p-2 mt-1 mb-1`}
       >
         {playlist.image ? (
-          <img src={playlist.image} alt="" className={"h-11 w-11 rounded"} />
+          <LazyLoadImage
+            alt=""
+            effect="blur"
+            wrapperProps={{
+              style: { transitionDelay: "0.5s" }
+            }}
+            loading="lazy"
+            className={"h-11 w-11 rounded"}
+            src={playlist.image}
+          />
         ) : (
           <BiSolidPlaylist size={35} color={"#59c2ef"} className={"m-[2px] "} />
         )}
