@@ -11,6 +11,7 @@ import useHover from "@/hooks/useHover.js";
 import { useMediaQuery } from "usehooks-ts";
 import {
   HomeSkeleton,
+  AlbumSkeleton,
   MobileAlbumSkeleton
 } from "@/_components/skeletons/HomeSkeleton";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -120,8 +121,12 @@ const Home = () => {
               </Link>
             </div>
             {RecentsLoading ? (
-              <div className="pl-4 pr-4 pb-4">
-                <MobileAlbumSkeleton count={2} />
+              <div className="pl-4 mt-4 mb-4  pr-4 pb-4">
+                {isMobile ? (
+                  <MobileAlbumSkeleton count={2} />
+                ) : (
+                  <AlbumSkeleton count={6} />
+                )}
               </div>
             ) : (
               <>
