@@ -3,7 +3,6 @@ import useSWR from "swr";
 import tuneMateInstance from "@/service/api/api.js";
 import { Link } from "react-router-dom";
 import usePlayerStore from "@/store/use-player.js";
-import AlbumSkeleton from "@/_components/skeletons/AlbumSkeleton.jsx";
 import useAuthStore from "@/store/use-auth.js";
 import MusicSlider from "@/_components/navigation/Slider/Slider";
 import { decodeHtmlEntities, truncateString } from "@/utils/MusicUtils.js";
