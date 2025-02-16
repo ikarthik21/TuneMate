@@ -16,6 +16,7 @@ import Toast from "@/utils/Toasts/Toast.js";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
 import { useMediaQuery } from "usehooks-ts";
 import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Favorites = () => {
   const { playSong, loadPlaylist, playlist, playSongByIndex } =
@@ -61,7 +62,16 @@ const Favorites = () => {
     <div className="flex items-center">
       <div className="flex md:flex-row w-full flex-col md:items-end pt-20 p-4 ">
         <div className="flex items-center justify-center">
-          <img src={FavImage} alt="Favorites" className="h-28 w-28" />
+          <LazyLoadImage
+            alt="Favorites"
+            effect="blur"
+            wrapperProps={{
+              style: { transitionDelay: "0.5s" }
+            }}
+            loading="lazy"
+            className="h-28 w-28"
+            src={FavImage}
+          />
         </div>
 
         <div className="md:ml-8 mt-8 md:mt-0 flex flex-col">
@@ -155,11 +165,17 @@ const Favorites = () => {
                     )}
                   </div>
                   <div className="flex items-center flex-1 ml-2">
-                    <img
+                    <LazyLoadImage
+                      effect="blur"
+                      wrapperProps={{
+                        style: { transitionDelay: "0.5s" }
+                      }}
+                      loading="lazy"
+                      className="h-9 w-9 rounded"
                       src={song.imageUrl}
                       alt={song.name}
-                      className="h-9 w-9 rounded"
                     />
+
                     <div className="flex flex-col ml-4">
                       <h1
                         className={`nunito-sans-bold ${

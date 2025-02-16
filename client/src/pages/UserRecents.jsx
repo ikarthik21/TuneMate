@@ -7,7 +7,7 @@ import { decodeHtmlEntities, truncateString } from "@/utils/MusicUtils.js";
 import { FaPlay } from "react-icons/fa";
 import AlbumSkeleton from "@/_components/skeletons/AlbumSkeleton.jsx";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
-import { useMediaQuery } from "usehooks-ts";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const UserRecents = () => {
   const { hoveredItemId, handleMouseEnter, handleMouseLeave } = useHover();
@@ -46,11 +46,17 @@ const UserRecents = () => {
                       onMouseLeave={handleMouseLeave}
                     >
                       <div className="relative md:h-44 md:w-44 flex-0">
-                        <img
+                        <LazyLoadImage
+                          effect="blur"
+                          wrapperProps={{
+                            style: { transitionDelay: "0.5s" }
+                          }}
+                          loading="lazy"
                           src={song.image}
                           alt=""
                           className="rounded-xl h-12 w-12  md:h-44 md:w-44"
                         />
+
                         {hoveredItemId === song.id && (
                           <div className="hidden md:block">
                             <div
