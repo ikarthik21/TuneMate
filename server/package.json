@@ -5,6 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
+    "postinstall": "prisma generate",
     "start": "node --env-file .env server.js",
     "dev": "nodemon --env-file .env server.js",
     "build": "npx prisma generate",
