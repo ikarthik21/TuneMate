@@ -282,7 +282,9 @@ body::-webkit-scrollbar-thumb:hover {
 
   .slider,
   .slick-slide {
-    height: 200px;
+    display: flex;
+    align-items: center;
+    height: 180px;
   }
 
   .slick-prev,
