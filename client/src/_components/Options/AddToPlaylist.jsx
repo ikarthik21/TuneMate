@@ -69,7 +69,6 @@ const AddToPlaylist = ({ clickEvent, component }) => {
     return () => window.removeEventListener("resize", calculatePosition);
   }, [clickEvent]);
 
-  console.log(component);
   const handleFavorite = async (song_id) => {
     try {
       const response = await tuneMateInstance.ManageSongInFavorites(song_id);
@@ -171,7 +170,7 @@ const AddToPlaylist = ({ clickEvent, component }) => {
           </div>
         )}
 
-        <div className="flex flex-col h-96 md:h-56">
+        <div className="flex flex-col    justify-between h-96 md:h-56">
           {/* Favorites and Playlist List */}
           <div className="flex flex-col mt-2 overflow-y-scroll custom-scrollbar">
             {/* Favorites Section */}
