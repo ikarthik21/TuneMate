@@ -304,18 +304,30 @@ const UserPlaylists = () => {
                 </p>
               </div>
               <div className="hidden md:flex justify-center items-center">
-                {hoveredItemId === song.id && (
+                <div
+                  className="w-6 h-6 flex items-center justify-center transition-opacity duration-200"
+                  title="Show playlists"
+                >
                   <IoMdRemoveCircle
                     color="#59c2ef"
                     size={20}
                     onClick={(e) => handleShowLists(e, song.id)}
+                    className={`${
+                      hoveredItemId === song.id
+                        ? "opacity-100"
+                        : "opacity-0 pointer-events-none"
+                    }`}
                   />
-                )}
+                </div>
+
                 <div className="relative">
                   {isAddToPlaylistVisible &&
                     song.id === selectedSongId &&
                     component === "USER_LIST" && (
-                      <AddToPlaylist clickEvent={clickEvent} />
+                      <AddToPlaylist
+                        clickEvent={clickEvent}
+                        component={"USER_LIST"}
+                      />
                     )}
                 </div>
               </div>

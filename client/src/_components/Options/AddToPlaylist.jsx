@@ -16,7 +16,7 @@ import { mutate } from "swr";
 import usePlayerStore from "@/store/use-player.js";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 
-const AddToPlaylist = ({ clickEvent }) => {
+const AddToPlaylist = ({ clickEvent, component }) => {
   const { Favorites, getFavorites } = usePlayerStore();
   const { hideAddToPlaylist, songId } = useAddListStore();
   const addMenuRef = useRef(null);
@@ -69,6 +69,7 @@ const AddToPlaylist = ({ clickEvent }) => {
     return () => window.removeEventListener("resize", calculatePosition);
   }, [clickEvent]);
 
+  console.log(component);
   const handleFavorite = async (song_id) => {
     try {
       const response = await tuneMateInstance.ManageSongInFavorites(song_id);
@@ -103,7 +104,12 @@ const AddToPlaylist = ({ clickEvent }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.25 }}
-      className={`rounded-lg w-full md:w-64 z-50 bg-[#18181b] border-[#2D2E35] p-4 absolute left-0 md:left-1 ${position}`}
+      className={`rounded-lg w-full md:w-64 z-50 bg-[#18181b] border-[#2D2E35] p-4 
+     ${position}  ${
+        component === "USER_LIST"
+          ? "absolute right-0"
+          : "absolute left-0 md:left-1"
+      } `}
     >
       <div className="flex flex-col">
         {/* Search Playlist */}

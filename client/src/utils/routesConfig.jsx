@@ -1,21 +1,60 @@
-import Home from "@/pages/Home";
-import Album from "@/pages/Album.jsx";
-import SearchResults from "@/pages/search/SearchResults.jsx";
-import Artist from "@/pages/Artist.jsx";
-import Playlist from "@/pages/Playlist.jsx";
-import Favorites from "@/pages/Favorites.jsx";
-import UserPlaylists from "@/pages/UserPlaylists.jsx";
-import UserRecents from "@/pages/UserRecents.jsx";
-import MobileSearch from "@/pages/search/MobileSearch";
-import UserLibrary from "@/pages/UserLibrary";
+import React from "react";
 
-const routesConfig = [{path: "/", element: <Home/>}, {path: "/albums/:id", element: <Album/>}, {
-    path: "/artists/:id", element: <Artist/>
-}, {path: "/playlists/:id", element: <Playlist/>}, {path: "/search", element: <SearchResults/>},  {path: "/m/search", element: <MobileSearch/>},{
-    path: "/recents", element: <UserRecents/>
-}, {path: "/favorites", element: <Favorites/>}, {
-    path: "/u/playlists/:id", element: <UserPlaylists/>
-}, {path: "/recommended/:id", element: <UserPlaylists/>}, {path: "/your-library", element: <UserLibrary/>}]
+const Home = React.lazy(() => import("@/pages/Home"));
+const Album = React.lazy(() => import("@/pages/Album"));
+const SearchResults = React.lazy(() => import("@/pages/search/SearchResults"));
+const Artist = React.lazy(() => import("@/pages/Artist"));
+const Playlist = React.lazy(() => import("@/pages/Playlist"));
+const Favorites = React.lazy(() => import("@/pages/Favorites"));
+const UserPlaylists = React.lazy(() => import("@/pages/UserPlaylists"));
+const UserRecents = React.lazy(() => import("@/pages/UserRecents"));
+const MobileSearch = React.lazy(() => import("@/pages/search/MobileSearch"));
+const UserLibrary = React.lazy(() => import("@/pages/UserLibrary"));
+import PrivateRoute from "./PrivateRoute";
 
+const routesConfig = [
+  { path: "/", element: <Home /> },
+  { path: "/albums/:id", element: <Album /> },
+  {
+    path: "/artists/:id",
+    element: <Artist />
+  },
+  { path: "/playlists/:id", element: <Playlist /> },
+  { path: "/search", element: <SearchResults /> },
+  { path: "/m/search", element: <MobileSearch /> },
+  {
+    path: "/recents",
+    element: (
+      <PrivateRoute>
+        <UserRecents />
+      </PrivateRoute>
+    )
+  },
+  {
+    path: "/favorites",
+    element: (
+      <PrivateRoute>
+        <Favorites />
+      </PrivateRoute>
+    )
+  },
+  {
+    path: "/u/playlists/:id",
+    element: (
+      <PrivateRoute>
+        <UserPlaylists />
+      </PrivateRoute>
+    )
+  },
+  { path: "/recommended/:id", element: <UserPlaylists /> },
+  {
+    path: "/your-library",
+    element: (
+      <PrivateRoute>
+        <UserLibrary />
+      </PrivateRoute>
+    )
+  }
+];
 
 export default routesConfig;

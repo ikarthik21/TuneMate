@@ -69,7 +69,8 @@ const MusicInfo = ({ song }) => {
                 )}
                 {isAddToPlaylistVisible &&
                   component === "MUSIC_INFO" &&
-                  role === "user" && <AddToPlaylist />}
+                  role === "user" && <AddToPlaylist component={"MUSIC_INFO"} />}
+
                 {isAddToPlaylistVisible &&
                   component === "MUSIC_INFO" &&
                   role === "admin" && <AdminAddToPlaylist />}
