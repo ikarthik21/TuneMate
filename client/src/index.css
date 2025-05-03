@@ -133,7 +133,7 @@ body,
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
-  font-variation-settings: "wdth" 100, "YTLC" 500;
+  font-variation-settings: "wdth"100, "YTLC"500;
   letter-spacing: 0.5px;
 }
 
@@ -193,21 +193,19 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .song-of-week-background {
-  background-image: linear-gradient(
-    to right top,
-    #660000,
-    #5f0708,
-    #580e0e,
-    #511213,
-    #491616,
-    #411617,
-    #381517,
-    #301517,
-    #261214,
-    #1d0d10,
-    #120709,
-    #000000
-  );
+  background-image: linear-gradient(to right top,
+      #660000,
+      #5f0708,
+      #580e0e,
+      #511213,
+      #491616,
+      #411617,
+      #381517,
+      #301517,
+      #261214,
+      #1d0d10,
+      #120709,
+      #000000);
 }
 
 .custom-btn {
@@ -221,6 +219,8 @@ body::-webkit-scrollbar-thumb:hover {
   border-radius: 5px;
   letter-spacing: 1px;
 }
+
+
 
 .slider img {
   inset: 0px;
@@ -279,6 +279,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* Mobile adjustments */
 @media (max-width: 767px) {
+
   .slider,
   .slick-slide {
     height: 200px;

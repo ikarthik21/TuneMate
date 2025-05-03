@@ -211,8 +211,8 @@ const usePlayerStore = create(
           await get().loadPlaylist({ id: playListId, type: playListType });
           await get().playSong(songId);
           if (
-            connectionState.connectedUserName &&
-            connectionState.connectedUserId
+            connectionState?.connectedUserName &&
+            connectionState?.connectedUserId
           ) {
             useWebSocketStore.getState().setConnectionStatus(true);
             useWebSocketStore.getState().setUserDetails({

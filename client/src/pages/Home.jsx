@@ -93,13 +93,13 @@ const Home = () => {
 
         <div className="pl-4 pr-4 mt-4">
           <div className="flex flex-col">
-            <h1 className={"text-2xl md:text-3xl jaro-head"}>
-              Tunemate Recommended
-            </h1>
             {isLoading ? (
               <HomeSkeleton count={6} />
             ) : (
-              <MusicSlider musicList={recommended?.playlists} />
+              <MusicSlider
+                title="Tunemate Recommended"
+                musicList={recommended?.playlists}
+              />
             )}
           </div>
         </div>
