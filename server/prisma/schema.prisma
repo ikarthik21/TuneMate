@@ -24,6 +24,8 @@ model User {
   playerState             Json
   verificationToken       String?
   verificationTokenExpiry DateTime?
+  resetToken              String?
+  resetTokenExpiry        DateTime?
   playlists               Playlist[]
   favorites               Favorites[]
   history                 History[]

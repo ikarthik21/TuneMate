@@ -1,7 +1,9 @@
 const ENDPOINTS = {
   login: "/login",
   resendVerificationMail: "/resendVerificationMail",
+  forgot: "/forgotPassword",
   verify: "/verify",
+  resetPassword: "/resetPassword",
   register: "/register",
   ManageSongInFavorites: "/songs/favorites",
   favorites: "/user/favorites",

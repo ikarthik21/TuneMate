@@ -201,6 +201,93 @@ export const UserController = () => {
           data: { message: "Internal Server Error" }
         });
       }
+    },
+    async forgotPassword(req, res) {
+      const { email } = req.body;
+      const prisma = await getPrismaInstance();
+
+      try {
+        const user = await prisma.User.findUnique({ where: { email } });
+
+        if (!user) {
+          return res.status(200).json({
+            data: { message: "User not found", type: "error" }
+          });
+        }
+
+        const mailSent = await EmailHelper().sendResetPasswordMail(email);
+
+        if (!mailSent) {
+          return res.status(200).json({
+            data: {
+              message: "Error sending reset password email.",
+              type: "error"
+            }
+          });
+        }
+
+        return res.status(201).json({
+          data: {
+            message: "Reset password email sent successfully.",
+            type: "success"
+          }
+        });
+      } catch (error) {
+        console.error("Error in forgotPassword:", error.message);
+        return res.status(200).json({
+          data: {
+            message: "Error sending reset password email.",
+            type: "error"
+          }
+        });
+      }
+    },
+    async resetPassword(req, res) {
+      const { token, password } = req.body;
+      const prisma = await getPrismaInstance();
+
+      try {
+        const user = await prisma.User.findFirst({
+          where: {
+            resetToken: token,
+            resetTokenExpiry: {
+              gte: new Date()
+            }
+          }
+        });
+
+        if (!user) {
+          return res.status(200).json({
+            data: { message: "Invalid or expired token", type: "error" }
+          });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await prisma.User.update({
+          where: { id: user.id },
+          data: {
+            password: hashedPassword,
+            resetToken: null,
+            resetTokenExpiry: null
+          }
+        });
+
+        return res.status(201).json({
+          data: {
+            message: "Password reset successfully.",
+            type: "success"
+          }
+        });
+      } catch (error) {
+        console.error("Error in resetPassword:", error.message);
+        return res.status(200).json({
+          data: {
+            message: "Error resetting password.",
+            type: "error"
+          }
+        });
+      }
     }
   };
 };

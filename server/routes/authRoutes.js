@@ -8,5 +8,7 @@ authRouter.post(ENDPOINTS.register, UserController().register);
 authRouter.post(ENDPOINTS.login, UserController().login);
 authRouter.get(ENDPOINTS.verify, UserController().verifyToken);
 authRouter.post(ENDPOINTS.resendVerificationMail, UserController().resendVerificationMail);
+authRouter.post(ENDPOINTS.forgot, UserController().forgotPassword);
+authRouter.post(ENDPOINTS.resetPassword, UserController().resetPassword);
 
 export default authRouter;
