@@ -40,6 +40,7 @@ const ResetPassword = () => {
         setTimeout(() => {
           navigate("/");
         }, 2000);
+        closeModal();
       }
     } catch (error) {
       console.error("Error in handleResetPassword:", error);
@@ -49,7 +50,6 @@ const ResetPassword = () => {
       });
     } finally {
       resetData();
-      closeModal();
     }
   };
 
