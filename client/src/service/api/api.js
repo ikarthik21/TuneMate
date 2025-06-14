@@ -52,6 +52,24 @@ class TuneMateService {
     }
   };
 
+  forgotPassword = async (data) => {
+    try {
+      const response = await tuneMateClient.post(ENDPOINTS.forgot, data);
+      return response.data;
+    } catch (err) {
+      return err;
+    }
+  };
+
+  resetPassword = async (data) => {
+    try {
+      const response = await tuneMateClient.post(ENDPOINTS.resetPassword, data);
+      return response.data;
+    } catch (err) {
+      return err;
+    }
+  };
+
   resendVerificationMail = async (data) => {
     try {
       const response = await tuneMateClient.post(

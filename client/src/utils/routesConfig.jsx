@@ -10,6 +10,7 @@ const UserPlaylists = React.lazy(() => import("@/pages/UserPlaylists"));
 const UserRecents = React.lazy(() => import("@/pages/UserRecents"));
 const MobileSearch = React.lazy(() => import("@/pages/search/MobileSearch"));
 const UserLibrary = React.lazy(() => import("@/pages/UserLibrary"));
+const ResetPassword = React.lazy(() => import("@/pages/auth/ResetPassword"));
 import PrivateRoute from "./PrivateRoute";
 
 const routesConfig = [
@@ -47,6 +48,7 @@ const routesConfig = [
     )
   },
   { path: "/recommended/:id", element: <UserPlaylists /> },
+  { path: "/reset-password/:id", element: <ResetPassword /> },
   {
     path: "/your-library",
     element: (

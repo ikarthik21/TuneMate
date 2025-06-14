@@ -5,6 +5,7 @@ import { useState } from "react";
 import Register from "@/pages/auth/register.jsx";
 import useAuthStore from "@/store/use-auth.js";
 import ResendMail from "./ResendMail";
+import ForgotPassword from "./ForgotPassword";
 
 // eslint-disable-next-line react/prop-types
 const Login = ({ closeModal }) => {
@@ -74,9 +75,15 @@ const Login = ({ closeModal }) => {
               </div>
             </form>
 
-            <div className={"flex items-center justify-center m-2"}>
+            <div className={"flex items-center justify-between mt-2 mb-2"}>
               <button
-                className={"link_button"}
+                className={"link_button mr-2"}
+                onClick={() => setshowDetails("forgotPassword")}
+              >
+                Forgot Password?
+              </button>
+              <button
+                className={"link_button ml-2"}
                 onClick={() => setshowDetails("register")}
               >
                 Not a Member? Register
@@ -88,6 +95,10 @@ const Login = ({ closeModal }) => {
 
       {showDetails === "register" && (
         <Register setshowDetails={setshowDetails} />
+      )}
+
+      {showDetails === "forgotPassword" && (
+        <ForgotPassword setshowDetails={setshowDetails} />
       )}
 
       {showDetails === "resendMail" && (
