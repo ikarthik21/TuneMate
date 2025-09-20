@@ -10,7 +10,7 @@ export const PlayListController = () => {
 
         const existingPlaylist = await prisma.playlist.findFirst({
           where: {
-            name: playlist,
+            name: playlist.toLowerCase(),
             userId: authUser.userid
           }
         });
@@ -23,7 +23,7 @@ export const PlayListController = () => {
 
         await prisma.Playlist.create({
           data: {
-            name: playlist,
+            name: playlist.toLowerCase(),
             user: {
               connect: { id: authUser.userid }
             }
