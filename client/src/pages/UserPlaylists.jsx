@@ -24,8 +24,14 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const UserPlaylists = () => {
   const { id } = useParams();
-  const { playSong, loadPlaylist, playlist, playSongByIndex, handleAudioPlay } =
-    usePlayerStore();
+  const {
+    playSong,
+    loadPlaylist,
+    playlist,
+    playSongByIndex,
+    handleAudioPlay,
+    setSongForPlayListDropdown
+  } = usePlayerStore();
   const { isAddToPlaylistVisible, showAddToPlaylist, component } =
     useAddListStore();
   const [selectedSongId, setSelectedSongId] = useState(null);
@@ -41,7 +47,8 @@ const UserPlaylists = () => {
   const {
     data: single_playlist,
     error,
-    isLoading
+    isLoading,
+    mutate
   } = useSWR(
     id
       ? isRecommended
@@ -311,7 +318,10 @@ const UserPlaylists = () => {
                   <IoMdRemoveCircle
                     color="#59c2ef"
                     size={20}
-                    onClick={(e) => handleShowLists(e, song.id)}
+                    onClick={(e) => {
+                      setSongForPlayListDropdown(song);
+                      handleShowLists(e, song.id);
+                    }}
                     className={`${
                       hoveredItemId === song.id
                         ? "opacity-100"
@@ -327,6 +337,7 @@ const UserPlaylists = () => {
                       <AddToPlaylist
                         clickEvent={clickEvent}
                         component={"USER_LIST"}
+                        onPlaylistUpdate={mutate}
                       />
                     )}
                 </div>

@@ -36,6 +36,10 @@ const usePlayerStore = create(
       onLoop: false,
       isShuffling: false,
       duration: 0,
+      songForPlayListDropdown: null,
+      setSongForPlayListDropdown: (song) => {
+        set({ songForPlayListDropdown: song });
+      },
 
       setVolume: async (value) => {
         try {

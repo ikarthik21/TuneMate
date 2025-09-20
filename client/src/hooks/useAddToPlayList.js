@@ -6,9 +6,9 @@ import useSWR, { mutate } from "swr";
 import useAuthStore from "@/store/use-auth.js";
 import usePlayerStore from "@/store/use-player.js";
 import { getAllArtists } from "@/utils/MusicUtils.js";
-
+ 
 const useAddToPlaylist = () => {
-  const { song } = usePlayerStore();
+  const { songForPlayListDropdown } = usePlayerStore();
   const { isAuthenticated, role } = useAuthStore();
   const [playlistName, setPlaylistName] = useState("");
   const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
@@ -32,24 +32,35 @@ const useAddToPlaylist = () => {
   );
 
   useEffect(() => {
-    if (playlists && playlists.length > 0 && song) {
+    if (playlists && playlists.length > 0 && songForPlayListDropdown?.id) {
       const initialSelectedPlaylists = playlists
-        .filter((playlist) => playlist.songs.includes(song.id))
+        .filter((playlist) => {
+          // Add null check and ensure songs is an array
+          const songsList = playlist.songs || [];
+          const isIncluded = songsList.includes(songForPlayListDropdown.id);
+          return isIncluded;
+        })
         .map((playlist) => playlist.id);
       setSelectedPlaylists(initialSelectedPlaylists);
       setInitialPlaylists(initialSelectedPlaylists);
+    } else {
+      // Reset states when no playlists or song
+      setSelectedPlaylists([]);
+      setInitialPlaylists([]);
     }
-  }, [playlists, song]);
+  }, [playlists, songForPlayListDropdown?.id]);
 
-  const togglePlaylistSelection = useCallback((id) => {
-    setSelectedPlaylists((prevSelected) => {
-      if (prevSelected.includes(id)) {
-        return prevSelected.filter((item) => item !== id);
-      } else {
-        return [...prevSelected, id];
-      }
-    });
-  }, []);
+  const togglePlaylistSelection = useCallback(
+    (id) => {
+      setSelectedPlaylists((prevSelected) => {
+        const newSelected = prevSelected.includes(id)
+          ? prevSelected.filter((item) => item !== id)
+          : [...prevSelected, id];
+        return newSelected;
+      });
+    },
+    [selectedPlaylists]
+  );
 
   const handleCreatePlaylist = async () => {
     try {
@@ -66,27 +77,38 @@ const useAddToPlaylist = () => {
           : mutate("user-playlists");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Error creating playlist:", err);
     }
   };
 
-  const handleToggleCreatePlaylist = () => {
+  const handleToggleCreatePlaylist = useCallback(() => {
     setShowCreatePlaylist((prevState) => !prevState);
     setPlaylistName("");
-  };
+  }, []);
 
   const handleSaveChanges = async () => {
-    const artists = getAllArtists(song);
+    if (!songForPlayListDropdown) {
+      console.error("No song available to save");
+      return;
+    }
 
-    const { id, name, duration, image, album, playCount } = song;
+    const artists = songForPlayListDropdown.artists.primary
+      ? getAllArtists(songForPlayListDropdown)
+      : songForPlayListDropdown?.artists || "Unknown Artist";
+    const { id, name, duration, image, album, playCount } =
+      songForPlayListDropdown;
+
+    // Add safety checks
     const compressedSong = {
       id,
       name,
       duration,
-      image: image[2].url,
+      image: Array.isArray(image)
+        ? image?.[2]?.url || image?.[0]?.url || ""
+        : image || "",
       artists,
-      album: album.name,
-      playCount: playCount
+      album: album?.name || "",
+      playCount: playCount || 0
     };
 
     const playlistsToAdd = selectedPlaylists.filter(
@@ -96,39 +118,47 @@ const useAddToPlaylist = () => {
       (id) => !selectedPlaylists.includes(id)
     );
 
-    if (playlistsToAdd.length > 0) {
-      const response = await tuneMateInstance.saveSongInPlaylist(
-        {
-          song: compressedSong,
-          playlists: playlistsToAdd
-        },
-        role
-      );
-      ImageToast({
-        type: response.data.type,
-        message: response.data.message,
-        image: compressedSong.image
-      });
-    }
+    try {
+      if (playlistsToAdd.length > 0) {
+        const response = await tuneMateInstance.saveSongInPlaylist(
+          {
+            song: compressedSong,
+            playlists: playlistsToAdd
+          },
+          role
+        );
+        ImageToast({
+          type: response.data.type,
+          message: response.data.message,
+          image: compressedSong.image
+        });
+      }
 
-    if (playlistsToRemove.length > 0) {
-      const response = await tuneMateInstance.removeSongFromPlaylist(
-        {
-          id: id,
-          playlists: playlistsToRemove
-        },
-        role
-      );
-      ImageToast({
-        type: response.data.type,
-        message: response.data.message,
-        image: compressedSong.image
-      });
-    }
+      if (playlistsToRemove.length > 0) {
+        const response = await tuneMateInstance.removeSongFromPlaylist(
+          {
+            id: id,
+            playlists: playlistsToRemove
+          },
+          role
+        );
+        ImageToast({
+          type: response.data.type,
+          message: response.data.message,
+          image: compressedSong.image
+        });
+      }
 
-    role === "admin"
-      ? mutate("tunemate-recommended")
-      : mutate("user-playlists");
+      // Update initial playlists to current selection after successful save
+      setInitialPlaylists([...selectedPlaylists]);
+
+      role === "admin"
+        ? mutate("tunemate-recommended")
+        : mutate("user-playlists");
+    } catch (err) {
+      console.error("Error saving changes:", err);
+      Toast({ type: "error", message: "Failed to save changes" });
+    }
   };
 
   return {
