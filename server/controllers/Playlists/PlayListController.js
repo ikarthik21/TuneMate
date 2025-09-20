@@ -175,6 +175,28 @@ export const PlayListController = () => {
       } catch (err) {
         console.log(err);
       }
+    },
+    async deleteUserPlaylist(req, res) {
+      const { id: playlist_id } = req.params;
+    
+      try {
+        const authUser = req.authUser;
+        const prisma = await getPrismaInstance();
+        await prisma.playlist.deleteMany({
+          where: {
+            id: playlist_id,
+            userId: authUser.userid
+          }
+        });
+        return res
+          .status(200)
+          .json({ data: { message: "Playlist Deleted", type: "success" } });
+      } catch (err) {
+        console.log(err);
+        return res
+          .status(500)
+          .json({ data: { message: "Error Deleting Playlist", type: "error" } });
+      }
     }
   };
 };

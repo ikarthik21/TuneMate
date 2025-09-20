@@ -227,6 +227,15 @@ class TuneMateService {
       return err;
     }
   };
+
+  deleteUserPlaylist = async (id) => {
+    try {
+      const response = await tuneMateClient.delete(ENDPOINTS.playlist(id));
+      return response.data;
+    } catch (err) {
+      return err;
+    }
+  };
 }
 
 const tuneMateInstance = new TuneMateService();

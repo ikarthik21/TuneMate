@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import usePlayerStore from "@/store/use-player.js";
 import useAddListStore from "@/store/use-addList.js";
 import { useEffect, useState } from "react";
@@ -15,12 +15,13 @@ import { IoMdRemoveCircle } from "react-icons/io";
 import AddToPlaylist from "@/_components/Options/AddToPlaylist.jsx";
 import { FaPause, FaPlay } from "react-icons/fa";
 import { BiSolidPlaylist } from "react-icons/bi";
-import useSWR from "swr";
+import useSWR, { mutate as globalMutate } from "swr"; // Import global mutate
 import tuneMateInstance from "@/service/api/api.js";
 import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
 import { useMediaQuery } from "usehooks-ts";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import Toast from "@/utils/Toasts/Toast";
 
 const UserPlaylists = () => {
   const { id } = useParams();
@@ -43,6 +44,7 @@ const UserPlaylists = () => {
   const location = useLocation();
   const isRecommended = location.pathname.startsWith("/recommended");
   const isMobile = useMediaQuery("(max-width: 767px)");
+  const navigate = useNavigate();
 
   const {
     data: single_playlist,
@@ -95,6 +97,32 @@ const UserPlaylists = () => {
     showAddToPlaylist(songId, "USER_LIST");
   };
 
+  const handleDeletePlaylist = async () => {
+    const choose = confirm(
+      `Are you sure you want to delete playlist ${single_playlist.name}?`
+    );
+    if (choose) {
+      try {
+        await tuneMateInstance.deleteUserPlaylist(single_playlist.id);
+        navigate("/");
+        
+        // Use global mutate to update the sidebar playlists
+        await globalMutate("user-playlists");
+        
+        Toast({
+          type: "success",
+          message: `Deleted Playlist ${single_playlist.name}`
+        });
+      } catch (error) {
+        Toast({
+          type: "error",
+          message: "Failed to delete playlist. Please try again."
+        });
+      }
+    }
+  };
+
+  // ... rest of your component remains the same
   const renderPlaylistDetails = () => (
     <div className="flex flex-col">
       <div className="flex md:items-end md:flex-row flex-col pt-12 p-4">
@@ -134,6 +162,12 @@ const UserPlaylists = () => {
         >
           <FaPlay size={14} color={"black"} className={"relative left-[2px]"} />
         </div>
+
+        {!isRecommended && (
+          <div className="ml-4">
+            <button onClick={handleDeletePlaylist}>Delete</button>
+          </div>
+        )}
       </div>
     </div>
   );
