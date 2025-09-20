@@ -15,7 +15,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const MusicInfo = ({ song }) => {
   const { isAuthenticated, role } = useAuthStore();
-  const { Favorites } = usePlayerStore();
+  const { Favorites, setSongForPlayListDropdown } = usePlayerStore();
   const { isAddToPlaylistVisible, showAddToPlaylist, component } =
     useAddListStore();
 
@@ -64,7 +64,10 @@ const MusicInfo = ({ song }) => {
                     size={22}
                     cursor={"pointer"}
                     color={"#59c2ef"}
-                    onClick={() => showAddToPlaylist(song.id, "MUSIC_INFO")}
+                    onClick={() => {
+                      setSongForPlayListDropdown(song);
+                      showAddToPlaylist(song.id, "MUSIC_INFO");
+                    }}
                   />
                 )}
                 {isAddToPlaylistVisible &&

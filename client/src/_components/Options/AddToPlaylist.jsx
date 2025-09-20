@@ -16,7 +16,7 @@ import { mutate } from "swr";
 import usePlayerStore from "@/store/use-player.js";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 
-const AddToPlaylist = ({ clickEvent, component }) => {
+const AddToPlaylist = ({ clickEvent, component, onPlaylistUpdate }) => {
   const { Favorites, getFavorites } = usePlayerStore();
   const { hideAddToPlaylist, songId } = useAddListStore();
   const addMenuRef = useRef(null);
@@ -83,6 +83,56 @@ const AddToPlaylist = ({ clickEvent, component }) => {
     }
   };
 
+  const handleSave = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    try {
+      await handleSaveChanges();
+      hideAddToPlaylist();
+      if (onPlaylistUpdate) {
+        onPlaylistUpdate();
+      }
+    } catch (err) {
+      console.error("Error saving changes:", err);
+    }
+  };
+
+  const handleCancel = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    hideAddToPlaylist();
+  };
+
+  const handleCreatePlaylistClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    handleCreatePlaylist();
+  };
+
+  const handleCreatePlaylistCancel = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setShowCreatePlaylist(false);
+  };
+
+  const handleToggleCreate = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    handleToggleCreatePlaylist();
+  };
+
+  const handlePlaylistToggle = (e, playlistId) => {
+    e.stopPropagation();
+    e.preventDefault();
+    togglePlaylistSelection(playlistId);
+  };
+
+  const handleFavoriteClick = (e, song_id) => {
+    e.stopPropagation();
+    e.preventDefault();
+    handleFavorite(song_id);
+  };
+
   if (isLoading)
     return (
       <div>
@@ -109,6 +159,10 @@ const AddToPlaylist = ({ clickEvent, component }) => {
           ? "absolute right-0"
           : "absolute left-0 md:left-1"
       } `}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
     >
       <div className="flex flex-col">
         {/* Search Playlist */}
@@ -120,6 +174,7 @@ const AddToPlaylist = ({ clickEvent, component }) => {
             className="rounded bg-[#222328] h-[35px] text-[15px] border-none focus:outline-none focus-visible:ring-0 pr-10"
             placeholder="Find a playlist"
             onChange={(e) => setSearchPlaylist(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
           />
         </div>
 
@@ -138,19 +193,20 @@ const AddToPlaylist = ({ clickEvent, component }) => {
                   className="rounded bg-[#222328] h-[40px] text-[15px] border-none focus:outline-none focus-visible:ring-0 pr-10"
                   placeholder="Playlist Name"
                   onChange={(e) => setPlaylistName(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
                 />
               </div>
               <div className="flex items-center justify-end mt-2">
                 <Button
                   variant="ghost"
                   className="h-8"
-                  onClick={() => setShowCreatePlaylist(false)}
+                  onClick={handleCreatePlaylistCancel}
                 >
                   Cancel
                 </Button>
                 <Button
                   className="h-8 w-14 button_variant_1 text-black"
-                  onClick={handleCreatePlaylist}
+                  onClick={handleCreatePlaylistClick}
                   disabled={!playlistName.length}
                 >
                   Save
@@ -163,14 +219,14 @@ const AddToPlaylist = ({ clickEvent, component }) => {
         {!showCreatePlaylist && (
           <div
             className="p-3 hover:bg-[#222328] hover:rounded border-b border-[#222328] flex items-center cursor-pointer"
-            onClick={handleToggleCreatePlaylist}
+            onClick={handleToggleCreate}
           >
             <IoMdAdd size={20} className="mr-3" />
             <h1>New Playlist</h1>
           </div>
         )}
 
-        <div className="flex flex-col    justify-between h-96 md:h-56">
+        <div className="flex flex-col justify-between h-96 md:h-56">
           {/* Favorites and Playlist List */}
           <div className="flex flex-col mt-2 overflow-y-scroll custom-scrollbar">
             {/* Favorites Section */}
@@ -184,14 +240,14 @@ const AddToPlaylist = ({ clickEvent, component }) => {
                   size={22}
                   cursor="pointer"
                   color="#59c2ef"
-                  onClick={() => handleFavorite(songId)}
+                  onClick={(e) => handleFavoriteClick(e, songId)}
                 />
               ) : (
                 <IoMdAddCircle
                   size={22}
                   cursor="pointer"
                   color="#59c2ef"
-                  onClick={() => handleFavorite(songId)}
+                  onClick={(e) => handleFavoriteClick(e, songId)}
                 />
               )}
             </div>
@@ -225,14 +281,14 @@ const AddToPlaylist = ({ clickEvent, component }) => {
                       size={18}
                       cursor="pointer"
                       color="#59c2ef"
-                      onClick={() => togglePlaylistSelection(playlist.id)}
+                      onClick={(e) => handlePlaylistToggle(e, playlist.id)}
                     />
                   ) : (
                     <IoMdAddCircle
                       size={20}
                       cursor="pointer"
                       color="#59c2ef"
-                      onClick={() => togglePlaylistSelection(playlist.id)}
+                      onClick={(e) => handlePlaylistToggle(e, playlist.id)}
                     />
                   )}
                 </div>
@@ -241,15 +297,12 @@ const AddToPlaylist = ({ clickEvent, component }) => {
 
           {/* Actions */}
           <div className="flex items-center justify-end mt-4">
-            <Button variant="ghost" className="h-8" onClick={hideAddToPlaylist}>
+            <Button variant="ghost" className="h-8" onClick={handleCancel}>
               Cancel
             </Button>
             <Button
               className="h-8 w-14 button_variant_1 text-black"
-              onClick={async () => {
-                await handleSaveChanges();
-                hideAddToPlaylist();
-              }}
+              onClick={handleSave}
             >
               Save
             </Button>
