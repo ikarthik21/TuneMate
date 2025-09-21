@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useModal from "@/hooks/useModal";
 import Modal from "@/_components/Modals/Modal";
 import useFormData from "@/hooks/useFormData";
 import tuneMateInstance from "@/service/api/api";
 import Toast from "@/utils/Toasts/Toast";
+import useModalStore from "@/store/use-modal-store";
 
 const ResetPassword = () => {
   const { id: token } = useParams();
-  const { closeModal, openModal, modalRef, isOpen } = useModal();
+  const { closeModal, openModal, isOpen } = useModalStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    openModal();
+    openModal("RESET_PASSWORD");
   }, []);
 
   const { data, handleChange, handleSubmit, isLoading, resetData } =
@@ -54,7 +54,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <Modal closeModal={closeModal} isOpen={isOpen} modalRef={modalRef}>
+    <Modal>
       <div className={"flex items-center justify-center"}>
         <div className={"flex flex-col"}>
           <form onSubmit={handleResetPassword}>

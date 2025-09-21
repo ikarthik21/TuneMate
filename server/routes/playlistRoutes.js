@@ -16,6 +16,8 @@ playListRouter.post(ENDPOINTS.removeSongFromPlaylist, isAuthUser, PlayListContro
 
 playListRouter.get(ENDPOINTS.playlist, isAuthUser, PlayListController().getPlaylistSongs);
 playListRouter.delete(ENDPOINTS.playlist, isAuthUser, PlayListController().deleteUserPlaylist);
+playListRouter.put(ENDPOINTS.playlist, isAuthUser, PlayListController().editUserPlaylist);
+
 
 
 export default playListRouter;

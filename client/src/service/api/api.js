@@ -236,6 +236,16 @@ class TuneMateService {
       return err;
     }
   };
+
+  editUserPlaylist = async (data) => {
+    const { newPlaylistName, playlistForEdit } = data;  
+    try {
+      const response = await tuneMateClient.put(ENDPOINTS.playlist(playlistForEdit.id), {newPlaylistName});
+      return response.data;
+    } catch (err) {
+      return err;
+    }
+  };
 }
 
 const tuneMateInstance = new TuneMateService();

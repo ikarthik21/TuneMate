@@ -37,6 +37,10 @@ const usePlayerStore = create(
       isShuffling: false,
       duration: 0,
       songForPlayListDropdown: null,
+      playlistForEdit: {},
+      setPlaylistForEdit: (playlist) => {
+        set({ playlistForEdit: playlist });
+      },
       setSongForPlayListDropdown: (song) => {
         set({ songForPlayListDropdown: song });
       },

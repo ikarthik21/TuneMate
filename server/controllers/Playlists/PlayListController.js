@@ -3,8 +3,9 @@ import { getPrismaInstance } from "../../utils/prisma/prisma.js";
 export const PlayListController = () => {
   return {
     async createNewPlaylist(req, res) {
-      const { playlist } = req.body;
       try {
+        let { playlist } = req.body;
+        playlist = playlist.trim();
         const authUser = req.authUser;
         const prisma = await getPrismaInstance();
 
@@ -178,7 +179,7 @@ export const PlayListController = () => {
     },
     async deleteUserPlaylist(req, res) {
       const { id: playlist_id } = req.params;
-    
+
       try {
         const authUser = req.authUser;
         const prisma = await getPrismaInstance();
@@ -193,9 +194,57 @@ export const PlayListController = () => {
           .json({ data: { message: "Playlist Deleted", type: "success" } });
       } catch (err) {
         console.log(err);
+        return res.status(500).json({
+          data: { message: "Error Deleting Playlist", type: "error" }
+        });
+      }
+    },
+    async editUserPlaylist(req, res) {
+      try {
+        const { id } = req.params;
+        let { newPlaylistName } = req.body;
+        newPlaylistName = newPlaylistName.trim();
+
+        const authUser = req.authUser;
+        const prisma = await getPrismaInstance();
+
+        const existingPlaylist = await prisma.playlist.findFirst({
+          where: {
+            name: newPlaylistName.toLowerCase(),
+            userId: authUser.userid
+          }
+        });
+
+        if (existingPlaylist) {
+          return res.status(200).json({
+            data: { message: "Playlist Already Exists", type: "error" }
+          });
+        }
+
+        if (newPlaylistName.length < 1 || newPlaylistName.length > 30) {
+          return res.status(200).json({
+            data: {
+              message: "Playlist name must be between 1 and 30 characters",
+              type: "error"
+            }
+          });
+        }
+
+        await prisma.playlist.updateMany({
+          where: {
+            id: id,
+            userId: authUser.userid
+          },
+          data: {
+            name: newPlaylistName.toLowerCase()
+          }
+        });
+
         return res
-          .status(500)
-          .json({ data: { message: "Error Deleting Playlist", type: "error" } });
+          .status(200)
+          .json({ data: { message: "Playlist Updated", type: "success" } });
+      } catch (err) {
+        console.log(err);
       }
     }
   };

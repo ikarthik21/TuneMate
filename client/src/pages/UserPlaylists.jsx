@@ -1,7 +1,7 @@
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import usePlayerStore from "@/store/use-player.js";
 import useAddListStore from "@/store/use-addList.js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import useHover from "@/hooks/useHover.js";
 import Wrapper from "@/pages/Wrapper.jsx";
 import {
@@ -15,13 +15,14 @@ import { IoMdRemoveCircle } from "react-icons/io";
 import AddToPlaylist from "@/_components/Options/AddToPlaylist.jsx";
 import { FaPause, FaPlay } from "react-icons/fa";
 import { BiSolidPlaylist } from "react-icons/bi";
-import useSWR, { mutate as globalMutate } from "swr"; // Import global mutate
+import useSWR from "swr"; // Import global mutate
 import tuneMateInstance from "@/service/api/api.js";
 import UserPlayListSkeleton from "@/_components/skeletons/UserPlayListSkeleton.jsx";
 import BlockWrapper from "@/_components/Wrappers/BlockWrapper";
 import { useMediaQuery } from "usehooks-ts";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import Toast from "@/utils/Toasts/Toast";
+import useDropDownStore from "@/store/use-dropDownStore";
+import UserPlayListModifyOptions from "@/_components/Options/UserPlayListModifyOptions";
 
 const UserPlaylists = () => {
   const { id } = useParams();
@@ -38,13 +39,13 @@ const UserPlaylists = () => {
   const [selectedSongId, setSelectedSongId] = useState(null);
   const [clickEvent, setClickEvent] = useState(null);
   const { hoveredItemId, handleMouseEnter, handleMouseLeave } = useHover();
-
   const [isScrolled, setIsScrolled] = useState(false);
   const { isPlaying, songId } = usePlayerStore();
   const location = useLocation();
   const isRecommended = location.pathname.startsWith("/recommended");
   const isMobile = useMediaQuery("(max-width: 767px)");
-  const navigate = useNavigate();
+  const { showDropDown, components, hideDropDown } = useDropDownStore();
+  const wrapperRef = useRef(null);
 
   const {
     data: single_playlist,
@@ -67,11 +68,24 @@ const UserPlaylists = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 350);
     };
+
+    const handleClickOutside = (event) => {
+      if (
+        components["USER_PLAYLIST_OPTIONS"] &&
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target)
+      ) {
+        hideDropDown("USER_PLAYLIST_OPTIONS");
+      }
+    };
     window.addEventListener("scroll", handleScroll);
+    window.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [components, hideDropDown]);
 
   if (error)
     return (
@@ -97,32 +111,6 @@ const UserPlaylists = () => {
     showAddToPlaylist(songId, "USER_LIST");
   };
 
-  const handleDeletePlaylist = async () => {
-    const choose = confirm(
-      `Are you sure you want to delete playlist ${single_playlist.name}?`
-    );
-    if (choose) {
-      try {
-        await tuneMateInstance.deleteUserPlaylist(single_playlist.id);
-        navigate("/");
-        
-        // Use global mutate to update the sidebar playlists
-        await globalMutate("user-playlists");
-        
-        Toast({
-          type: "success",
-          message: `Deleted Playlist ${single_playlist.name}`
-        });
-      } catch (error) {
-        Toast({
-          type: "error",
-          message: "Failed to delete playlist. Please try again."
-        });
-      }
-    }
-  };
-
-  // ... rest of your component remains the same
   const renderPlaylistDetails = () => (
     <div className="flex flex-col">
       <div className="flex md:items-end md:flex-row flex-col pt-12 p-4">
@@ -164,8 +152,22 @@ const UserPlaylists = () => {
         </div>
 
         {!isRecommended && (
-          <div className="ml-4">
-            <button onClick={handleDeletePlaylist}>Delete</button>
+          <div className="relative ml-4" ref={wrapperRef}>
+            {" "}
+            {/* relative wrapper */}
+            <button
+              className="text-white text-3xl font-medium mb-2 "
+              onClick={() => {
+                components["USER_PLAYLIST_OPTIONS"]
+                  ? hideDropDown("USER_PLAYLIST_OPTIONS")
+                  : showDropDown("USER_PLAYLIST_OPTIONS");
+              }}
+            >
+              <h2>...</h2>
+            </button>
+            {components["USER_PLAYLIST_OPTIONS"] && (
+              <UserPlayListModifyOptions single_playlist={single_playlist} />
+            )}
           </div>
         )}
       </div>

@@ -8,9 +8,10 @@ import UserLogo from "@/assets/images/user.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "usehooks-ts";
 import { MdLogin } from "react-icons/md";
-
+import useModalStore from "@/store/use-modal-store";
 // eslint-disable-next-line react/prop-types
-const NavBar = ({ openModal }) => {
+const NavBar = () => {
+  const { openModal } = useModalStore();
   const { isAuthenticated, removeAccessToken, username } = useAuthStore(
     (state) => state
   );
@@ -57,7 +58,11 @@ const NavBar = ({ openModal }) => {
           <LogOut size={24} onClick={removeAccessToken} />
         </div>
       ) : (
-        <MdLogin size={30} cursor="pointer" onClick={openModal} />
+        <MdLogin
+          size={30}
+          cursor="pointer"
+          onClick={() => openModal("LOGIN")}
+        />
       )}
     </nav>
   );

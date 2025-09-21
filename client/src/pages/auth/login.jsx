@@ -6,9 +6,12 @@ import Register from "@/pages/auth/register.jsx";
 import useAuthStore from "@/store/use-auth.js";
 import ResendMail from "./ResendMail";
 import ForgotPassword from "./ForgotPassword";
-
+import useModalStore from "@/store/use-modal-store";
+import Modal from "@/_components/Modals/Modal";
 // eslint-disable-next-line react/prop-types
-const Login = ({ closeModal }) => {
+const Login = () => {
+  const { isOpen, closeModal } = useModalStore();
+
   const [showDetails, setshowDetails] = useState("login");
   const { setAccessToken } = useAuthStore();
   const { handleChange, handleSubmit, isLoading, resetData } = useFormData(
@@ -36,7 +39,7 @@ const Login = ({ closeModal }) => {
   };
 
   return (
-    <>
+    <Modal>
       {showDetails === "login" && (
         <div className={"flex items-center justify-center"}>
           <div className={"flex flex-col"}>
@@ -104,7 +107,7 @@ const Login = ({ closeModal }) => {
       {showDetails === "resendMail" && (
         <ResendMail setshowDetails={setshowDetails} />
       )}
-    </>
+    </Modal>
   );
 };
 
