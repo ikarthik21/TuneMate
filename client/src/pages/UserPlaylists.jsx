@@ -136,7 +136,9 @@ const UserPlaylists = () => {
             {truncateString(single_playlist.name, 15)}
           </h1>
           <p className="text-sm md:text-lg">
-            {single_playlist.songs ? single_playlist.songs.length : 0} Songs
+            {single_playlist.songs && single_playlist.songs.length == 1
+              ? `${single_playlist.songs.length} Song`
+              : `${single_playlist.songs.length} Songs`}
           </p>
         </div>
       </div>
