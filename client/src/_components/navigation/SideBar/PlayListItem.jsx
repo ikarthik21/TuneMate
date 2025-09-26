@@ -30,7 +30,11 @@ const PlayListItem = ({ playlist, collapse }) => {
           <div className={"flex flex-col justify-center ml-3"}>
             <h1 className={"text-sm nunito-sans-bold"}>{playlist.name}</h1>
             <p className={"text-xs text-[#6a6a6a] mt-1 nunito-sans-bold"}>
-              {playlist.songs.length} songs
+              {playlist.songs.length > 1
+                ? `${playlist.songs.length} songs`
+                : playlist.songs.length === 1
+                ? "1 song"
+                : "0 songs"}
             </p>
           </div>
         )}

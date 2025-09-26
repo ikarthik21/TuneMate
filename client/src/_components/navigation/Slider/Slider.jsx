@@ -17,7 +17,7 @@ const MusicSlider = ({
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
-    autoplay: true,
+    autoplay: false,
     variableWidth: true,
     responsive: [
       {

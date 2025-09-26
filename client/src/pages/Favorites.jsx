@@ -196,7 +196,7 @@ const Favorites = () => {
                     </div>
                   </div>
                   <div className="hidden md:flex items-center justify-center">
-                    <div>
+                    <div className="mr-4">
                       {hoveredItemId === song.id && (
                         <IoMdRemoveCircle
                           color="#59c2ef"
