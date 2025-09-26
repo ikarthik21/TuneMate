@@ -13,7 +13,6 @@ import useUserSyncStore from "@/store/use-userSync";
 import useNotifierStore from "@/store/use-Notifier";
 import MobileController from "./mobile/MobileController";
 import Toast from "@/utils/Toasts/Toast";
-import { encryptUserId } from "@/utils/MusicUtils.js";
 import tuneMateInstance from "@/service/api/api";
 import MusicControls from "./MusicControls";
 
@@ -146,7 +145,7 @@ const Player = () => {
   // Connect WebSocket if userId exists
   useEffect(() => {
     if (userId) {
-      connectWebSocket(encryptUserId(userId));
+      connectWebSocket(userId);
     }
     return () => closeWebSocket();
   }, [userId, connectWebSocket, closeWebSocket]);

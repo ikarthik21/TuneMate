@@ -1,6 +1,6 @@
 import MusicServiceInstance from "@/service/api/music_apis.js";
 import tuneMateInstance from "@/service/api/api.js";
-import CryptoJS from "crypto-js";
+ 
 
 export const formatTime = (seconds) => {
   const minutes = Math.floor(seconds / 60);
@@ -87,21 +87,4 @@ export const formatPlayCount = (number) => {
   return decimalPart ? formattedInteger + "." + decimalPart : formattedInteger;
 };
 
-export const encryptUserId = (userId) => {
-  if (!userId) {
-    throw new Error("User ID is required for encryption");
-  }
-  const secretKey = import.meta.env.VITE_SECRET_KEY;
-
-  if (!secretKey || typeof secretKey !== "string") {
-    throw new Error("Invalid secret key");
-  }
-  try {
-    const encryptedUserId = CryptoJS.AES.encrypt(userId, secretKey).toString();
-    const base64Encoded = btoa(encryptedUserId);
-    return base64Encoded;
-  } catch (error) {
-    console.error("Error during encryption:", error);
-    throw new Error("Encryption failed");
-  }
-};
+ 

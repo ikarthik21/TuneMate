@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 import useWebSocketStore from "@/store/use-socket";
 import useUserSyncStore from "@/store/use-userSync";
 import { truncateString } from "@/utils/MusicUtils.js";
-import { encryptUserId } from "@/utils/MusicUtils.js";
 import { Button } from "@/components/ui/button";
 import tuneMateInstance from "@/service/api/api";
 import { motion } from "framer-motion";
@@ -48,7 +47,7 @@ const UserSync = () => {
         payload: {
           connectId,
           senderUsername: username,
-          senderId: encryptUserId(userId)
+          senderId: userId
         }
       })
     );
@@ -62,7 +61,7 @@ const UserSync = () => {
           JSON.stringify({
             type: "CLOSE_CONNECTION",
             payload: {
-              acceptedBy: { userId: encryptUserId(userId) },
+              acceptedBy: { userId: userId },
               sentBy: { userId: userDetails.userId }
             }
           })

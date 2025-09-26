@@ -1,7 +1,6 @@
 import useAuthStore from "@/store/use-auth";
 import useWebSocketStore from "@/store/use-socket";
 import useNotifierStore from "@/store/use-Notifier";
-import { encryptUserId } from "@/utils/MusicUtils";
 import useUserSyncStore from "@/store/use-userSync";
 import tuneMateInstance from "@/service/api/api";
 const UserNotifier = () => {
@@ -16,7 +15,7 @@ const UserNotifier = () => {
       e.stopPropagation();
       setConnectionStatus(true);
       const payload = {
-        acceptedBy: { username, userId: encryptUserId(userId) },
+        acceptedBy: { username, userId: userId },
         sentBy: {
           userId: userDetails.userId,
           username: userDetails.username
@@ -79,7 +78,9 @@ const UserNotifier = () => {
           <div className="flex flex-col items-center">
             <h2>
               Incoming Connection Request from{" "}
-              <span className="text-cyan-500 text-lg">{userDetails.username}</span>
+              <span className="text-cyan-500 text-lg">
+                {userDetails.username}
+              </span>
             </h2>
             <div className="flex items-center space-x-4 mt-4">
               <button

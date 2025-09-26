@@ -1,6 +1,5 @@
 import MESSAGE_TYPES from "../utils/messageTypes.js";
 import SyncControllerInstance from "./SyncController.js";
-import { decryptUserId } from "../utils/socketUtils.js";
 export const handleMessage = async (ws, data) => {
   const { type, payload } = data;
 
@@ -8,9 +7,9 @@ export const handleMessage = async (ws, data) => {
     case MESSAGE_TYPES.CONNECTION_REQUEST:
       const { connectId, senderUsername, senderId } = payload;
       SyncControllerInstance.sendConnectionRequest(
-        decryptUserId(connectId),
+        connectId,
         senderUsername,
-        decryptUserId(senderId)
+        senderId
       );
       break;
 
