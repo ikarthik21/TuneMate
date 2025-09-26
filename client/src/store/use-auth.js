@@ -3,7 +3,6 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { tuneMateClient } from "@/service/api/api.js";
 import useWebSocketStore from "./use-socket.js";
-import { encryptUserId } from "@/utils/MusicUtils.js";
 import useUserSyncStore from "./use-userSync.js";
 
 const parseToken = (token) => {
@@ -27,7 +26,7 @@ const initializeAuthState = () => {
     role: role,
     userId: decodedToken?.userid || null,
     username: decodedToken?.username || null,
-    userSyncKey: decodedToken ? encryptUserId(decodedToken.userid) : null
+    userSyncKey: decodedToken ?  decodedToken.userid : null
   };
 };
 
@@ -45,7 +44,7 @@ const useAuthStore = create((set) => ({
       username: decodedToken.username,
       role: decodedToken.role,
       userId: decodedToken.userid,
-      userSyncKey: encryptUserId(decodedToken.userid)
+      userSyncKey: decodedToken.userid
     });
   },
 

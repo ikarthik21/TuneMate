@@ -2,18 +2,17 @@ import { WebSocketServer } from "ws";
 import { addConnection, removeConnection } from "./userConnections.js";
 import { handleMessage } from "../controllers/messageHandler.js";
 import redisClient from "../config/redisClient.js";
-import { decryptUserId } from "../utils/socketUtils.js";
 
-export const startWebSocketServer = (server) => {
+export const startWebSocketServer = server => {
   const wss = new WebSocketServer({ server });
 
   wss.on("connection", async (ws, req) => {
     const params = new URL(req.url, `ws://${req.headers.host}`).searchParams;
-    const clientId = decryptUserId(params.get("userId"));
+    const clientId = params.get("userId");
 
     if (clientId) await addConnection(clientId, ws);
 
-    ws.on("message", async (message) => {
+    ws.on("message", async message => {
       const data = JSON.parse(message);
       await handleMessage(ws, data);
     });

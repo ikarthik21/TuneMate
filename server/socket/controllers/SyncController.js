@@ -1,7 +1,6 @@
 import MESSAGE_TYPES from "../utils/messageTypes.js";
 import { getWebSocketByUserId } from "../services/userConnections.js";
 import redisClient from "../config/redisClient.js";
-import { encryptUserId, decryptUserId } from "../utils/socketUtils.js";
 
 class SyncController {
   // Helper function to validate WebSocket instance
@@ -32,15 +31,15 @@ class SyncController {
     targetWs.send(
       JSON.stringify({
         type: MESSAGE_TYPES.CONNECTION_REQUEST,
-        payload: { username, userId: encryptUserId(senderId) }
+        payload: { username, userId: senderId }
       })
     );
   }
 
   async acceptConnectionRequest(payload) {
     const { acceptedBy, sentBy } = payload;
-    const senderId = decryptUserId(sentBy.userId);
-    const acceptorId = decryptUserId(acceptedBy.userId);
+    const senderId = sentBy.userId;
+    const acceptorId = acceptedBy.userId;
 
     // Store the active connection in Redis
     await redisClient.hset("activeConnections", senderId, acceptorId);
@@ -63,7 +62,7 @@ class SyncController {
 
   async declineConnectionRequest(payload) {
     const { sentBy } = payload;
-    const targetWs = await this.getValidWebSocket(decryptUserId(sentBy.userId));
+    const targetWs = await this.getValidWebSocket(sentBy.userId);
     if (!targetWs) return;
     // Send the connection declined message
     targetWs.send(
@@ -77,15 +76,10 @@ class SyncController {
   async syncAction(payload) {
     const { senderId, action } = payload;
 
-    const targetUserId = await redisClient.hget(
-      "activeConnections",
-      decryptUserId(senderId)
-    );
+    const targetUserId = await redisClient.hget("activeConnections", senderId);
 
     if (!targetUserId) {
-      console.warn(
-        `No active connection found for userId: ${decryptUserId(senderId)}`
-      );
+      console.warn(`No active connection found for userId: ${senderId}`);
       return;
     }
     const targetWs = await getWebSocketByUserId(targetUserId);
@@ -128,9 +122,9 @@ class SyncController {
   async closeConnection(payload) {
     try {
       const { acceptedBy, sentBy } = payload;
+      const senderId = sentBy.userId;
+      const acceptorId = acceptedBy.userId;
 
-      const senderId = decryptUserId(sentBy.userId);
-      const acceptorId = decryptUserId(acceptedBy.userId);
       // Remove the active connection in Redis
       await redisClient.hdel("activeConnections", senderId);
       await redisClient.hdel("activeConnections", acceptorId);
