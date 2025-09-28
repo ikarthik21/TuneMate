@@ -14,7 +14,7 @@ const ResendMail = ({ setshowDetails }) => {
   const handleResend = async (e) => {
     e.preventDefault();
     if (data.email === "") {
-      alert("Please enter email");
+      Toast({ type: "error", message: "Please enter email" });
       return;
     }
 
@@ -37,6 +37,7 @@ const ResendMail = ({ setshowDetails }) => {
               className={"input-box w-72"}
               onChange={handleChange}
               name="email"
+              value={data.email}
               required={true}
             />
           </div>

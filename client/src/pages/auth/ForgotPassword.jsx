@@ -36,6 +36,7 @@ const ForgotPassword = ({ setshowDetails }) => {
               type="email"
               className={"input-box"}
               onChange={handleChange}
+              value={data.email}
               name="email"
               required={true}
             />
