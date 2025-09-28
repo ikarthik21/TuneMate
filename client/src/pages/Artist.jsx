@@ -33,12 +33,7 @@ const Artist = () => {
     await loadPlaylist({ id, type: "ARTIST", index: 0 });
   };
 
-  if (isLoading)
-    return (
-      <div>
-        <h1>Loading.....</h1>
-      </div>
-    );
+  if (isLoading) return <></>;
   if (error)
     return (
       <div>

@@ -18,12 +18,7 @@ const SearchResults = () => {
     () => MusicServiceInstance.getSearchResults(debouncedSearch)
   );
 
-  if (isLoading)
-    return (
-      <div>
-        <h1>Loading.....</h1>
-      </div>
-    );
+  if (isLoading) return <></>;
   if (error)
     return (
       <div>

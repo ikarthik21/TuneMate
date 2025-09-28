@@ -133,12 +133,7 @@ const AddToPlaylist = ({ clickEvent, component, onPlaylistUpdate }) => {
     handleFavorite(song_id);
   };
 
-  if (isLoading)
-    return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    );
+  if (isLoading) return <></>;
   if (error)
     return (
       <div>
@@ -253,46 +248,47 @@ const AddToPlaylist = ({ clickEvent, component, onPlaylistUpdate }) => {
             </div>
 
             {/* Playlist List */}
-            {playlists
-              ?.filter((playlist) =>
-                playlist.name
-                  .toLowerCase()
-                  .includes(searchPlaylist.toLowerCase())
-              )
-              .map((playlist) => (
-                <div
-                  key={playlist.id}
-                  className="flex items-center p-3 rounded hover:bg-[#222328] cursor-pointer justify-between"
-                >
-                  <div className="flex items-center">
-                    {playlist.image ? (
-                      <img
-                        src={playlist.image}
-                        alt={playlist.name}
-                        className="h-8 w-8 rounded"
+            {playlists.length > 0 &&
+              playlists
+                ?.filter((playlist) =>
+                  playlist.name
+                    .toLowerCase()
+                    .includes(searchPlaylist.toLowerCase())
+                )
+                .map((playlist) => (
+                  <div
+                    key={playlist.id}
+                    className="flex items-center p-3 rounded hover:bg-[#222328] cursor-pointer justify-between"
+                  >
+                    <div className="flex items-center">
+                      {playlist.image ? (
+                        <img
+                          src={playlist.image}
+                          alt={playlist.name}
+                          className="h-8 w-8 rounded"
+                        />
+                      ) : (
+                        <BiSolidPlaylist size={20} color="#59c2ef" />
+                      )}
+                      <h2 className="ml-4">{playlist.name}</h2>
+                    </div>
+                    {selectedPlaylists.includes(playlist.id) ? (
+                      <FaCheckCircle
+                        size={18}
+                        cursor="pointer"
+                        color="#59c2ef"
+                        onClick={(e) => handlePlaylistToggle(e, playlist.id)}
                       />
                     ) : (
-                      <BiSolidPlaylist size={20} color="#59c2ef" />
+                      <IoMdAddCircle
+                        size={20}
+                        cursor="pointer"
+                        color="#59c2ef"
+                        onClick={(e) => handlePlaylistToggle(e, playlist.id)}
+                      />
                     )}
-                    <h2 className="ml-4">{playlist.name}</h2>
                   </div>
-                  {selectedPlaylists.includes(playlist.id) ? (
-                    <FaCheckCircle
-                      size={18}
-                      cursor="pointer"
-                      color="#59c2ef"
-                      onClick={(e) => handlePlaylistToggle(e, playlist.id)}
-                    />
-                  ) : (
-                    <IoMdAddCircle
-                      size={20}
-                      cursor="pointer"
-                      color="#59c2ef"
-                      onClick={(e) => handlePlaylistToggle(e, playlist.id)}
-                    />
-                  )}
-                </div>
-              ))}
+                ))}
           </div>
 
           {/* Actions */}

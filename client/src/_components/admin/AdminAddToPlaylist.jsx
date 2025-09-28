@@ -63,7 +63,7 @@ const AdminAddToPlaylist = ({clickEvent}) => {
     }, [clickEvent]);
 
 
-    if (isLoading) return <div><h1>Loading.....</h1></div>;
+    if (isLoading) return <></>;
     if (error) return <div><h1>Error.....</h1></div>;
 
     return (<div ref={addMenuRef}
@@ -107,23 +107,44 @@ const AdminAddToPlaylist = ({clickEvent}) => {
                 <h1>New Playlist</h1>
             </div>)}
 
-            {/*Favorites*/}
-            <div className="flex flex-col mt-2 h-36 overflow-y-scroll custom-scrollbar">
-
-                {playlists?.map((playlist) => (<div key={playlist.id}
-                                                    className="flex items-center p-3 rounded hover:bg-[#222328] cursor-pointer justify-between">
-                    <div className="flex items-center">
-                        {playlist.image ? (<img src={playlist.image} alt="" className={"h-8 w-8 rounded"}/>) : (
-                            <BiSolidPlaylist size={20} color={"#59c2ef"}/>)}
-                        <h2 className="ml-4">{playlist.name}</h2>
-                    </div>
-                    {selectedPlaylists.includes(playlist.id) ? (
-                        <FaCheckCircle size={18} cursor="pointer" color="#59c2ef"
-                                       onClick={() => togglePlaylistSelection(playlist.id)}/>) : (
-                        <IoMdAddCircle size={20} cursor="pointer" color="#59c2ef"
-                                       onClick={() => togglePlaylistSelection(playlist.id)}/>)}
-                </div>))}
-            </div>
+        {/*Favorites*/}
+        <div className="flex flex-col mt-2 h-36 overflow-y-scroll custom-scrollbar">
+          {playlists.playlists.length > 0 &&
+            playlists?.playlists?.map((playlist) => (
+              <div
+                key={playlist.id}
+                className="flex items-center p-3 rounded hover:bg-[#222328] cursor-pointer justify-between"
+              >
+                <div className="flex items-center">
+                  {playlist.image ? (
+                    <img
+                      src={playlist.image}
+                      alt=""
+                      className={"h-8 w-8 rounded"}
+                    />
+                  ) : (
+                    <BiSolidPlaylist size={20} color={"#59c2ef"} />
+                  )}
+                  <h2 className="ml-4">{playlist.name}</h2>
+                </div>
+                {selectedPlaylists.includes(playlist.id) ? (
+                  <FaCheckCircle
+                    size={18}
+                    cursor="pointer"
+                    color="#59c2ef"
+                    onClick={() => togglePlaylistSelection(playlist.id)}
+                  />
+                ) : (
+                  <IoMdAddCircle
+                    size={20}
+                    cursor="pointer"
+                    color="#59c2ef"
+                    onClick={() => togglePlaylistSelection(playlist.id)}
+                  />
+                )}
+              </div>
+            ))}
+        </div>
 
             <div className="flex items-center justify-end mt-4">
                 <Button variant="ghost" className="h-8" onClick={(e) => {
