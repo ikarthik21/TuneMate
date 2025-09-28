@@ -14,13 +14,14 @@ const Login = () => {
 
   const [showDetails, setshowDetails] = useState("login");
   const { setAccessToken } = useAuthStore();
-  const { handleChange, handleSubmit, isLoading, resetData } = useFormData(
-    {
-      email: "",
-      password: ""
-    },
-    tuneMateInstance.loginUser
-  );
+  const { data, handleChange, handleSubmit, isLoading, resetData } =
+    useFormData(
+      {
+        email: "",
+        password: ""
+      },
+      tuneMateInstance.loginUser
+    );
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -51,6 +52,7 @@ const Login = () => {
                   className={"input-box w-72"}
                   onChange={handleChange}
                   name="email"
+                  value={data.email}
                   required={true}
                 />
               </div>
@@ -62,6 +64,7 @@ const Login = () => {
                   className={"input-box w-72"}
                   onChange={handleChange}
                   name="password"
+                  value={data.password}
                   required={true}
                 />
               </div>

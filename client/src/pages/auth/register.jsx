@@ -9,6 +9,7 @@ const Register = ({ setshowDetails }) => {
       {
         email: "",
         password: "",
+        username: "",
         confirmPassword: ""
       },
       tuneMateInstance.registerUser
@@ -17,7 +18,7 @@ const Register = ({ setshowDetails }) => {
   const handleRegister = async (e) => {
     e.preventDefault();
     if (data.password !== data.confirmPassword) {
-      console.log("passwords must be same");
+      Toast({ type: "error", message: "passwords must be same" });
       return;
     }
     const response = await handleSubmit();
@@ -38,6 +39,7 @@ const Register = ({ setshowDetails }) => {
               className={"input-box "}
               onChange={handleChange}
               name="email"
+              value={data.email}
               required={true}
             />
           </div>
@@ -49,6 +51,7 @@ const Register = ({ setshowDetails }) => {
               className={"input-box  "}
               onChange={handleChange}
               name="username"
+              value={data.username}
               required={true}
             />
           </div>
@@ -60,6 +63,7 @@ const Register = ({ setshowDetails }) => {
               className={"input-box  "}
               onChange={handleChange}
               name="password"
+              value={data.password}
               required={true}
             />
           </div>
@@ -70,6 +74,7 @@ const Register = ({ setshowDetails }) => {
               className={"input-box  "}
               onChange={handleChange}
               name="confirmPassword"
+              value={data.confirmPassword}
               required={true}
             />
           </div>

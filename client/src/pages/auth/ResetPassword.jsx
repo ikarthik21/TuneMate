@@ -65,6 +65,7 @@ const ResetPassword = () => {
                 className={"input-box  w-72"}
                 onChange={handleChange}
                 name="password"
+                value={data.password}
                 required={true}
               />
             </div>
@@ -76,6 +77,7 @@ const ResetPassword = () => {
                 className={"input-box w-72"}
                 onChange={handleChange}
                 name="confirmPassword"
+                value={data.confirmPassword}
                 required={true}
               />
             </div>
